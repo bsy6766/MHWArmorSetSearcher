@@ -1,0 +1,1007 @@
+Leather,1,2,0
+Leather Headgear,1,Hunger Resistance,1,0
+Leather Mail,0,0
+Leather Gloves,0,0
+Leather Belt,0,0
+Leather Trousers,0,0
+
+Chainmail,1,2,0
+Chainmail Headgear,1,Master Gatherer,1,0
+Chainmail Vest,0,0
+Chainmail Gloves,0,0
+Chainmail Belt,0,0
+Chainmail Trousers,0,0
+
+Hunter's,1,6,0
+Hunter's Headgear,1,Scoutfly Range Up,1,0
+Hunter's Mail,1,Slinger Capacity,1,0
+Hunter's Vambraces,1,Stealth,1,0
+Hunter's Coil,1,Scenthound,1,0
+Hunter's Greaves,1,BBQ Master,1,0
+
+Bone,1,6,0
+Bone Helm,1,Health Boost,1,0
+Bone Mail,1,Attack Boost,1,0
+Bone Vambraces,1,Slugger,1,0
+Bone Coil,1,Horn Maestro,1,0
+Bone Greaves,1,Entomologist,1,0
+
+Vespoid,1,8,0
+Vespoid Helm,1,Quick Sheath,1,0
+Vespoid Mail,1,Windproof,1,0
+Vespoid Vambraces,1,Paralysis Attack,1,0
+Vespoid Coil,1,Paralysis Resistance,1,0
+Vespoid Greaves,1,Honey Hunter,1,0
+
+Kestodon,1,12,0
+-
+-
+Kestodon Guards,1,Affinity Sliding,1,0
+-
+-
+
+Gajau,1,12,0
+-
+-
+-
+-
+Gajau Boots,1,Aquatic Expert,1,0
+
+Jargas,1,8,0
+Jargas Helm,1,Speed Eating,1,0
+Jargas Mail,1,Intimidator,1,0
+Jargas Vambraces,1,Palico Rally,1,0
+Jargas Coil,1,Fortify,1,0
+Jargas Greaves,1,Speed Crawler,1,0
+
+Kulu,1,10,0
+Kulu Headpiece,1,Fire Resistance,1,0
+Kulu Mail,1,Stamina Surge,1,0
+Kulu Vambraces,1,Pro Transporter,1,0
+Kulu Coil,1,Item Prolonger,1,0
+Kulu Greaves,1,Critical Eye,1,0
+
+Alloy,2,8,0
+Alloy Helm,1,Windproof,1,0
+Alloy Mail,1,Water Resistance,1,0
+Alloy Vambraces,1,Defense Boost,1,0
+Alloy Coil,1,Poison Resistance,1,0
+Alloy Greaves,1,Speed Sharpening,1,0
+
+Pukei,2,12,0
+Pukei Hood,1,Sporepuff Expert,1,0
+Pukei Mail,1,Item Prolonger,1,0
+Pukei Vambraces,1,Poison Resistance,1,0
+Pukei Coil,1,Poison Attack,1,0
+Pukei Greaves,1,Botanist,1,0
+
+Barroth,2,14,0
+Barroth Helm,1,Guard,1,0
+Barroth Mail,1,Stamina Thief,1,0
+Barroth Vambraces,1,Marathon Runner,1,0
+Barroth Coil,1,Muck Resistance,1,0
+Barroth Greaves,1,Stun Resistance,1,0
+
+Jyura,2,14,0
+Jyura Helm,1,Aquatic Expert,1,0
+Jyura Mail,1,Muck Resistance,1,0
+Jyura Vambraces,1,Water Attack,1,0
+Jyura Coil,1,Ice Resistance,1,0
+Jyura Greaves,1,Focus,1,0
+
+Kadachi,2,16,0
+Kadachi Helm,1,Constitution,1,0
+Kadachi Mail,1,Jump Master,1,0
+Kadachi Vambraces,1,Evade Extender,1,0
+Kadachi Coil,1,Thunder Attack,1,0
+Kadachi Greaves,1,Thunder Resistance,1,0
+
+High Metal,3,18,0
+High Metal Helm,1,Ice Resistance,1,0
+High Metal Mail,1,Earplugs,1,0
+High Metal Braces,1,Defense Boost,1,0
+High Metal Coil,1,Capacity Boost,1,0
+High Metal Greaves,1,Heavy Artillery,1,0
+
+Butterfly,3,22,1
+Butterfly Vertex,1,Evade Window,1,0
+Butterfly Thorax,1,Quick Sheath,1,0
+Butterfly Brachia,1,Leap of Faith,1,0
+Butterfly Elytra,1,Honey Hunter,1,0
+Butterfly Crura,1,Forager's Luck,1,0
+
+King Beetle,3,22,2
+King Beetle Vertex,1,Evade Window,1,0
+King Beetle Thorax,1,Quick Sheath,1,0
+King Beetle Brachia,1,Leap of Faith,1,0
+King Beetle Elytra,1,Honey Hunter,1,0
+King Beetle Crura,Forager's Luck,1,0
+
+Shamos,3,22,0
+Shamos Goggles,1,Detector,1,0
+-
+-
+-
+-
+
+Hornetaur,3,18,0
+Hornetaur Helm,1,Dungmaster,1,0
+Hornetaur Mail,1,Effluvial Expert,1,0
+Hornetaur Vambraces,1,Free Meal,1,0
+Hornetaur Coil,1,Carving Pro,1,0
+Hornetaur Greaves,1,Handicraft,1,0
+
+Anja,3,20,0,Anjanath Power
+Anja Helm,1,Fire Attack,1,0
+Anja Mail,1,Marathon Runner,1,0
+Anja Vambraces,1,Special Ammo Boost,1,0
+Anja Coil,1,Fire Resistance,1,0
+Anja Greaves,1,Artillery,1,0
+
+Rathian,3,22,0
+Rathian Helm,1,Health Boost,1,0
+Rathian Mail,1,Botanist,1,0
+Rathian Vambraces,1,Poison Attack,1,0
+Rathian Coil,1,Poison Resistance,1,0
+Rathian Greaves,1,Recovery Up,1,0
+
+Tzitzi,3,18,0
+Tzitzi Headgear,1,Blindsider,1,0
+Tzitzi Mail,1,Constitution,1,0
+Tzitzi Vambraces,1,Stun Resistance,1,0
+Tzitzi Coil,1,Wide-Range,1,0
+Tzitzi Greaves,1,Sleep Resistance,1,0
+
+Lumu,3,20,0
+Lumu Hat,1,Stamina Surge,1,0
+Lumu Mail,1,Master Mounter,1,0
+Lumu Vambraces,1,Artillery,1,0
+Lumu Coil,1,Divine Blessing,1,0
+Lumu Greaves,1,Windproof,1,0
+
+Girros,3,20,0
+Girros Mask,1,Horn Maestro,1,0
+Girros Mail,1,Paralysis Resistance,1,0
+Girros Vambraces,1,Palico Rally,1,0
+Girros Coil,1,Effluvial Expert,1,0
+Girros Greaves,1,Paralysis Attack,1,0
+
+Baan,3,24,0
+Baan Helm,1,Slugger,1,0
+Baan Mail,1,Sleep Resistance,1,0
+Baan Vambraces,1,Sleep Attack,1,0
+Baan Coil,1,Guard,1,0
+Baan Greaves,1,Bleeding Resistance,1,0
+
+Ingot,4,28,0
+Ingot Helm,1,Thunder Attack,1,0
+Ingot Mail,1,Thunder Resistance,1,0
+Ingot Vambraces,1,Health Boost,1,0
+Ingot Coil,1,Windproof,1,0
+Ingot Greaves,1,Defense Boost,1,0
+
+Death Stench,4,32,0
+Death Stench Brain,1,Resuscitate,1,0
+Death Stench Muscle,1,Fortify,1,0
+Death Stench Grip,1,Focus,1,0
+Death Stench Bowels,1,Dragon Attack,1,0
+Death Stench Heel,1,Handicraft,1,0
+
+Brigade,4,28,0
+Brigade Lobos,1,Recovery Speed,1,0
+Brigade Suit,1,Divine Blessing,1,0
+Brigade Vambraces,1,Heavy Artillery,1,0
+Brigade Coil,1,Geologist,1,0
+Brigade Boots,1,Scholar,1,0
+
+Legiana,4,30,0,Legiana Blessing
+Legiana Helm,1,Divine Blessing,1,0
+Legiana Mail,1,Evade Window,1,0
+Legiana Vambraces,1,Airborne,1,0
+Legiana Coil,1,Ice Attack,1,0
+Legiana Greaves,1,Ice Resistance,1,0
+
+Odogaron,4,30,0,Odogaron Power
+Odogaron Helm,1,Bleeding Resistance,1,0
+Odogaron Mail,1,Speed Sharpening,1,0
+Odogaron Vambraces,1,Constitution,1,0
+Odogaron Coil,1,Critical Eye,1,0
+Odogaron Greaves,1,Quick Sheath,1,0
+
+Rathalos,4,30,0,Rathalos Power
+Rathalos Helm,1,Attack Boost,1,0
+Rathalos Mail,1,Weakness Exploit,1,0
+Rathalos Vambraces,1,Fire Resistance,1,0
+Rathalos Coil,1,Fire Attack,1,0
+Rathalos Greaves,1,Jump Master,1,0
+
+Diablos,4,32,0,Diablos Power
+Diablos Helm,1,Critical Draw,1,0
+Diablos Mail,1,Slugger,1,0
+Diablos Vambraces,1,Heroics,1,0
+Diablos Coil,1,Marathon Runner,1,0
+Diablos Greaves,1,Tremor Resistance,1,0
+
+Kirin,4,34,0,Kirin Blessing
+Kirin Horn,1,Marathon Runner,1,0
+Kirin Jacket,1,Divine Blessing,1,0
+Kirin Longarms,1,Blight Resistance,1,0
+Kirin Hoop,1,Thunder Attack,1,0
+Kirin Leg Guards,1,Thunder Resistance,1,0
+
+Leather a,5,32,0
+Leather Headgear a,1,Hunger Resistance,2,0
+Leather Mail a,1,Fire Resistance,1,0
+Leather Gloves a,1,Recovery Speed,1,0
+Leather Belt a,1,Stamina Surge,1,0
+Leather Trousers a,1,Cliffhanger,1,0
+
+Leather b,5,32,0
+Leather Headgear b,1,Hunger Resistance,1,1,1
+Leather Mail b,0,1,1
+Leather Glvoes b,0,1,1
+Leather Belt b,0,1,1
+Leather Trousers b,0,1,1
+
+Chainmail a,5,32,0
+Chainmail Headgear a,2,Master Gatherer,1,Guard,1,0
+Chainmail Armor a,1,Water Resistance,1,0
+Chainmail Gloves a,1,Recovery Speed,1,0
+Chainmail Belt a,1,Quick Sheath,1,0
+Chainmail Trousers a,1,Recovery Up,1,0
+
+Chainmail b,5,32,0
+Chainmail Headgear b,1,Master Gatherer,1,1,1
+Chainmail Armor b,0,1,1
+Chainmail Gloves b,0,1,1
+Chainmail Belt b,0,1,1
+Chainmail Trousers b,0,1,1
+
+Hunter's a,5,36,0
+Hunter's Headhear a,2,Scoutfly Range Up,1,Scholar,1,0
+Hunter's Mail a,1,Slinger Capacity,2,0
+Hunter's Vambraces a,1,Stealth,2,0
+Hunter's Coil a,2,Master Gatherer,1,Stealth,1,0
+Hunter's Greaves a,2,Scenthound,1,Slinger Capacity,1,0
+
+Hunter's b,5,36,0
+Hunter's Headgear b,1,Scoutfly Range Up,1,1,1
+Hunter's Mail b,1,Slinger Capacity,1,1,1
+Hunter's Vambraces b,1,Stealth,1,1,1
+Hunter's Coil b,1,Master Gatherer,1,1,1
+Hunter's Greaves b,1,Scenthound,1,1,1
+
+Bone a,5,36,0
+Bone Helm a,2,Health Boost,1,Entomologist,1,0
+Bone Mail a,1,Attack Boost,2,0
+Bone Vambraces a,2,Slugger,1,Attack Boost,1,0
+Bone Coil a,2,Horn Maestro,1,Master Fisher,1,0
+Bone Greaves a,1,Entomologist,2,0
+
+Bone b,5,36,0
+Bone Helm b,1,Health Boost,1,1,1
+Bone Mail b,1,Attack Boost,1,1,1
+Bone Vambraces b,1,Slugger,1,1,1
+Bone Coil b,1,Horn Maestro,1,1,1
+Bone Greaves b,1,Entomologist,1,1,1
+
+Alloy a,5,36,0
+Alloy Helm a,2,Windproof,1,Defense Boost,1,0
+Alloy Mail a,1,Water Resistance,2,0
+Alloy Vambraces a,2,Defense Boost,1,Speed Sharpening,1,0
+Alloy Coil a,2,Poison Resistance,1,Water Resistance,1,0
+Alloy Greaves a,1,Speed Sharpening,2,0
+
+Alloy b,5,36,0
+Alloy Helm b,1,Windproof,1,1,1
+Alloy Mail b,1,Water Resistance,1,1,1
+Alloy Vambraces b,1,Defense Boost,1,1,1
+Alloy Coil b,1,Poison Resistance,1,1,1
+Alloy Greaves b,1,Speed Sharpening,1,1,1
+
+Butterfly a,5,42,1
+Butterfly Vertex a,2,Evade Window,2,Botanist,1,0
+Butterfly Thorax a,2,Quick Sheath,2,Botanist,1,0
+Butterfly Brachia a,2,Botanist,2,Leap of Faith,1,1,1
+Butterfly Elytra a,2,Honey Hunter,1,Quick Sheath,1,1,1
+Butterfly Crura a,2,Forager's Luck,1,Evade Window,1,1,1
+
+Butterfly b,5,42,1
+Butterfly Vertex b,1,Evade Window,2,1,1
+Butterfly Thorax b,1,Quick Sheath,2,1,1
+Butterfly Brachia b,1,Botanist,2,2,2,1
+Butterfly Elytra b,1,Honey Hunter,1,2,2,1
+Butterfly Crura b,1,Forager's Luck,1,2,2,1
+
+King Beetle a,5,42,2
+King Beetle Vertex a,2,Evade Window,2,Botanist,1,0
+King Beetle Thorax a,2,Quick Sheath,2,Botanist,1,0
+King Beetle Brachia a,2,Botanist,2,Leap of Faith,1,1,1
+King Beetle Elytra a,2,Honey Hunter,1,Quick Sheath,1,1,1
+King Beetle Crura a,2,Forager's Luck,1,Evade Window,1,1,1
+
+King Beetle b,5,42,2
+King Beetle Vertex b,1,Evade Window,2,1,1
+King Beetle Thorax b,1,Quick Sheath,2,1,1
+King Beetle Brachia b,1,Botanist,2,2,2,1
+King Beetle Elytra b,1,Honey Hunter,1,2,2,1
+King Beetle Crura b,1,Forager's Luck,1,2,2,1
+
+Vespoid a,5,38,0
+Vespoid Helm a,2,Quick Sheath,1,Paralysis Attack,1,0
+Vespoid Mail a,1,Windproof,2,0
+Vespoid Vambraces a,1,Paralysis Attack,2,0
+Vespoid Coil a,1,Paralysis Resistance,2,0
+Vespoid Greaves a,2,Honey Hunter,1,Paralysis Resistance,1,0
+
+Vespoid b,5,38,0
+Vespoid Helm b,1,Quick Sheath,1,1,1
+Vespoid Mail b,1,Windproof,1,1,1
+Vespoid Vambraces b,1,Paralysis Attack,1,1,1
+Vespoid Coil b,1,Paralysis Resistance,1,1,1
+Vespoid Greaves b,1,Honey Hunter,1,1,1
+
+Hornetaur a,5,38,0
+Hornetaur Helm a,2,Dungmaster,1,Dragon Attack,1,0
+Hornetaur Mail a,2,Effluvial Expert,1,Hunger Resistance,1,0
+Hornetaur Vambraces a,2,Free Meal,1,Hunger Resistance,1,0
+Hornetaur Coil a,2,Carving Pro,1,Hunger Resistance,1,0
+Hornetaur Greaves a,2,Handicraft,1,Dragon Attack,1,0
+
+Hornetaur b,5,38,0
+Hornetaur Helm b,1,Dungmaster,1,1,1
+Hornetaur Mail b,1,Effluvial Expert,1,1,1
+Hornetaur Vambraces b,1,Free Meal,1,1,1
+Hornetaur Coil b,1,Carving Pro,1,1,1
+Hornetaur Greaves b,1,Handicraft,1,1,1
+
+Mosswine Mask a,5,40,0
+Mosswine Mask a,1,Mushroomancer,2,0
+-
+-
+-
+-
+
+Kestodon a,5,40,0
+-
+-
+Kestodon Guards a,2,Affinity Sliding,1,Focus,1,0
+-
+-
+
+Kestodon b,5,40,0
+-
+-
+Kestodon Guards b,1,Affinity Sliding,1,1,1
+-
+-
+
+Gajau a,5,40,0
+-
+-
+-
+-
+Gajau Boots a,2,Aquatic Expert,2,Water Attack,1,0
+
+Gajau b,5,40,0
+-
+-
+-
+-
+Gajau Boots b,2,Aquatic Expert,1,Water Attack,1,1,1
+
+Shamos a,5,40,0
+Shamos Goggles a,2,Detector,1,Geologist,1,0
+-
+-
+-
+-
+
+Shamos b,5,40,0
+Shamos Googles b,1,Detector,1,1,1
+-
+-
+-
+-
+
+Jargas a,5,40,0
+Jargas Helm a,1,Speed Eating,2,0
+Jargas Mail a,1,Intimidator,2,0
+Jargas Vambraces a,2,Palico Rally,1,Intimidator,1,0
+Jargas Coil a,2,Fortify,1,Speed Eating,1,0
+Jargas Greaves a,2,Speed Crawler,1,Free Meal,1,0
+
+Jargas b,5,40,0
+Jargas Helm b,1,Speed Eating,1,1,1
+Jargas Mail b,1,Intimidator,1,1,1
+Jargas Vambraces b,1,Palico Rally,1,1,1
+Jargas Coil b,1,Fortify,1,1,1
+Jargas Greaves b,1,Speed Crawler,1,1,1
+
+Kulu a,5,40,0
+Kulu Headpiece a,2,Fire Resistance,1,Weakness Exploit,1,0
+Kulu Mail a,2,Stamina Surge,1,Critical Eye,1,0
+Kulu Vambraces a,2,Pro Transporter,1,Critical Eye,1,0
+Kulu Coil a,1,Item Prolonger,2,0
+Kulu Greaves a,2,Critical Eye,1,Item Prolonger,1,0
+
+Kulu b,5,40,0
+Kulu Headpiece b,1,Fire Resistance,1,2,1,1
+Kulu Mail b,1,Stamina Surge,1,1,1
+Kulu Vambraces b,1,Pro Transporter,1,1,2
+Kulu Coil b,1,Item Prolonger,1,1,2
+Kulu Greaves b,1,Critical Eye,1,1,1
+
+Tzitzi a,5,40,0
+Tzitzi Headgear a,2,Blindsider,1,Stun Resistance,1,0
+Tzitzi Mail a,2,Constitution,1,Water Attack,2,0
+Tzitzi Vambraces a,2,Stun Resistance,2,Wide-Range,1,0
+Tzitzi Coil a,2,Wide-Range,2,Water Attack,1,0
+Tzitzi Greaves a,1,Sleep Resistance,2,0
+
+Tzitzi b,5,40,0
+Tzitzi Headgear b,1,Blindsider,1,1,1
+Tzitzi Mail b,1,Constitution,1,2,1,1
+Tzitzi Vambraces b,1,Stun Resistance,2,1,1
+Tzitzi Coil b,1,Wide-Range,1,1,2
+Tzitzi Greaves b,1,Sleep Resistance,1,1,1
+
+Girros a,5,40,0
+Girros Mask a,2,Horn Maestro,1,Paralysis Resistance,1,0
+Girros Mail a,1,Paralysis Resistance,2,0
+Girros Vambraces a,1,Palico Rally,2,0
+Girros Coil a,2,Effluvial Expert,1,Paralysis Attack,1,0
+Girros Greaves a,1,Paralysis Attack,2,0
+
+Girros b,5,40,0
+Girros Mask b,1,Horn Maestro,1,1,1
+Girros Mail b,1,Paralysis Resistance,1,1,1
+Girros Vambraces b,1,Palico Rally,1,1,1
+Girros Coil b,1,Effluvial Expert,1,1,1
+Girros Greaves b,1,Paralysis Attack,1,1,1
+
+Pukei a,5,42,0
+Pukei Hood a,1,Sporepuff Expert,2,0
+Pukei Mail a,2,Item Prolonger,1,Botanist,1,0
+Pukei Vambraces a,2,Poison Resistance,2,Poison Attack,1,0
+Pukei Coil a,1,Poison Attack,2,0
+Pukei Greaves a,2,Botanist,2,Sporepuff Expert,1,0
+
+Pukei b,5,42,0
+Pukei Hood b,1,Sporepuff Expert,1,2,1,1
+Pukei Mail b,1,Item Prolonger,1,1,1
+Pukei Vambraces b,1,Poison Resistance,1,2,1,1
+Pukei Coil b,1,Poison Attack,1,1,1
+Pukei Greaves b,1,Botanist,1,1,2
+
+Barroth a,5,42,0
+Barroth Helm a,1,Guard,2,0
+Barroth Mail a,1,Stamina Thief,2,0
+Barroth Vambraces a,2,Marathon Runner,1,Stamina Thief,1,0
+Barroth Coil a,2,Muck Resistance,1,Guard,1,0
+Barroth Greaves a,2,Stun Resistance,2,Marathon Runner,1,0
+
+Barroth b,5,42,0
+Barroth Helm b,1,Guard,1,1,1
+Barroth Mail b,1,Stamina Thief,1,1,1
+Barroth Vambraces b,1,Marathon Runner,1,1,1
+Barroth Coil b,1,Muck Resistance,1,1,2
+Barroth Greaves b,1,Stun Resistance,1,2,1,1
+
+Anja a,5,44,0,Anjanath Will
+Anja Helm a,2,Fire Attack,2,Fire Resistance,1,0
+Anja Mail a,2,Marathon Runner,1,Special Ammo Boost,1,0
+Anja Vambraces A,2,Special Ammo Boost,1,Fire Attack,1,0
+Anja Coil a,2,Fire Resistance,2,Artillery,1,0
+Anja Greaves a,1,Artillery,2,0
+
+Anja b,5,44,0,Anjanath Will
+Anja Helm b,1,Fire Attack,2,1,2
+Anja Mail b,1,Marathon Runner,1,2,1,1
+Anja Vambraces b,1,Special Ammo Boost,1,1,1
+Anja Coil b,1,Fire Resistance,2,1,2
+Anja Greaves b,1,Artillery,1,1,1
+
+Jyura a,5,44,0
+Jyura Helm a,1,Aquatic Expert,2,0
+Jyura Mail a,2,Muck Resistance,1,Water Attack,1,0
+Jyura Vambraces a,2,Water Attack,2,Aquatic Expert,1,0
+Jyura Coil a,1,Ice Resistance,2,0
+Jyura Greaves a,1,Focus,2,0
+
+Jyura b,5,44,0
+Jyura Helm b,1,Aquatic Expert,1,1,1
+Jyura Mail b,1,Muck Resistance,1,1,1
+Jyura Vambraces b,1,Water Attack,2,1,1
+Jyura Coil b,1,Ice Resistance,1,1,1
+Jyura Greaves b,1,Focus,1,1,2
+
+Kadachi a,5,44,0
+Kadachi Helm a,1,Constitution,2,0
+Kadachi Mail a,2,Jump Master,1,Evade Extender,1,0
+Kadachi Vambraces a,1,Evade Extender,2,0
+Kadachi Coil a,2,Thunder Attack,2,Thunder Resistance,1,0
+Kadachi Greaves a,2,Thunder Resistance,2,Constitution,1,0
+
+Kadachi b,5,44,0
+Kadachi Helm b,1,Constitution,1,1,2
+Kadachi Mail b,1,Jump Master,1,1,2
+Kadachi Vambraces b,1,Evade Extender,1,1,2
+Kadachi Coil b,1,Thunder Attack,1,2,1,1
+Kadachi Greaves b,1,Thunder Resistance,1,2,1,1
+
+Lumu a,5,44,0
+Lumu Hat a,1,Stamina Surge,2,0
+Lumu Mail a,2,Master Mounter,1,Artillery,1,0
+Lumu Vambraces a,1,Artillery,2,0
+Lumu Coil a,1,Divine Blessing,2,0
+Lumu Greaves a,2,Windproof,1,Stamina Surge,1,0
+
+Lumu b,5,44,0
+Lumu Hat b,1,Stamina Surge,1,1,2
+Lumu Mail b,1,Master Mounter,1,1,1
+Lumu Vambraces b,1,Artillery,1,1,1
+Lumu Coil b,1,Divine Blessing,1,1,1
+Lumu Greaves b,1,Windproof,1,2,1,1
+
+Rathian a,5,46,0
+Rathian Helm a,2,Health Boost,2,Poison Attack,1,0
+Rathian Mail a,2,Botanist,2,Recovery Up,1,0
+Rathian Vambraces a,1,Poison Attack,2,0
+Rathian Coil a,2,Poison Resistance,2,Health Boost,1,0
+Rathian Greaves a,1,Recovery Up,2,0
+
+Rathian b,5,46,0
+Rathian Helm b,2,Health Boost,1,Poison Attack,1,1,1
+Rathian Mail b,2,Botanist,1,Recovery Up,1,1,1
+Rathian Vambraces b,1,Poison Attack,1,1,1
+Rathian Coil b,2,Poison Resistance,1,Health Boost,1,1,1
+Rathian Greaves b,1,Recovery Up,1,1,1
+
+Rath Heart a,6,52,0,Pink Rathian Mastery
+Rath Heart Helm a,2,Evade Extender,1,Poison Attack,1,0
+Rath Heart Mail a,1,Tool Specialist,2,0
+Rath Heart Braces a,1,Windproof,2,0
+Rath Heart Coil a,2,Handicraft,1,Poison Resistance,1,0
+Rath Heart Greaves,2,Tool Specialist,1,Windproof,1,0
+
+Rath Heart b,6,52,0,Pink Rathian Mastery
+Rath Heart Helm b,1,Evade Extender,1,1,2
+Rath Heart Mail b,1,Tool Specialist,1,2,1,1
+Rath Heart Braces b,1,Windproof,1,1,2
+Rath Heart Coil b,1,Handicraft,1,1,1
+Rath Heart Greaves b,1,Tool Specialist,1,1,2
+
+Baan a,6,46,0
+Baan Helm a,1,Tremor Resistance,2,0
+Baan Mail a,2,Sleep Attack,1,Bleeding Resistance,1,0
+Baan Vambraces a,2,Sleep Attack,2,Guard,1,0
+Baan Coil a,1,Guard,2,0
+Baan Greaves a,1,Bleeding Resistance,2,0
+
+Baan b,6,46,0
+Baan Helm b,1,Tremor Resistance,1,1,2
+Baan Mail b,1,Sleep Attack,1,1,1
+Baan Vambraces b,2,Sleep Attack,1,Guard,1,1,1
+Baan Coil b,1,Guard,1,1,2
+Baan Greaves b,1,Bleeding Resistance,1,1,1
+
+Gastodon a,5,48,0
+Gastodon Horn a,2,Flinch Free,1,Blast Resistance,1,0
+-
+-
+-
+-
+
+Gastodon b,5,48,0
+Gastodon Horn b,1,Flinch Free,1,1,1
+-
+-
+-
+-
+
+Barnos a,5,48,0
+-
+Barnos Jacket a,2,Heat Guard,1,Iron Skin,1,0
+-
+-
+-
+
+Barnos b,5,48,0
+-
+Barnos Jacket b,1,Heat Guard,1,1,1
+-
+-
+-
+
+Dodogama a,5,48,0
+Dodogama Helm a,1,Blast Resistance,2,0
+Dodogama Mail a,1,Blast Attack,2,0
+Dodogama Vambraces a,1,Bombardier,2,0
+Dodogama Coil a,2,Artillery,2,Blast Resistance,1,0
+Dodogama Greaves a,2,Capacity Boost,1,Blast Attack,1,0
+
+Dodogama b,5,48,0
+Dodogama Helm b,1,Blast Resistance,1,1,1
+Dodogama Mail b,1,Blast Attack,1,1,1
+Dodogama Vambraces b,1,Bombardier,1,1,1
+Dodogama Coil b,1,Artillery,2,1,1
+Dodogama Greaves b,1,Capacity Boost,1,1,1
+
+Zorah a,6,44,0,Zorah Magdaros Mastery
+Zorah Headgear a,2,Handicraft,1,Blast Attack,1,0
+Zorah Hide a,2,Blast Attack,2,Windproof,1,0
+Zorah Claws a,2,Free Elem/Ammo Up,1,Bombardier,1,0
+Zorah Spine a,2,Fortify,1,Tremor Resistance,1,0
+Zorah Spurs a,2,Bombardier,2,Earplugs,1,0
+
+Zorah b,6,44,0,Zorah Magdaros Mastery
+Zorah Headgear b,1,Handicraft,1,1,1
+Zorah Hide b,1,Blast Attack,2,1,2
+Zorah Claws b,1,Free Elem/Ammo Up,1,1,1
+Zorah Spine b,1,Fortify,1,1,2
+Zorah Spurs b,1,Bombardier,2,1,2
+
+High Metal a,6,50,0
+High Metal Helm a,2,Ice Resistance,2,Earplugs,1,0
+High Metal Mail a,2,Earplugs,2,Ice Attack,1,0
+High Metal Braces a,2,Defense Boost,2,Ice Attack,1,0
+High Metal Coil a,2,Capacity Boost,1,Defense Boost,1,0
+High Metal Greaves a,2,Heavy Artillery,1,Ice Resistance,1,0
+
+High Metal b,6,50,0
+High Metal Helm b,1,Ice Resistance,2,1,2
+High Metal Mail b,2,Earplugs,1,Ice Attack,1,1,2
+High Metal Braces b,1,Defense Boost,2,1,1
+High Metal Coil b,1,Capacity Boost,1,1,1
+High Metal Greaves b,1,Heavy Artillery,1,1,1
+
+Ingot a,6,50,0
+Ingot Helm a,1,Thunder Attack,2,0
+Ingot Mail a,1,Thunder Resistance,2,0
+Ingot Vambraces a,2,Health Boost,2,Thunder Attack,1,0
+Ingot Coil a,1,Windproof,2,0
+Ingot Greaves a,2,Defense Boost,2,Windproof,1,0
+
+Ingot b,6,50,0
+Ingot Helm b,1,Thunder Attack,1,1,1
+Ingot Mail b,1,Thunder Resistance,1,1,1
+Ingot Vambraces b,1,Health Boost,2,1,1
+Ingot Coil b,1,Windproof,1,1,3
+Ingot Greaves b,1,Defense Boost,2,1,2
+
+Brigade a,6,52,0
+Brigade Lobos a,2,Recovery Speed,2,Horn Maestro,1,0
+Brigade Suit a,1,Divine Blessing,2,1,2
+Brigade Vambraces a,2,Heavy Artillery,2,Divine Blessing,1,0
+Brigade Coil a,2,Geologist,2,Recovery Speed,1,0
+Brigade Boots a,2,Scholar,1,Geologist,1,1,1
+
+Brigade b,6,52,0
+Brigade Lobos b,1,Recovery Speed,2,1,1
+Brigade Suit b,1,Divine Blessing,2,2,2,2
+Brigade Vambraces b,1,Heavy Artillery,2,1,1
+Brigade Coil b,1,Geologist,2,1,1
+Brigade Boots b,1,Scholar,1,1,3
+
+Faux Felyne a,6,56,0
+Faux Felyne a,1,Palico Rally,3,0
+-
+-
+-
+-
+
+Strategist a,6,56,0
+Strategist Spectacle a,1,Critical Eye,2,1,1
+-
+-
+-
+-
+
+Lavasioth a,6,56,0
+Lavasioth Helm a,2,Fire Attack,2,Quick Sheath,1,0
+Lavasioth Mail a,2,Fire Attack,2,Heat Guard,1,0
+Lavasioth Vambraces a,2,Affinity Sliding,1,Wide-Range,1,1,2
+Lavasioth Coil a,2,Quick Sheath,2,Recovery Up,1,0
+Lavasioth Greaves a,2,Spread/Power Shots,1,Fire Attack,1,1,1
+
+Lavasioth b,6,56,0
+Lavasioth Helm b,2,Fire Attack,1,Quick Sheath,1,2,1,1
+Lavasioth Mail b,1,Fire Attack,2,2,1,1
+Lavasioth Vambraces b,1,Affinity Sliding,1,1,3
+Lavasioth Coil b,1,Quick Sheath,2,1,1
+Lavasioth Greaves b,1,Spread/Power Shots,1,1,2
+
+Legiana a,6,54,0,Legiana Favor
+Legiana Helm a,2,Divine Blessing,2,Ice Attack,1,0
+Legiana Mail a,2,Evade Window,2,Divine Blessing,1,0
+Legiana Vambraces a,2,Airborne,1,Evade Window,1,0
+Legiana Coil a,2,Ice Attack,2,Windproof,1,0
+Legiana Greaves a,2,Ice Resistance,1,Critical Draw,1,0
+
+Legiana b,6,54,0,Legiana Favor
+Legiana Helm b,1,Divine Blessing,2,1,1
+Legiana Mail b,1,Evade Window,2,1,1
+Legiana Vambraces b,1,Airborne,1,1,3
+Legiana Coil b,1,Ice Attack,2,1,2
+Legiana Greaves b,1,Ice Resistance,2,1,3
+
+Odogaron a,6,54,0,Odogaron Mastery
+Odogaron Helm a,2,Bleeding Resistance,2,Critical Eye,1,0
+Odogaron Mail a,2,Speed Sharpening,2,Bleeding Resistance,1,0
+Odogaron Vambraces a,2,Constitution,1,Critical Eye,1,0
+Odogaron Coil a,2,Critical Eye,2,Speed Sharpening,1,0
+Odogaron Greaves a,2,Quick Sheath,1,Critical Eye,1,0
+
+Odogaron b,6,54,0,Odogaron Mastery
+Odogaron Helm b,1,Bleeding Resistance,2,1,2
+Odogaron Mail b,1,Speed Sharpening,2,1,1
+Odogaron Vambraces b,1,Constitution,1,1,1
+Odogaron Coil b,1,Critical Eye,2,1,2
+Odogaron Greaves b,1,Quick Sheath,1,1,1
+
+Rathalos a,6,54,0,Rathalos Mastery
+Rathalos Helm a,2,Attack Boost,2,Fire Attack,1,0
+Rathalos Mail a,2,Weakness Exploit,2,Fire Attack,1,0
+Rathalos Vambraces a,2,Fire Resistance,2,Attack Boost,1,0
+Rathalos Coil a,2,Fire Attack,2,Focus,1,0
+Rathalos Greaves a,2,Jump Master,1,Weakness Exploit,1,0
+
+Rathalos b,6,54,0,Rathalos Mastery
+Rathalos Helm b,1,Attack Boost,2,1,1
+Rathalos Mail b,1,Weakness Exploit,2,1,1
+Rathalos Vambraces b,1,Fire Resistance,2,1,1
+Rathalos Coil b,1,Fire Attack,2,1,2
+Rathalos Greaves b,1,Jump Master,1,1,3
+
+Rath Soul a,7,56,0,Rathalos Mastery
+Rath Soul Helm a,2,Critical Boost,1,Intimidator,2,0
+Rath Soul Mail a,2,Free Elem/Ammo Up,1,Intimidator,1,1,1
+Rath Soul Braces a,2,Focus,1,Windproof,1,1,1
+Rath Soul Coil a,2,Windproof,2,Piercing Shots,1,0
+Rath Soul Greaves a,2,Focus,1,Cliffhanger,1,0
+
+Rath Soul b,7,56,0,Rathalos Mastery
+Rath Soul Helm b,1,Critical Boost,1,2,1,1
+Rath Soul Mail b,1,Free Elem/Ammo Up,1,1,2
+Rath Soul Braces b,1,Focus,1,1,2
+Rath Soul Coil b,1,Windproof,2,1,3
+Rath Soul Greaves b,1,Focus,1,1,1
+
+Diablos a,6,54,0,Diablos Mastery
+Diablos Helm a,2,Critical Draw,2,Heroics,1,0
+Diablos Mail a,2,Slugger,2,Heroics,1,0
+Diablos Vambraces a,2,Heroics,2,Tremor Resistance,1,0
+Diablos Coil a,2,Marathon Runner,2,Critical Draw,1,0
+Diablos Greaves a,2,Tremor Resistance,2,Slugger,1,0
+
+Diablos b,6,54,0,Diablos Mastery
+Diablos Helm b,1,Critical Draw,2,1,2
+Diablos Mail b,1,Slugger,2,1,2
+Diablos Vambraces b,1,Heroics,2,1,2
+Diablos Coil b,1,Marathon Runner,2,1,2
+Diablos Greaves b,1,Tremor Resistance,2,2,1,1
+
+Diablos Nero a,7,56,0,Diablos Mastery
+Diablos Nero Helm a,1,Focus,2,1,1
+Diablos Nero Mail a,1,Resentment,2,1,1
+Diablos Nero Braces a,2,Focus,1,Marathon Runner,1,0
+Diablos Nero Coil a,2,Resentment,1,Partbreaker,1,0
+Diablos Nero Greaves a,2,Normal Shots,1,Heroics,1,1,1
+
+Diablos Nero b,7,56,0,Diablos Mastery
+Diablos Nero Helm b,1,Focus,1,1,3
+Diablos Nero Mail b,1,Resentment,1,2,2,1
+Diablos Nero Braces b,1,Focus,1,2,2,1
+Diablos Nero Coil b,1,Resentment,1,1,2
+Diablos Nero Greaves b,1,Normal Shots,1,1,2
+
+Uragaan a,7,60,0,Uragaan Protection
+Uragaan Helm a,1,Thunder Resistance,2,1,3
+Uragaan Mail a,1,Partbreaker,2,1,1
+Uragaan Vambraces a,2,Guard,1,Defense Boost,1,1,1
+Uragaan Coil a,2,Partbreaker,1,Thunder Resistance,1,2,1,1
+Uragaan Greaves a,1,Guard,2,1,1
+
+Uragaan b,7,60,0,Uragaan Protection
+Uragaan Helm b,1,Thunder Resistance,1,2,3,1
+Uragaan Mail b,1,Partbreaker,1,1,3
+Uragaan Vambraces b,1,Guard,1,1,2
+Uragaan Coil b,1,Partbreaker,1,2,2,1
+Uragaan Greaves b,1,Guard,1,1,3
+
+Bazel a,7,58,0,Bazelgeuse Protection
+Bazel Helm a,2,Earplugs,2,Blast Attack,1,1,2
+Bazel Mail a,2,Guard,2,Blast Resistance,2,0
+Bazel Vambraces a,2,Critical Draw,2,Earplugs,1,0
+Bazel Coil a,2,Earplugs,2,Jump Master,1,1,1
+Bazel Greaves a,2,Bombardier,2,Critical Draw,1,1,1
+
+Bazel b,7,58,0,Bazelgeuse Protection
+Bazel Helm b,1,Earplugs,2,2,3,1
+Bazel Mail b,1,Guard,2,2,1,1
+Bazel Vambraces b,1,Critical Draw,2,1,3
+Bazel Coil b,1,Earplugs,2,1,3
+Bazel Greaves b,1,Bombardier,2,1,3
+
+Damascus a,7,60,0
+Damascus Helm a,2,Defense Boost,2,Speed Sharpening,1,1,1
+Damascus Mail a,2,Focus,2,Defense Boost,2,1,1
+Damascus Vambraces a,2,Handicraft,1,Speed Sharpening,1,0
+Damascus Coil a,2,Focus,1,Iron Skin,2,1,1
+Damascus Greaves a,2,Defense Boost,2,Iron Skin,1,1,1
+
+Damascus b,7,60,0
+Damascus Helm b,1,Defense Boost,2,1,3
+Damascus Mail b,1,Focus,2,3,1,1,1
+Damascus Vambraces b,1,Handicraft,1,1,1
+Damascus Coil b,1,Focus,1,3,1,1,1
+Damascus Greaves b,1,Defense Boost,2,1,3
+
+Dober a,7,60,0
+Dober Helm a,2,Free Elem/Ammo Up,1,Dragon Resistance,1,0
+Dober Mail a,2,Attack Boost,2,Mushroomancer,1,1,1
+Dober Vambraces a,2,Stamina Surge,2,Mushroomancer,1,0
+Dober Coil a,2,Dragon Resistance,2,Attack Boost,1,1,2
+Dober Greaves a,2,Attack Boost,2,Stamina Surge,1,0
+
+Dober b,7,60,0
+Dober Helm b,1,Free Elem/Ammo Up,1,1,1
+Dober Mail b,1,Attack Boost,2,1,3
+Dober Vambraces b,2,Stamina Surge,1,Mushroomancer,1,2,1,1
+Dober Coil b,1,Dragon Resistance,2,1,3
+Dober Greaves b,1,Attack Boost,2,1,1
+
+Death Stench a,7,62,0
+Death Stench Brain a,2,Resuscitate,1,Critical Eye,1,1,2
+Death Stench Muscle a,2,Fortify,1,Free Elem/Ammo Up,1,0
+Death Stench Grip a,2,Focus,2,Dragon Attack,1,1,1
+Death Stench Bowels a,2,Dragon Attack,2,Focus,1,0
+Death Stench Heel a,2,Handicraft,2,Dragon Attack,2,0
+
+Death Stench b,7,62,0
+Death Stench Brain b,1,Resuscitate,1,1,3
+Death Stench Muscle b,1,Fortify,1,1,3
+Death Stench Grip b,1,Focus,2,2,1,1
+Death Stench Bowels b,1,Dragon Attack,2,2,1,1
+Death Stench Heel b,1,Handicraft,2,2,1,1
+
+Skull a,7,64,0
+Skull Mask a,1,Handicraft,1,1,2
+-
+-
+-
+-
+
+Nergigante a,8,64,0,Nergigante Hunger
+Nergigante Helm a,2,Maximum Might,2,Attack Boost,1,1,1
+Nergigante Mail a,2,Stamina Surge,2,Agitator,1,1,1
+Nergigante Vambraces a,2,Agitator,2,Attack Boost,1,0
+Nergigante Coil a,2,Attack Boost,2,Stamina Surge,1,0
+Nergigante Greaves a,2,Maximum Might,1,Agitator,1,1,1
+
+Nergigante b,8,64,0,Nergigante Hunger
+Nergigante Helm b,1,Maximum Might,2,2,1,1
+Nergigante Mail b,1,Stamina Surge,2,2,2,1
+Nergigante Vambraces b,1,Agitator,2,1,1
+Nergigante Coil b,1,Attack Boost,2,1,2
+Nergigante Greaves b,1,Maximum Might,1,1,2
+
+Teostra a,8,64,0,Teostra Technique
+Kaiser Crown a,1,Latent Power,2,0
+Kaiser Mail a,2,Special Ammo Boost,2,Latent Power,1,0
+Kaiser Vambraces a,1,Weakness Exploit,2,1,1
+Kaiser Coil a,2,Blast Attack,2,Weakness Exploit,1,0
+Kaiser Greaves a,2,Latent Power,2,Blast Attack,1,0
+
+Teostra b,8,64,0,Teostra Technique
+Kaiser Crown b,1,Latent Power,1,1,2
+Kaiser Mail b,1,Special Ammo Boost,2,2,1,1
+Kaiser Vambraces b,1,Weakness Exploit,1,1,3
+Kaiser Coil b,1,Blast Attack,2,1,2
+Kaiser Greaves b,1,Latent Power,2,1,1
+
+Kushala a,8,64,0,Kushala Daora Flight
+Kushala Glare a,2,Ice Attack,2,Handicraft,1,0
+Kushala Cista a,2,Handicraft,2,Focus,1,0
+Kushala Grip a,2,Evade Window,2,Handicraft,1,0
+Kushala Cocoon a,2,Ice Attack,2,Evade Extender,1,0
+Kushala Crus a,2,Evade Extender,2,Handicraft,1,0
+
+Kushala b,8,64,0,Kushala Daora Flight
+Kushala Glare b,1,Ice Attack,2,3,1,1,1
+Kushala Cista b,1,Handicraft,2,1,2
+Kushala Grip b,1,Evade Window,2,1,3
+Kushala Cocoon b,1,Ice Attack,2,2,1,1
+Kushala Crus b,1,Evade Extender,2,1,3
+
+Vaal Hazak a,8,64,0,Vaal Hazak Vitality
+Vaal Hazak Helm a,2,Peak Performance,1,Dragon Attack,2,0
+Vaal Hazak Mail a,2,Recovery Speed,2,Dragon Attack,1,1,1
+Vaal Hazak Braces a,2,Peak Performance,1,Recovery Speed,1,1,1
+Vaal Hazak Coil a,2,Peak Performance,1,Effluvia Resistance,1,1,1
+Vaal Hazak Greaves a,2,Effluvia Resistance,2,Dragon Attack,1,1,1
+
+Vaal Hazak b,8,64,0,Vaal Hazak Vitality
+Vaal Hazak Helm b,1,Peak Performance,1,1,1
+Vaal Hazak Mail b,1,Recovery Speed,2,2,1,1
+Vaal Hazak Braces b,1,Peak Performance,3,1,1,1
+Vaal Hazak Coil b,1,Peak Performance,1,2,1,1
+Vaal Hazak Greaves b,1,Effluvia Resistance,2,2,1,1
+
+Kirin a,8,64,0,Kirin Favor
+Kirin Horn a,2,Marathon Runner,2,Divine Blessing,1,0
+Kirin Jacket a,2,Divine Blessing,2,Thunder Attack,1,0
+Kirin Longarms a,2,Thunder Attack,2,Marathon Runner,1,0
+Kirin Hoop a,2,Blight Resistance,1,Free Elem/Ammo Up,1,0
+Kirin Leg Guards a,2,Free Elem/Ammo Up,2,Thunder Resistance,2,0
+
+Kirin b,8,64,0,Kirin Favor
+Kirin Horn b,1,Marathon Runner,2,1,1
+Kirin Jacket b,1,Divine Blessing,2,1,1
+Kirin Longarms b,1,Thunder Attack,2,2,1,1
+Kirin Hoop b,1,Blight Resistance,1,3,1,1,1
+Kirin Leg Guards b,1,Free Elem/Ammo Up,2,2,1,1
+
+Xeno'jiiva a,8,72,0,Xeno'jiiva Divinity
+Xeno'jiiva Headgear a,2,Flinch Free,1,Special Ammo Boost,1,1,1
+Xeno'jiiva Hide a,2,Power Prolonger,2,Blight Resistance,1,1,1
+Xeno'jiiva Claws a,2,Flinch Free,1,Critical Boost,1,1,1
+Xeno'jiiva Spine a,2,Blight Resistance,2,Special Ammo Boost,1,1,2
+Xeno'jiiva Spurs a,2,Flinch Free,1,Power Prolonger,1,1,1
+
+Xeno'jiiva b,8,72,0,Xeno'jiiva Divinity
+Xeno'jiiva Headgear b,1,Flinch Free,1,1,2
+Xeno'jiiva Hide b,1,Power Prolonger,2,2,1,1
+Xeno'jiiva Claws b,1,Flinch Free,1,1,3
+Xeno'jiiva Spine b,1,Blight Resistance,2,2,2,1
+Xeno'jiiva Spurs b,1,Flinch Free,1,2,1,1
+
+Guild Cross a,8,62,0,Guild Guidance
+Guild Cross Circlet a,2,Divine Blessing,2,Thunder Resistance,2,1,1
+Guild Cross Suit a,2,Resuscitate,1,Ice Resistance,2,1,1
+Guild Cross Vambraces a,2,Tool Specialist,1,Water Resistance,2,1,1
+Guild Cross Coil a,2,Fortify,1,Dragon Resistance,2,1,1
+Guild Cross Boots,2,Airborne,1,Fire Resistance,2,1,1
+
+Guild Cross  b,8,62,0,Guild Guidance
+Guild Cross Circlet b,1,Divine Blessing,2,3,1,1,1
+Guild Cross Suit b,1,Resuscitate,1,1,3
+Guild Cross Vambraces b,1,Tool Specialist,1,1,3
+Guild Cross Coil b,1,Fortify,1,3,1,1,1
+Guild Cross Boots b,1,Airborne,1,1,3
+
+Dragonking a,8,70,0
+Dragonking Eyepath a,1,Weakness Exploit,2,1,3
+-
+-
+-
+-
+
+Commission a,8,70,0,Commission Guidance
+Commission Gorget a,2,Tool Specialist,1,Master Gatherer,1,1,1
+Commission Jacket a,2,Wide-Range,2,Cliffhanger,1,0
+Commission Vambraces a,2,Blindsider,1,Carving Pro,1,1,1
+Commission Belt a,2,Mushroomancer,1,Pro Transporter,1,1,1
+Commission Pants a,2,Stealth,2,Affinity Sliding,1,0
+
+Commission b,8,70,0,Commission Guidance
+Commission Gorget b,1,Tool Specialist,1,1,2
+Commission Jacket b,1,Wide-Range,2,1,1
+Commission Vambraces b,1,Blindsider,1,1,2
+Commission Belt b,1,Mushroomancer,1,1,2
+Commission Pants b,1,Stealth,2,1,2
+
+Dragonseal Earrings,7,60,0
+Dragonseal Earrings,1,Elderseal Boost,1,0
+-
+-
+-
+-
+
+Pulverizing Feather,4,32,0
+Pulverizing Feather,1,Bombardier,3,0
+-
+-
+-
+-
