@@ -53,14 +53,14 @@ public:
 	// ============== 
 
 	// Added skills
-	std::list<Skill> skills;
+	std::list<Skill*> skills;
 
 	// ============== 
 
 	// set skill rank setting
 	bool highRankSetSkill;
 	// Added set skills
-	std::list<SetSkill> setSkills;
+	std::list<SetSkill*> setSkills;
 
 	// ============== 
 
@@ -138,6 +138,9 @@ public:
 	// Get added skill at index
 	Skill* getAddedSkillAt(const int index);
 	SetSkill* getAddedSetSkillAt(const int index);
+
+	int getTotalAddedSkills();
+	int getTotalAddedSetSkills();
 
 	std::wstring getString(const MHW::StringLiteral e);
 

@@ -3,7 +3,7 @@
 #include "Const.h"
 #include "Utility.h"
 
-using namespace MHWASS::CONSTS;
+using namespace MHW::CONSTS;
 
 const int Settings::CHARM_DISPLAY_BY_NAME = 0;
 const int Settings::CHARM_DISPLAY_BY_SKILL_NAME = 1;
@@ -43,6 +43,8 @@ bool Settings::init()
 
 bool Settings::initStringLiterals()
 {
+	stringLiterals.clear();
+
 	// Read charm data file and init to map
 	std::ifstream strLitFile("Data/" + getLanguagePath() + "/str");
 
@@ -212,7 +214,7 @@ bool Settings::isSkillAdded(const int skillId)
 {
 	for (auto& skill : skills)
 	{
-		if (skill.id == skillId)
+		if (skill->id == skillId)
 		{
 			return true;
 		}
@@ -223,20 +225,20 @@ bool Settings::isSkillAdded(const int skillId)
 
 bool Settings::isSetSkillAdded(const int setSkillId, const int groupId, const bool HR)
 {
-	for (auto& setSkill : setSkills)
+	for (auto setSkill : setSkills)
 	{
-		if (setSkill.id == setSkillId || setSkill.groupId == groupId)
+		if (setSkill->id == setSkillId || setSkill->groupId == groupId)
 		{
 			if (HR)
 			{
-				if (setSkill.highRank == true)
+				if (setSkill->highRank == true)
 				{
 					return true;
 				}
 			}
 			else
 			{
-				if (setSkill.highRank == false)
+				if (setSkill->highRank == false)
 				{
 					return true;
 				}
@@ -259,12 +261,14 @@ int Settings::getSkillDropdownIndexByPos(const int listPos)
 		auto iter = skills.begin();
 		std::advance(iter, listPos);
 
-		return (iter->dropdownIndex);
+		return ((*iter)->dropdownIndex);
 	}
 }
 
 int Settings::getSkillOriginalIndexByPos(const int listPos)
 {
+	//OutputDebugString((L"-- " + std::to_wstring(listPos) + L"\n").c_str());
+
 	// there are 15 skills can be added.
 	if (listPos >= MAX_SKILL_COUNT)
 	{
@@ -272,10 +276,16 @@ int Settings::getSkillOriginalIndexByPos(const int listPos)
 	}
 	else
 	{
+		if (listPos >= skills.size())
+		{
+			return -1;
+		}
+
 		auto iter = skills.begin();
+
 		std::advance(iter, listPos);
 
-		return (iter->originalIndex);
+		return ((*iter)->originalIndex);
 	}
 }
 
@@ -285,11 +295,11 @@ int Settings::getSetSkillDropdownIndexByPos(const int listPos)
 
 	if (listPos == 0)
 	{
-		return setSkills.front().dropdownIndex;
+		return setSkills.front()->dropdownIndex;
 	}
 	else if (listPos == 1)
 	{
-		return setSkills.back().dropdownIndex;
+		return setSkills.back()->dropdownIndex;
 	}
 	else
 	{
@@ -303,11 +313,11 @@ int Settings::getSetSkillOriginalIndexByPos(const int listPos)
 
 	if (listPos == 0)
 	{
-		return setSkills.front().originalIndex;
+		return setSkills.front()->originalIndex;
 	}
 	else if (listPos == 1)
 	{
-		return setSkills.back().originalIndex;
+		return setSkills.back()->originalIndex;
 	}
 	else
 	{
@@ -321,11 +331,11 @@ bool Settings::getSetSkillRankByPos(const int listPos)
 
 	if (listPos == 0)
 	{
-		return setSkills.front().highRank;
+		return setSkills.front()->highRank;
 	}
 	else if (listPos == 1)
 	{
-		return setSkills.back().highRank;
+		return setSkills.back()->highRank;
 	}
 	else
 	{
@@ -343,11 +353,11 @@ int Settings::getTotalReqArmorPieces()
 	{
 		int result = 0;
 
-		for (auto& ss : setSkills)
+		for (auto ss : setSkills)
 		{
-			if (ss.applied)
+			if (ss->applied)
 			{
-				result += ss.reqArmorPieces;
+				result += ss->reqArmorPieces;
 			}
 		}
 
@@ -376,7 +386,7 @@ void Settings::addSkillAt(const int index, Skill* skill)
 {
 	if (skills.empty())
 	{
-		skills.push_back(*skill);
+		skills.push_back(skill);
 	}
 	else
 	{
@@ -387,14 +397,14 @@ void Settings::addSkillAt(const int index, Skill* skill)
 		}
 		else if (index == (int)skills.size())
 		{
-			skills.push_back(*skill);
+			skills.push_back(skill);
 		}
 		else
 		{
 			auto iter = skills.begin();
 			std::advance(iter, index);
 
-			skills.insert(iter, *skill);
+			skills.insert(iter, skill);
 		}
 	}
 }
@@ -445,7 +455,7 @@ Skill * Settings::getAddedSkillAt(const int index)
 		auto iter = skills.begin();
 		std::advance(iter, index);
 
-		return &(*iter);
+		return (*iter);
 	}
 }
 
@@ -463,8 +473,18 @@ SetSkill * Settings::getAddedSetSkillAt(const int index)
 		auto iter = setSkills.begin();
 		std::advance(iter, index);
 
-		return &(*iter);
+		return (*iter);
 	}
+}
+
+int Settings::getTotalAddedSkills()
+{
+	return skills.size();
+}
+
+int Settings::getTotalAddedSetSkills()
+{
+	return setSkills.size();
 }
 
 std::wstring Settings::getString(const MHW::StringLiteral e)
@@ -533,10 +553,10 @@ void Settings::print(std::map<int, Charm>& charms)
 	else
 	{
 		int i = 0;
-		for (auto& skill : skills)
+		for (auto skill : skills)
 		{
 			OutputDebugString((L"Skill #" + std::to_wstring(i) + L"\n").c_str());
-			skill.print(true);
+			skill->print(true);
 			i++;
 		}
 	}

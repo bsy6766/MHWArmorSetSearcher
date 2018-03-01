@@ -1967,180 +1967,6 @@ Charm * Database::getNextLevelCharm(Charm * charm)
 	}
 }
 
-/*
-void Database::getAllHeadArmorsBySkill(std::vector<int>& filterHeadArmor, std::unordered_set<int>& skillFilter, std::unordered_set<int>& decoSetSkillFilter, std::unordered_set<int>& lowRankSetSkillFilter, std::unordered_set<int>& highRankSetSkillFilter, const bool LR, const bool HR)
-{
-}
-
-void Database::getAllChestsArmorsBySkill(std::vector<int>& filterChestArmor, std::unordered_set<int>& skillFilter, std::unordered_set<int>& decoSetSkillFilter, std::unordered_set<int>& lowRankSetSkillFilter, std::unordered_set<int>& highRankSetSkillFilter, const bool LR, const bool HR)
-{
-	for (auto& chestArmor : chestArmors)
-	{
-		bool found = false;
-
-		for (auto& skillID : chestArmor.second.skills)
-		{
-			auto find_it = skillFilter.find(skillID);
-			if (find_it == skillFilter.end())
-			{
-				// This head armor doesn't have desired skill. skip.
-				continue;
-			}
-			else
-			{
-				// This head armor has desired skill.
-				if (HR && chestArmor.second.highRank)
-				{
-					filterChestArmor.push_back(chestArmor.second.id);
-					found = true;
-				}
-
-				if (LR && !chestArmor.second.highRank)
-				{
-					filterChestArmor.push_back(chestArmor.second.id);
-					found = true;
-				}
-
-				if (found)
-				{
-					break;
-				}
-			}
-		}
-
-		if (!found)
-		{
-		}
-	}
-}
-
-void Database::getAllArmArmorsBySkill(std::vector<int>& filterArmArmor, std::unordered_set<int>& skillFilter, std::unordered_set<int>& decoSetSkillFilter, std::unordered_set<int>& lowRankSetSkillFilter, std::unordered_set<int>& highRankSetSkillFilter, const bool LR, const bool HR)
-{
-	for (auto& armArmor : armArmors)
-	{
-		bool found = false;
-
-		for (auto& skillID : armArmor.second.skills)
-		{
-			auto find_it = skillFilter.find(skillID);
-			if (find_it == skillFilter.end())
-			{
-				// This head armor doesn't have desired skill. skip.
-				continue;
-			}
-			else
-			{
-				// This head armor has desired skill.
-				if (HR && armArmor.second.highRank)
-				{
-					filterArmArmor.push_back(armArmor.second.id);
-					found = true;
-				}
-
-				if (LR && !armArmor.second.highRank)
-				{
-					filterArmArmor.push_back(armArmor.second.id);
-					found = true;
-				}
-
-				if (found)
-				{
-					break;
-				}
-			}
-		}
-
-		if (!found)
-		{
-		}
-	}
-}
-
-void Database::getAllWaistArmorsBySkill(std::vector<int>& filterWaistArmor, std::unordered_set<int>& skillFilter, std::unordered_set<int>& decoSetSkillFilter, std::unordered_set<int>& lowRankSetSkillFilter, std::unordered_set<int>& highRankSetSkillFilter, const bool LR, const bool HR)
-{
-	for (auto& waistArmor : waistArmors)
-	{
-		bool found = false;
-
-		for (auto& skillID : waistArmor.second.skills)
-		{
-			auto find_it = skillFilter.find(skillID);
-			if (find_it == skillFilter.end())
-			{
-				// This head armor doesn't have desired skill. skip.
-				continue;
-			}
-			else
-			{
-				// This head armor has desired skill.
-				if (HR && waistArmor.second.highRank)
-				{
-					filterWaistArmor.push_back(waistArmor.second.id);
-					found = true;
-				}
-
-				if (LR && !waistArmor.second.highRank)
-				{
-					filterWaistArmor.push_back(waistArmor.second.id);
-					found = true;
-				}
-
-				if (found)
-				{
-					break;
-				}
-			}
-		}
-
-		if (!found)
-		{
-		}
-	}
-}
-
-void Database::getAllLegArmorsBySkill(std::vector<int>& filterLegArmor, std::unordered_set<int>& skillFilter, std::unordered_set<int>& decoSetSkillFilter, std::unordered_set<int>& lowRankSetSkillFilter, std::unordered_set<int>& highRankSetSkillFilter, const bool LR, const bool HR)
-{
-	for (auto& legArmor : legArmors)
-	{
-		bool found = false;
-
-		for (auto& skillID : legArmor.second.skills)
-		{
-			auto find_it = skillFilter.find(skillID);
-			if (find_it == skillFilter.end())
-			{
-				// This head armor doesn't have desired skill. skip.
-				continue;
-			}
-			else
-			{
-				// This head armor has desired skill.
-				if (HR && legArmor.second.highRank)
-				{
-					filterLegArmor.push_back(legArmor.second.id);
-					found = true;
-				}
-
-				if (LR && !legArmor.second.highRank)
-				{
-					filterLegArmor.push_back(legArmor.second.id);
-					found = true;
-				}
-
-				if (found)
-				{
-					break;
-				}
-			}
-		}
-
-		if (!found)
-		{
-		}
-	}
-}
-
-*/
 void Database::getArmorBySkill(std::map<int, Armor>& armors, std::vector<Armor*>& queriedArmors, std::unordered_set<int>& skillFilter, std::unordered_set<int>& decoSetSkillFilter, std::unordered_set<int>& lowRankSetSkillFilter, std::unordered_set<int>& highRankSetSkillFilter, const bool LR, const bool HR, const MHW::Gender genderSetting)
 {
 	// This function queires all the armor that has filtered skill, set skill and set skill from decoration
@@ -2528,4 +2354,579 @@ bool Database::hasSameTypeOfAnyArmor(Armor & armor, const std::map<int, Armor>& 
 
 		return false;
 	}
+}
+
+int Database::reloadNames(Settings * setting)
+{
+	int result = 0;
+
+	result = reloadSkillNames(setting);
+	if (result != 0) return result;
+
+	result = reloadSetSkillNames(setting);
+	if (result != 0) return result;
+
+	result = reloadCharmNames(setting);
+	if (result != 0) return result;
+
+	result = reloadArmorNames(setting);
+	if (result != 0) return result;
+
+	result = reloadDecorationNames(setting);
+	if (result != 0) return result;
+
+	return 0;
+}
+
+int Database::reloadSkillNames(Settings * setting)
+{
+	// Read charm data file and init to map
+	std::ifstream skillData("Data/" + setting->getLanguagePath() + "/SkillData");
+
+	skillNameToIdLUT.clear();
+	skillIdToNameLUT.clear();
+
+	// Check if data is valid
+	if (skillData.is_open())
+	{
+		std::string line;
+
+		// ID for each charms
+		int idCounter = 0;
+
+		// 0 is None in dropdown list.
+		int indexCounter = 0;
+
+		// get each line
+		while (std::getline(skillData, line))
+		{
+			// check str line
+			if (!line.empty())
+			{
+				// Split line by commna
+				std::vector<std::string> split = splitByComma(line);
+
+				auto size = split.size();
+
+				if (size == 4)
+				{
+					auto find_skill = skills.find(indexCounter);
+
+					if (find_skill != skills.end())
+					{
+						Skill* skill = &(find_skill->second);
+						std::wstring skillName = utf8_decode(split.at(0));
+
+						const int maxLvl = skill->maxLevel;
+
+						std::getline(skillData, line);
+						std::wstring description = utf8_decode(line);
+
+						for (int i = 1; i <= maxLvl; i++)
+						{
+							std::getline(skillData, line);
+							skill->name = skillName;
+							skill->description = description;
+							skill->levelDescription = utf8_decode(line);
+
+							find_skill++;
+							if (find_skill != skills.end())
+							{
+								skill = &(find_skill->second);
+							}
+						}
+
+						indexCounter += maxLvl;
+
+						skillNameToIdLUT[skillName] = skill->id;
+						skillIdToNameLUT[skill->id] = skillName;
+					}
+					else
+					{
+						// can't find skill
+						OutputDebugString(L"Can't find skill\n");
+					}
+				}
+				else
+				{
+					// split size error
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+int Database::reloadSetSkillNames(Settings * setting)
+{
+	// Read charm data file and init to map
+	std::ifstream setSkillData("Data/" + setting->getLanguagePath() + "/SetSkillData");
+	
+	if (setSkillData.is_open())
+	{
+		reloadLowRankSetSkillNames(setSkillData);
+		reloadHighRankSetSkillNames(setSkillData);
+	}
+	else
+	{
+		// failed to read set skill data
+		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_READ_SET_SKILL_DATA_FILE);
+	}
+
+	return 0;
+}
+
+int Database::reloadLowRankSetSkillNames(std::ifstream & file)
+{
+	setSkillNameToIdLUT.clear();
+	setSkillIdToNameLUT.clear();
+	setSkillGroupNameToIdLUT.clear();
+
+	std::string line;
+
+	std::getline(file, line);
+
+	int lowRankSetSkillCount = 0;
+
+	try
+	{
+		lowRankSetSkillCount = std::stoi(line);
+	}
+	catch (...)
+	{
+		return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_TOTAL_LOW_RANK_SET_SKILL_COUNT_IS_NOT_NUM);
+	}
+
+	int idCounter = 0;		// ID for each charms
+	int indexCounter = 0;	// 0 is None in dropdown list.
+
+	for (int i = 0; i < lowRankSetSkillCount; ++i)
+	{
+		std::getline(file, line);
+
+		// check if line is empty
+		if (!line.empty())
+		{
+			std::vector<std::string> split = splitByComma(line);
+
+			auto size = split.size();
+
+			// Low rank doesn't have multiple set skills
+			if (size == 3)
+			{
+				SetSkill& curSetSkill = lowRankSetSkills[indexCounter];
+
+				curSetSkill.name = utf8_decode(split.at(0));
+				curSetSkill.skillName = utf8_decode(split.at(1));
+
+				// get description
+				std::getline(file, line);
+				curSetSkill.description = utf8_decode(line);
+
+				std::wstring setSkillName = curSetSkill.name + L" " + utf8_decode(split.at(2));
+
+				setSkillNameToIdLUT[setSkillName] = idCounter;
+				setSkillIdToNameLUT[idCounter] = setSkillName;
+				setSkillGroupNameToIdLUT[curSetSkill.name] = indexCounter;
+
+				idCounter++;
+			}
+			else
+			{
+				return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_LOW_RANK_SET_SKILL_DATA_INCORRECT_SPLIT_SIZE);
+			}
+		}
+		// else, line is empty.
+
+		indexCounter++;
+	}
+
+	return 0;
+}
+
+int Database::reloadHighRankSetSkillNames(std::ifstream & file)
+{
+	setSkillNameToIdLUT.clear();
+	setSkillIdToNameLUT.clear();
+	setSkillGroupNameToIdLUT.clear();
+
+	std::string line;
+
+	std::getline(file, line);
+
+	int highRankSetSkillCount = 0;
+
+	try
+	{
+		highRankSetSkillCount = std::stoi(line);
+	}
+	catch (...)
+	{
+		return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_TOTAL_HIGH_RANK_SET_SKILL_COUNT_IS_NOT_NUM);
+	}
+
+	int idCounter = 0;
+	int indexCounter = 0;	// 0 is None in dropdown list.
+
+	// get each line
+	while (std::getline(file, line))
+	{
+		// check if line is empty
+		if (!line.empty())
+		{
+			std::vector<std::string> split = splitByComma(line);
+
+			auto size = split.size();
+
+			// Splitted strings must be either 3 or 5
+			if (size == 3 || size == 5)
+			{
+				SetSkill& curSetSkill = highRankSetSkills[indexCounter];
+
+				curSetSkill.name = utf8_decode(split.at(0));
+				curSetSkill.skillName = utf8_decode(split.at(1));
+
+				// get description
+				std::getline(file, line);
+				curSetSkill.description = utf8_decode(line);
+
+				std::wstring setSkillName = curSetSkill.name + L" " + utf8_decode(split.at(2));
+
+				setSkillNameToIdLUT[setSkillName] = idCounter;
+				setSkillIdToNameLUT[idCounter] = setSkillName;
+				setSkillGroupNameToIdLUT[curSetSkill.name] = indexCounter;
+
+				indexCounter++;
+				idCounter++;
+
+				if (size == 5)
+				{
+					secondSetSkillCheckLUT[idCounter - 1] = true;
+
+					// add second skill set
+					SetSkill& secondSetSkill = highRankSetSkills[indexCounter];
+					secondSetSkill.name = utf8_decode(split.at(0));
+					secondSetSkill.skillName = utf8_decode(split.at(3));
+
+					// get description
+					std::getline(file, line);
+					secondSetSkill.description = utf8_decode(line);
+
+					setSkillNameToIdLUT[setSkillName] = idCounter;
+					setSkillIdToNameLUT[idCounter] = setSkillName;
+
+					indexCounter++;
+					idCounter++;
+				}
+			}
+			else
+			{
+				return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_HIGH_RANK_SET_SKILL_DATA_INCORRECT_SPLIT_SIZE);
+			}
+		}
+	}
+
+	return 0;
+}
+
+int Database::reloadCharmNames(Settings * setting)
+{
+	// Read charm data file and init to map
+	std::ifstream charmDataFile("Data/" + setting->getLanguagePath() + "/CharmData");
+
+	// Check if it's valid
+	if (charmDataFile.is_open())
+	{
+		std::string line;
+
+		int index = 2;
+		
+		// iterate by each line
+		while (std::getline(charmDataFile, line))
+		{
+			// check line
+			if (!line.empty())
+			{
+				// not empty
+				OutputDebugString((L"processing: " + utf8_decode(line) + L"\n").c_str());
+
+				// split line by comma
+				std::vector<std::string> split = Utility::splitByComma(line);
+
+				auto size = split.size();
+
+				if (3 <= size && size <= 4)
+				{
+					std::wstring charmName = utf8_decode(split.at(0));
+					std::wstring skillName = utf8_decode(split.at(1));
+					std::wstring secondSkillName = L"";
+
+					if (size == 4)
+					{
+						secondSkillName = utf8_decode(split.at(2));
+					}
+					else
+					{
+						secondSkillName = L"";
+					}
+
+					auto find_charm = charms.find(index);
+
+					if (find_charm != charms.end())
+					{
+						Charm* curCharm = &(find_charm->second);
+
+						const int maxLvl = (find_charm->second).maxLevel;
+
+						for (int i = 1; i <= maxLvl; ++i)
+						{
+							curCharm->name = charmName;
+							curCharm->skillName = skillName;
+							curCharm->secondSkillName = secondSkillName;
+
+							find_charm++;
+							if (find_charm != charms.end())
+							{
+								curCharm = &(find_charm->second);
+							}
+						}
+						
+						index += maxLvl;
+					}
+					else
+					{
+						// error, can't find charm
+						OutputDebugString(L"CAn't find charm");
+					}
+				}
+				else
+				{
+					// split size rror
+					OutputDebugString(L"Split size err\n");
+				}
+			}
+			else
+			{
+				OutputDebugString(L"line is empty\n");
+			}
+		}
+
+	}
+
+	return 0;
+}
+
+int Database::reloadArmorNames(Settings * setting)
+{
+	// Read charm data file and init to map
+	std::ifstream armorDataFile("Data/" + setting->getLanguagePath() + "/ArmorData");
+
+	// Check if it's valid
+	if (armorDataFile.is_open())
+	{
+		std::string line;
+
+		int headIndex = 0;
+		int chestIndex = 0;
+		int armIndex = 0;
+		int waistIndex = 0;
+		int legIndex = 0;
+
+		// iterate by each line
+		while (std::getline(armorDataFile, line))
+		{
+			// check line
+			if (!line.empty())
+			{
+				// not empty
+
+				// split line by comma
+				std::vector<std::string> split = Utility::splitByComma(line);
+
+				auto size = split.size();
+
+				if (size == 4 || size == 5)
+				{
+					// header
+					std::wstring setName = utf8_decode(split.at(0));
+
+					// armors.
+					for (int i = 0; i < 5; ++i)
+					{
+						std::getline(armorDataFile, line);
+
+						if (line == "-")
+						{
+							continue;
+						}
+
+						std::vector<std::string> armorSplit = Utility::splitByComma(line);
+
+						std::wstring name = utf8_decode(armorSplit.at(0));
+
+						switch (i)
+						{
+						case 0:
+						{
+							// head
+							headArmors[headIndex].name = name;
+							headArmors[headIndex].setName = setName;
+							headIndex++;
+						}
+							break;
+						case 1:
+						{
+							// chest
+							chestArmors[chestIndex].name = name;
+							chestArmors[chestIndex].setName = setName;
+							chestIndex++;
+						}
+							break;
+						case 2:
+						{
+							// arm
+							armArmors[armIndex].name = name;
+							armArmors[armIndex].setName = setName;
+							armIndex++;
+						}
+							break;
+						case 3:
+						{
+							// waist
+							waistArmors[waistIndex].name = name;
+							waistArmors[waistIndex].setName = setName;
+							waistIndex++;
+						}
+							break;
+						case 4:
+						{
+							// leg
+							legArmors[legIndex].name = name;
+							legArmors[legIndex].setName = setName;
+							legIndex++;
+						}
+							break;
+						default:
+							break;
+						}
+
+					}
+				}
+				else
+				{
+					OutputDebugString(L"Error");
+				}
+			}
+		}
+	}
+	else
+	{
+		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_READ_ARMOR_DATA_FILE);
+	}
+
+	return 0;
+}
+
+int Database::reloadDecorationNames(Settings * setting)
+{
+	// Read charm data file and init to map
+	std::ifstream decoDataFile("Data/" + setting->getLanguagePath() + "/DecorationData");
+
+	// Check if it's valid
+	if (decoDataFile.is_open())
+	{
+		std::string line;
+
+		// ID for each charms
+		int idCounter = 0;
+
+		// iterate by each line
+		while (std::getline(decoDataFile, line))
+		{
+			// check line
+			if (!line.empty())
+			{
+				// Split line by commna
+				std::vector<std::string> split = splitByComma(line);
+
+				auto size = split.size();
+
+				if (size == 4 || size == 6)
+				{
+					Decoration& deco = decorations[idCounter];
+
+					// Name of decoration. Name + Jewel + size
+					deco.name = utf8_decode(split.at(3));
+
+					if (deco.name == L"?")
+					{
+						deco.name = L"[Missing Name]";
+					}
+				}
+				else
+				{
+					return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_DECO_DATA_INCORRECT_SPLIT_SIZE);
+				}
+			}
+
+			idCounter++;
+		}
+	}
+	else
+	{
+		return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_ARMOR_DATA_DECO_SIZE_IS_NOT_NUM);
+	}
+
+	return 0;
+}
+
+void Database::clear()
+{
+	charms.clear();
+	skills.clear();
+	lowRankSetSkills.clear();
+	highRankSetSkills.clear();
+
+	bulwarkCharm = nullptr;
+	guardUpSkill = nullptr;
+	uragaanProtectionSetSkill = nullptr;
+
+	headArmors.clear();
+	anyHeadArmors.clear();
+	totalLowRankHeadArmors = 0;
+	totalHighRankHeadArmors = 0;
+
+	chestArmors.clear();
+	anyChestArmors.clear();
+	totalLowRankChestArmors = 0;
+	totalHighRankChestArmors = 0;
+
+	armArmors.clear();
+	anyArmArmors.clear();
+	totalLowRankArmArmors = 0;
+	totalHighRankArmArmors = 0;
+
+	waistArmors.clear();
+	anyWaistArmors.clear();
+	totalLowRankWaistArmors = 0;
+	totalHighRankWaistArmors = 0;
+
+	legArmors.clear();
+	anyLegArmors.clear();
+	totalLowRankLegArmors = 0;
+	totalHighRankArmArmors = 0;
+
+	decorations.clear();
+
+	skillIdToNameLUT.clear();
+	skillNameToIdLUT.clear();
+	skillIdToKeyLUT.clear();
+	setSkillIdToNameLUT.clear();
+	setSkillNameToIdLUT.clear();
+	setSkillGroupNameToIdLUT.clear();
+	secondSetSkillCheckLUT.clear();
+	setSkillGroupIdToDecoSetSkillIDLUT.clear();
+	skillIdToDecorationIdLUT.clear();
+	setSkillIdToDecorationIdLUT.clear();
 }

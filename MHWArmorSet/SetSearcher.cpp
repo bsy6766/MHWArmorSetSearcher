@@ -7,6 +7,7 @@
 #include "Armor.h"
 #include "Decoration.h"
 #include "Utility.h"
+#include "Const.h"
 
 MHW::SetSearcher::SetSearcher()
 	: workerThread(nullptr)
@@ -33,11 +34,6 @@ void MHW::SetSearcher::init(Database * db)
 	std::wstringstream ss;
 	ss << workerThread->get_id();
 	OutputDebugString((L"Worker thread " + ss.str() + L" created\n").c_str());
-}
-
-void MHW::SetSearcher::abortSearch()
-{
-
 }
 
 void MHW::SetSearcher::stop()
@@ -163,6 +159,8 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 {
 	if (searchState == SearchState::LF_HEAD)
 	{
+		if (abort.load()) return;
+
 		// Armor search starts from the head armor.
 		
 		if (filter.headArmors.empty())
@@ -173,16 +171,6 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 			// Look for chest
 			searchArmorSet(db, SearchState::LF_CHEST, curArmorSet);
 		}
-		/*
-		if (filter.headArmors.size() == 1)
-		{
-			// there is only 1 armor
-			curArmorSet->setHeadrmor(filter.headArmors.front());
-
-			// Look for chest
-			searchArmorSet(db, SearchState::LF_CHEST, curArmorSet);
-		}
-		*/
 		else
 		{
 			// There is at 
@@ -202,6 +190,8 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 	}
 	else if (searchState == SearchState::LF_CHEST)
 	{
+		if (abort.load()) return;
+
 		// Looking for chest.
 		
 		if (filter.chestArmors.empty())
@@ -212,16 +202,6 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 			// Look for arm
 			searchArmorSet(db, SearchState::LF_ARM, curArmorSet);
 		}
-		/*
-		else if (filter.chestArmors.size() == 1)
-		{
-			// there is only 1 chest armor
-			curArmorSet->setChestArmor(filter.chestArmors.front());
-
-			// Look for arm
-			searchArmorSet(db, SearchState::LF_ARM, curArmorSet);
-		}
-		*/
 		else
 		{
 			// There is multiple chest armors
@@ -239,6 +219,8 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 	}
 	else if (searchState == SearchState::LF_ARM)
 	{
+		if (abort.load()) return;
+
 		// Looking for arm
 		
 		if (filter.armArmors.empty())
@@ -249,16 +231,6 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 			// Look for waist
 			searchArmorSet(db, SearchState::LF_WAIST, curArmorSet);
 		}
-		/*
-		else if (filter.armArmors.size() == 1)
-		{
-			// there is only 1 arm armor
-			curArmorSet->setArmArmor(filter.armArmors.front());
-
-			// Look for waist
-			searchArmorSet(db, SearchState::LF_WAIST, curArmorSet);
-		}
-		*/
 		else
 		{
 			// There is multiple arm armors
@@ -276,6 +248,8 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 	}
 	else if (searchState == SearchState::LF_WAIST)
 	{
+		if (abort.load()) return;
+
 		// Looking for waist
 		
 		if (filter.waistArmors.empty())
@@ -286,16 +260,6 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 			// Look for leg
 			searchArmorSet(db, SearchState::LF_LEG, curArmorSet);
 		}
-		/*
-		else if (filter.waistArmors.size() == 1)
-		{
-			// there is only 1 waist armor
-			curArmorSet->setWaistArmor(filter.waistArmors.front());
-
-			// Look for leg
-			searchArmorSet(db, SearchState::LF_LEG, curArmorSet);
-		}
-		*/
 		else
 		{
 			// There is multiple waist armors
@@ -313,135 +277,150 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 	}
 	else if (searchState == SearchState::LF_LEG)
 	{
+		if (abort.load()) return;
+
 		// Looking for leg
 
-		// Check all leg armor
-		for (auto legArmor : filter.legArmors)
+		if (filter.legArmors.empty())
 		{
-			if (abort.load()) return;
+			// there is no waist armor
+			curArmorSet->setLegArmor(nullptr);
 
-			// set index
-			curArmorSet->setLegArmor(legArmor);
-
-			// clear sum
-			curArmorSet->clearSums();
-
-			// init sum (Not extra skills) to 0
-			curArmorSet->initSums(filter.reqSkills, filter.reqLRSetSkills, filter.reqHRSetSkill);
-
-			// Count skill sums and set skill's req armor pieces
-			curArmorSet->countSums(db);
-
-			// clear flags
-			curArmorSet->skillPassed = false;
-			curArmorSet->setSkillPassed = false;
-
-			// Check if armor set meets set skill requirement
-			bool setSkillResult = checkSetSkill(curArmorSet);
-
-			if (setSkillResult)
+			// Look for leg
+			searchArmorSet(db, SearchState::LF_CHARM, curArmorSet);
+		}
+		else
+		{
+			// Check all leg armor
+			for (auto legArmor : filter.legArmors)
 			{
-				// Passed set skill check
-				curArmorSet->setSkillPassed = true;
+				if (abort.load()) return;
 
-				// Check if armor set can be added with only armors
-				bool result = checkNewArmorSet(curArmorSet);
+				// set index
+				curArmorSet->setLegArmor(legArmor);
 
-				if (result)
+				// clear sum
+				curArmorSet->clearSums();
+
+				// init sum (Not extra skills) to 0
+				curArmorSet->initSums(filter.reqSkills, filter.reqLRSetSkills, filter.reqHRSetSkill);
+
+				// Count skill sums and set skill's req armor pieces
+				curArmorSet->countSums(db);
+
+				// clear flags
+				curArmorSet->skillPassed = false;
+				curArmorSet->setSkillPassed = false;
+
+				// Check if armor set meets set skill requirement
+				bool setSkillResult = checkSetSkill(curArmorSet);
+
+				if (setSkillResult)
 				{
-					// Armor set found with only 5 piece armors and fulfills set skill requirements
-					curArmorSet->skillPassed = true;
+					// Passed set skill check
+					curArmorSet->setSkillPassed = true;
 
-					// Set charm index as None
-					curArmorSet->charm = nullptr;
+					// Check if armor set can be added with only armors
+					bool result = checkNewArmorSet(curArmorSet);
 
-					//  Add to result
-					addNewArmorSet(curArmorSet);
-					// Don't check charm because if armor set need charm, it would be failed.
+					if (result)
+					{
+						// Armor set found with only 5 piece armors and fulfills set skill requirements
+						curArmorSet->skillPassed = true;
+
+						// Set charm index as None
+						curArmorSet->charm = nullptr;
+
+						//  Add to result
+						addNewArmorSet(curArmorSet);
+						// Don't check charm because if armor set need charm, it would be failed.
 	
-					sendMsg(false);
+						sendMsg(false);
+					}
+					else
+					{
+						// Failed to pass armor skill test. However, yet this armor set passed set skill check, so we only need to check charm and deco
+						curArmorSet->skillPassed = false;
+
+						//  Try with charm
+						searchArmorSet(db, SearchState::LF_CHARM, curArmorSet);
+					}
+
+					// End of successed set skill check.
 				}
 				else
 				{
-					// Failed to pass armor skill test. However, yet this armor set passed set skill check, so we only need to check charm and deco
-					curArmorSet->skillPassed = false;
+					/*
+					// set skill check failed.
+					// User selected at least 1 set skill.
+					// This usually means that new armor set is not qualified to fulfill set skill requirements. However, there is corner case.
+					// Case 1: Set skill is Guard up. In this case, we need to handle corner case. Guard up can be activated by charm or decoration.
+					// Case 2: Set skill is something else than guard up. In this case, it's failed because user asked for specific set skill
+					curArmorSet->setSkillPassed = false;
 
-					//  Try with charm
-					searchArmorSet(db, SearchState::LF_CHARM, curArmorSet);
-				}
+					// Corner case: If set skill is Uragaan Protection 3, check if there is a charm that it gives this set skill
+					bool u3 = isSetSkillGuardUp(db);
 
-				// End of successed set skill check.
-			}
-			else
-			{
-				/*
-				// set skill check failed.
-				// User selected at least 1 set skill.
-				// This usually means that new armor set is not qualified to fulfill set skill requirements. However, there is corner case.
-				// Case 1: Set skill is Guard up. In this case, we need to handle corner case. Guard up can be activated by charm or decoration.
-				// Case 2: Set skill is something else than guard up. In this case, it's failed because user asked for specific set skill
-				curArmorSet->setSkillPassed = false;
-
-				// Corner case: If set skill is Uragaan Protection 3, check if there is a charm that it gives this set skill
-				bool u3 = isSetSkillGuardUp(db);
-
-				if (u3)
-				{
-					// One of set skill is Guard Up (Uragaan Protection 3)
-					// This mean that user selected Uragaan protection 3 on set skill section.
-					// Which means only want to filter armor set that has Uragaan 3 pieces.
-					// Case 1: Has guard up charm. In this case, select guard up charm and check skills.
-					// Case 2: Doesn't have guard up charm. In this case, user selected none or didn't add guard up on skill section.
-
-					// Check if there is a charm that has guard up
-					bool hasBulwarkCharm = filter.hasGuardUpCharm(db);
-
-					if (hasBulwarkCharm)
+					if (u3)
 					{
-						// Case 1
+						// One of set skill is Guard Up (Uragaan Protection 3)
+						// This mean that user selected Uragaan protection 3 on set skill section.
+						// Which means only want to filter armor set that has Uragaan 3 pieces.
+						// Case 1: Has guard up charm. In this case, select guard up charm and check skills.
+						// Case 2: Doesn't have guard up charm. In this case, user selected none or didn't add guard up on skill section.
 
-						// This armor set doesn't have enough pieces for Guard Up, but has charm that can activate set skill.
+						// Check if there is a charm that has guard up
+						bool hasBulwarkCharm = filter.hasGuardUpCharm(db);
 
-						// Check set skill without guard up
-						if (checkSetSkillWithOutGuardUp(curArmorSet))
+						if (hasBulwarkCharm)
 						{
-							// pass without guard up. Since we have guard up charm, check skill
-							curArmorSet->setSkillPassed = true;
+							// Case 1
+
+							// This armor set doesn't have enough pieces for Guard Up, but has charm that can activate set skill.
+
+							// Check set skill without guard up
+							if (checkSetSkillWithOutGuardUp(curArmorSet))
+							{
+								// pass without guard up. Since we have guard up charm, check skill
+								curArmorSet->setSkillPassed = true;
+							}
+							else
+							{
+								// Can't pass even with guard up charm.
+								curArmorSet->setSkillPassed = false;
+								// Check decoration
+								searchArmorSet(db, SearchState::LF_DECORATION, curArmorSet);
+							}
 						}
 						else
 						{
-							// Can't pass even with guard up charm.
+							// Case 2. Doesn't have guard up charm. It's either None or didn't select Guard up skill.
+							// Because set skill check failed, this armor set can't get guard up.
 							curArmorSet->setSkillPassed = false;
-							// Check decoration
-							searchArmorSet(db, SearchState::LF_DECORATION, curArmorSet);
+
+							return;
 						}
 					}
 					else
 					{
-						// Case 2. Doesn't have guard up charm. It's either None or didn't select Guard up skill.
-						// Because set skill check failed, this armor set can't get guard up.
+						// There is no guard up set skill. 
+						// This mean that there is no charm to cover up set skill like guard up.
+						// So it's fail
 						curArmorSet->setSkillPassed = false;
 
 						return;
 					}
-				}
-				else
-				{
-					// There is no guard up set skill. 
-					// This mean that there is no charm to cover up set skill like guard up.
-					// So it's fail
-					curArmorSet->setSkillPassed = false;
-
+					*/
+					// There was some set skill added and current armor pieces didn't meet the requirement.
 					return;
 				}
-				*/
-				// There was some set skill added and current armor pieces didn't meet the requirement.
-				return;
 			}
 		}
 	}
 	else if (searchState == SearchState::LF_CHARM)
 	{
+		if (abort.load()) return;
+
 		// Looking for charm.
 
 		// At this point, current armor set failed to be added because of lacking skills
@@ -611,6 +590,8 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 	}
 	else if (searchState == SearchState::LF_DECORATION)
 	{
+		if (abort.load()) return;
+
 		if (filter.hasDecorationToUse == false)
 		{
 			// No decoration to use. Fail safe.
@@ -922,10 +903,6 @@ bool MHW::SetSearcher::isSetSkillGuardUp(Database* db)
 	}
 	else
 	{
-		// todo: change set skill name to other language if language option isn't English.
-		//std::wstring setSkillName = L"Uragaan Protection";
-		//const int guardUpSetSkillGroupID = (db->highRankSetSkills[db->setSkillGroupNameToIdLUT[setSkillName]]).groupId;
-
 		const int size = (int)filter.reqHRSetSkill.size();
 
 		if (size >= 1 && filter.reqHRSetSkill.at(0)->groupId == db->uragaanProtectionSetSkill->groupId)
@@ -1030,50 +1007,6 @@ void MHW::SetSearcher::queryResults(std::vector<MHW::ArmorSet>& armorSets)
 	int size = armorSets.size();
 
 	armorSets = std::move(searchedArmorSets);
-
-	/*
-	int resultSize = searchedArmorSets.size();
-
-	if (size < resultSize)
-	{
-		for (int i = size; i < resultSize; ++i)
-		{
-			//armorSets.push_back(searchedArmorSets.at(i));
-			armorSets.push_back(std::move(searchedArmorSets.at(i)));
-		}
-	}
-	*/
-
-	/*
-	if (previouslyQueriedLastResultIndex == -1)
-	{
-		// hasn't queried any yet
-		if (searchedArmorSets.empty())
-		{
-			return;
-		}
-		else
-		{
-			for (auto& as : searchedArmorSets)
-			{
-				armorSets.push_back(as);
-				previouslyQueriedLastResultIndex++;
-			}
-		}
-	}
-	else
-	{
-		previouslyQueriedLastResultIndex += 1;
-
-		const int size = (int)searchedArmorSets.size();
-
-		for (int i = previouslyQueriedLastResultIndex; i < size; ++i)
-		{
-			armorSets.push_back(searchedArmorSets.at(i));
-			previouslyQueriedLastResultIndex++;
-		}
-	}
-	*/
 }
 
 void MHW::SetSearcher::sendMsg(const bool finished)
@@ -1089,7 +1022,7 @@ void MHW::SetSearcher::sendMsg(const bool finished)
 	{
 		iterCount++;
 
-		if (iterCount > 50)
+		if (iterCount > MHW::CONSTS::SETSEARCHER_ITER_TRESHOLD)
 		{
 			iterCount = 0;
 

@@ -882,7 +882,7 @@ void MHW::ArmorSet::setHeadrmor(Armor * armor)
 	else
 	{
 		headArmor = nullptr;
-			OutputDebugString(L"armor doesn't exists\n");
+		OutputDebugString(L"armor doesn't exists\n");
 	}
 }
 

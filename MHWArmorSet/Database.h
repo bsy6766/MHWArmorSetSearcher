@@ -112,10 +112,7 @@ public:
 	*	Key represent the unique ID for each decoration
 	*/
 	std::map<int, Decoration> decorations;
-
-	// user decoration
-	std::map<int, MyDecoration> userDecoration;
-
+	
 	// Look up tables
 
 	// LUT to convert skill id to string skill name.
@@ -139,7 +136,6 @@ public:
 	std::unordered_map<int, int> setSkillIdToDecorationIdLUT;
 
 	
-
 	//====== not used? =======
 	// LUT to convert skill from deco that gives set skills to set skill group id. only for high rank
 	std::unordered_map<int, int> decoSetSkillIDToSetSkillGroupIDLUT;
@@ -229,6 +225,18 @@ public:
 
 	// Check if there is same kind of any armor
 	bool hasSameTypeOfAnyArmor(Armor& armor, const std::map<int, Armor>& anyArmors);
+
+	// reload names
+	int reloadNames(Settings* setting);
+	int reloadSkillNames(Settings* setting);
+	int reloadSetSkillNames(Settings* setting);
+	int reloadLowRankSetSkillNames(std::ifstream& file);
+	int reloadHighRankSetSkillNames(std::ifstream& file);
+	int reloadCharmNames(Settings* setting);
+	int reloadArmorNames(Settings* setting);
+	int reloadDecorationNames(Settings* setting);
+
+	void clear();
 };
 
 #endif

@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace MHWASS
+namespace MHW
 {
 	namespace CONSTS
 	{
@@ -34,10 +34,9 @@ namespace MHWASS
 		const int LINESPACE = 15;
 
 		const int DECO_LISTBOX_W = 500;
-		//const int DECO_LISTBOX_H = 137;
 		const int DECO_LISTBOX_H = 295;
 
-		//std::wstring searchResultHeader = L"Searching... Total armor sets searched: ";
+		const int SETSEARCHER_ITER_TRESHOLD = 10;
 	}
 }
 

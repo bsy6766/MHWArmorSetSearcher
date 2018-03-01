@@ -102,13 +102,6 @@ namespace MHW
 		// Check if filtered set skill is guard up (Uragaan protection 3)
 		bool isSetSkillGuardUp(Database* db);
 		
-		// register decoration slots
-		//void registerDecoSlots(Armor* armor, const Armor::Type armorType, MHW::ArmorSet* newArmorSet);
-
-		// attempt to insert decoration
-		//bool attemptToEquipDecoration(Decoration* deco, Database* db, MHW::ArmorSet* newArmorSet);
-
-		void abortSearch();
 	public:
 		// Constructor
 		SetSearcher();
