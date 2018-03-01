@@ -5,6 +5,13 @@
 
 namespace MHW
 {
+	namespace VERSION
+	{
+		static const int major = 0;
+		static const int minor = 0;
+		static std::wstring build = L"Alpha";
+	}
+
 	namespace CONSTS
 	{
 		static const int MIN_WINDOW_W = 860;
@@ -17,26 +24,26 @@ namespace MHW
 		static const int MAX_SET_SKILL_COUNT = 2;
 
 		// const
-		const int LEFT_COLUMN_WIDTH = 300;
-		const int RIGHT_COLUMN_X = 320;
-		const int RIGHT_COLUMN_WIDTH = 520;
-		const int X_OFFSET = 10;
-		const int TEXT_OUT_X_OFFSET = 20;
-		const int TEXT_OUT_Y_OFFSET = 20;
-		const int COMBOBOX_Y_OFFSET = 17;
-		const int BUTTON_SIZE_Y = 22;
-		const int ARMOR_TEXT_Y_OFFSET = 50;
-		const int WEAPON_SLOT_SIZE_X_OFFSET = 50;
-		const int SEARCH_RESULT_GB_HEIGHT = 510;
-		const int SEARCH_BUTTON_Y = 759;
-		const int DROPDOWN_LIST_W = 285;
+		static const int LEFT_COLUMN_WIDTH = 300;
+		static const int RIGHT_COLUMN_X = 320;
+		static const int RIGHT_COLUMN_WIDTH = 520;
+		static const int X_OFFSET = 10;
+		static const int TEXT_OUT_X_OFFSET = 20;
+		static const int TEXT_OUT_Y_OFFSET = 20;
+		static const int COMBOBOX_Y_OFFSET = 17;
+		static const int BUTTON_SIZE_Y = 22;
+		static const int ARMOR_TEXT_Y_OFFSET = 50;
+		static const int WEAPON_SLOT_SIZE_X_OFFSET = 50;
+		static const int SEARCH_RESULT_GB_HEIGHT = 510;
+		static const int SEARCH_BUTTON_Y = 759;
+		static const int DROPDOWN_LIST_W = 285;
 
-		const int LINESPACE = 15;
+		static const int LINESPACE = 15;
 
-		const int DECO_LISTBOX_W = 500;
-		const int DECO_LISTBOX_H = 295;
+		static const int DECO_LISTBOX_W = 500;
+		static const int DECO_LISTBOX_H = 295;
 
-		const int SETSEARCHER_ITER_TRESHOLD = 10;
+		static const int SETSEARCHER_ITER_TRESHOLD = 10;
 	}
 }
 

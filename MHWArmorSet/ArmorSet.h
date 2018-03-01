@@ -13,6 +13,7 @@ class Charm;
 class Armor;
 class SetSkill;
 class Skill;
+class Settings;
 
 namespace MHW
 {
@@ -96,7 +97,7 @@ namespace MHW
 		void countSums(Database* db);
 		void countSums(Armor* armor);
 		// Check if there is any set skill activated and stores if there's any.
-		void checkActviatedSetSkills(Database* db, const std::vector<SetSkill*>& reqLRSetSkills, const std::vector<SetSkill*>& reqHRSetSkills);
+		//void checkActviatedSetSkills(Database* db, const std::vector<SetSkill*>& reqLRSetSkills, const std::vector<SetSkill*>& reqHRSetSkills);
 		void addSkillLevelToSum(const int skillID, const int skillLevel);
 		void addCharmSkillLevelSums(Database* db);
 		void addCharmSkillLevelSumByOne(Charm* charm);
@@ -126,13 +127,12 @@ namespace MHW
 		std::wstring getItemDecoSizeAsStr(const std::array<int, 3>& decoSlots);
 
 		// Generate string output of armor set
-		std::wstring toResultStr(Database* db);
+		std::wstring toResultStr(Database* db, Settings* setting);
 		std::wstring getArmorSkillsStr(Database* db);
 		std::wstring getExtraRmorSkillsStr(Database* db);
 		std::wstring getDecoSkillsStr(Database* db);
-		std::wstring getTotalSkillsStr(Database* db);
+		std::wstring getTotalSkillsStr(Database* db, Settings* setting);
 		std::wstring getSetSkillStr(Database* db);
-		std::wstring getExtraSetSkillStr(Database* db);
 	};
 }
 

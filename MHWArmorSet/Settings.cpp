@@ -2,6 +2,7 @@
 #include "Settings.h"
 #include "Const.h"
 #include "Utility.h"
+#include "Logger.h"
 
 using namespace MHW::CONSTS;
 
@@ -276,7 +277,7 @@ int Settings::getSkillOriginalIndexByPos(const int listPos)
 	}
 	else
 	{
-		if (listPos >= skills.size())
+		if (listPos >= (int)skills.size())
 		{
 			return -1;
 		}
@@ -392,7 +393,7 @@ void Settings::addSkillAt(const int index, Skill* skill)
 	{
 		if (index > (int)skills.size())
 		{
-			// error
+			MHW::Logger::getInstance().errorCode(MHW::ERROR_CODE::ADD_SKILL_AT_INDEX_OUT_OF_RANGE);
 			return;
 		}
 		else if (index == (int)skills.size())
@@ -413,7 +414,7 @@ void Settings::removeAddedSkillAt(const int index)
 {
 	if (index >= (int)skills.size())
 	{
-		// todo: add warning? error
+		MHW::Logger::getInstance().errorCode(MHW::ERROR_CODE::REMOVE_SKILL_AT_INDEX_OUT_OF_RANGE);
 		return;
 	}
 	else
@@ -429,7 +430,7 @@ void Settings::removeAddedSetSkillAt(const int index)
 {
 	if (index >= (int)setSkills.size())
 	{
-		// todo: add warning?
+		MHW::Logger::getInstance().errorCode(MHW::ERROR_CODE::REMOVE_SET_SKILL_AT_INDEX_OUT_OF_RANGE);
 		return;
 	}
 	else
@@ -447,7 +448,7 @@ Skill * Settings::getAddedSkillAt(const int index)
 
 	if (index >= (int)skills.size())
 	{
-		// todo: add warning?
+		MHW::Logger::getInstance().errorCode(MHW::ERROR_CODE::GET_SKILL_AT_INDEX_OUT_OR_RANGE);
 		return nullptr;
 	}
 	else
@@ -465,7 +466,7 @@ SetSkill * Settings::getAddedSetSkillAt(const int index)
 
 	if (index >= (int)setSkills.size())
 	{
-		// todo: add warning?
+		MHW::Logger::getInstance().errorCode(MHW::ERROR_CODE::GET_SET_SKILL_AT_INDEX_OUT_OR_RANGE);
 		return nullptr;
 	}
 	else

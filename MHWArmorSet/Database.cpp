@@ -2,6 +2,7 @@
 #include "Database.h"
 #include "Settings.h"
 #include "Utility.h"
+#include "Logger.h"
 #include <assert.h>
 
 using namespace Utility;
@@ -138,27 +139,6 @@ int Database::initCharmData(Settings * setting)
 						else
 						{
 							curCharm.skillId = find_it->second;
-
-							/*
-							// Note: Only "Bulwark Charm" has "Guard Up" Set skill from Uragaan 3 (Uragaan protection). (patch 1.06)
-							if (curCharm.skillName == L"Guard Up")
-							{
-								// Handling the corner case
-								auto find_it = setSkillNameToIdLUT.find(L"Uragaan Protection 3");
-								if (find_it == setSkillNameToIdLUT.end())
-								{
-									// Todo: Add error code with alert message box.
-									OutputDebugString(L"Error: Uraggan Protection 3 doesn't exist for Guard up\n");
-									break;
-								}
-								else
-								{
-									curCharm.setSkill = true;
-
-
-								}
-							}
-							*/
 						}
 
 						if (size == 4)
@@ -747,6 +727,8 @@ int Database::initArmorData(Settings * setting)
 		// gender.
 		MHW::Gender gender = MHW::Gender::NONE;
 
+		auto& logger = MHW::Logger::getInstance();
+
 		// Each first line for each armor sets have 3 or 4 entries per line, but first one has only 4
 		// Armor set name,rarity,armor,gender
 		if (firstSize == 4)
@@ -779,7 +761,7 @@ int Database::initArmorData(Settings * setting)
 					}
 					else
 					{
-						// error. Gender code is wrong
+						logger.error("Gender code is wrong: " + std::to_string(genderCode));
 					}
 				}
 			}
@@ -843,7 +825,7 @@ int Database::initArmorData(Settings * setting)
 							}
 							else
 							{
-								// error. Gender code is wrong
+								logger.error("Gender code is wrong: " + std::to_string(genderCode));
 							}
 						}
 					}
@@ -871,8 +853,7 @@ int Database::initArmorData(Settings * setting)
 							auto find_setSkill = highRankSetSkills.find(setSkillId);
 							if (find_setSkill == highRankSetSkills.end())
 							{
-								// todo: handle error
-								OutputDebugString(L"Error: Incorrect armor data file");
+								return static_cast<int>(MHW::ERROR_CODE::ARMOR_DATA_CANT_FIND_SET_SKILL_BY_ID);
 							}
 							else
 							{
@@ -1131,7 +1112,7 @@ int Database::initArmorData(Settings * setting)
 	}
 	else
 	{
-		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_INITIALIZE_GUARD_UP_PTR);
+		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_READ_ARMOR_DATA_FILE);
 	}
 
 	return 0;
@@ -1184,8 +1165,7 @@ int Database::initArmorSkillData(Armor & armor, std::vector<std::string>& split,
 			auto find_it = skillNameToIdLUT.find(skillName);
 			if (find_it == skillNameToIdLUT.end())
 			{
-				// error
-				return static_cast<int>(MHW::ERROR_CODE::ARMOR_DATA_CANT_FIND_SKILL_ID);
+				return static_cast<int>(MHW::ERROR_CODE::ARMOR_DATA_CANT_FIND_SKILL_ID_BY_NAME);
 			}
 			else
 			{
@@ -1197,7 +1177,6 @@ int Database::initArmorSkillData(Armor & armor, std::vector<std::string>& split,
 				}
 				catch (...)
 				{
-					// error
 					return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_ARMOR_DATA_SKILL_LEVEL_IS_NOT_NUM);
 				}
 
@@ -1222,7 +1201,6 @@ int Database::initArmorDecorationData(Armor & armor, const int decoCountIndex, s
 	}
 	catch (...)
 	{
-		// error
 		return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_ARMOR_DATA_DECO_COUNT_IS_NOT_NUM);
 	}
 
@@ -1244,7 +1222,6 @@ int Database::initArmorDecorationData(Armor & armor, const int decoCountIndex, s
 			}
 			catch (...)
 			{
-				// error
 				return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_ARMOR_DATA_DECO_SIZE_IS_NOT_NUM);
 			}
 		}
@@ -1306,7 +1283,6 @@ int Database::initDecorationData(Settings * setting)
 					}
 					catch (...)
 					{
-						// Todo: Add error code with alert message box.
 						return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_DECO_SIZE_IS_NOT_NUM);
 					}
 
@@ -1321,7 +1297,6 @@ int Database::initDecorationData(Settings * setting)
 					}
 					catch (...)
 					{
-						// Todo: Add error code with alert message box.
 						return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_DECO_RARITY_IS_NOT_NUM);
 					}
 
@@ -1332,7 +1307,6 @@ int Database::initDecorationData(Settings * setting)
 					auto find_it = skillNameToIdLUT.find(skillName);
 					if (find_it == skillNameToIdLUT.end())
 					{
-						// Todo: Add error code with alert message box.
 						return static_cast<int>(MHW::ERROR_CODE::DECO_SKILL_NAME_DOES_NOT_EXIST);
 					}
 					else
@@ -1358,7 +1332,6 @@ int Database::initDecorationData(Settings * setting)
 						}
 						catch (...)
 						{
-							// Todo: Add error code with alert message box.
 							return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_DECO_SET_SKILL_REQ_ARMOR_PIECE_IS_NOT_NUM);
 						}
 
@@ -2443,13 +2416,12 @@ int Database::reloadSkillNames(Settings * setting)
 					}
 					else
 					{
-						// can't find skill
-						OutputDebugString(L"Can't find skill\n");
+						return static_cast<int>(MHW::ERROR_CODE::RELOAD_NAME_CANT_FIND_SKILL);
 					}
 				}
 				else
 				{
-					// split size error
+					return static_cast<int>(MHW::ERROR_CODE::RELOAD_NAME_SKILL_DATA_INCORRECT_SPLIT_SIZE);
 				}
 			}
 		}
@@ -2471,7 +2443,7 @@ int Database::reloadSetSkillNames(Settings * setting)
 	else
 	{
 		// failed to read set skill data
-		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_READ_SET_SKILL_DATA_FILE);
+		return static_cast<int>(MHW::ERROR_CODE::RELOAD_NAME_FAILED_TO_READ_SET_SKILL_DATA_FILE);
 	}
 
 	return 0;
@@ -2495,7 +2467,7 @@ int Database::reloadLowRankSetSkillNames(std::ifstream & file)
 	}
 	catch (...)
 	{
-		return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_TOTAL_LOW_RANK_SET_SKILL_COUNT_IS_NOT_NUM);
+		return static_cast<int>(MHW::ERROR_CODE::RELOAD_NAME_LOW_RANK_SET_SKILL_COUNT_IS_NOT_NUM);
 	}
 
 	int idCounter = 0;		// ID for each charms
@@ -2534,7 +2506,7 @@ int Database::reloadLowRankSetSkillNames(std::ifstream & file)
 			}
 			else
 			{
-				return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_LOW_RANK_SET_SKILL_DATA_INCORRECT_SPLIT_SIZE);
+				return static_cast<int>(MHW::ERROR_CODE::RELOAD_NAME_LOW_RANK_SET_SKILL_INCORECT_SPLIT_SIZE);
 			}
 		}
 		// else, line is empty.
@@ -2563,7 +2535,7 @@ int Database::reloadHighRankSetSkillNames(std::ifstream & file)
 	}
 	catch (...)
 	{
-		return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_TOTAL_HIGH_RANK_SET_SKILL_COUNT_IS_NOT_NUM);
+		return static_cast<int>(MHW::ERROR_CODE::RELOAD_NAME_HIGH_RANK_SET_SKILL_COUNT_IS_NOT_NUM);
 	}
 
 	int idCounter = 0;
@@ -2622,7 +2594,7 @@ int Database::reloadHighRankSetSkillNames(std::ifstream & file)
 			}
 			else
 			{
-				return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_HIGH_RANK_SET_SKILL_DATA_INCORRECT_SPLIT_SIZE);
+				return static_cast<int>(MHW::ERROR_CODE::RELOAD_NAME_HIGH_RANK_SET_SKILL_INCORECT_SPLIT_SIZE);
 			}
 		}
 	}
@@ -2696,19 +2668,17 @@ int Database::reloadCharmNames(Settings * setting)
 					}
 					else
 					{
-						// error, can't find charm
-						OutputDebugString(L"CAn't find charm");
+						return static_cast<int>(MHW::ERROR_CODE::REALOD_NAME_CANT_FIND_CHARM);
 					}
 				}
 				else
 				{
-					// split size rror
-					OutputDebugString(L"Split size err\n");
+					return static_cast<int>(MHW::ERROR_CODE::RELOAD_CHARM_NAME_INCORRECT_SPLIT_SIZE);
 				}
 			}
 			else
 			{
-				OutputDebugString(L"line is empty\n");
+				return static_cast<int>(MHW::ERROR_CODE::RELOAD_CHARM_NAME_EMPTY_LINE);
 			}
 		}
 
@@ -2815,7 +2785,7 @@ int Database::reloadArmorNames(Settings * setting)
 				}
 				else
 				{
-					OutputDebugString(L"Error");
+					return static_cast<int>(MHW::ERROR_CODE::RELOAD_NAME_ARMOR_DATA_INCORRECT_SPLIT_SIZE);
 				}
 			}
 		}

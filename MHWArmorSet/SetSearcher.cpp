@@ -8,6 +8,7 @@
 #include "Decoration.h"
 #include "Utility.h"
 #include "Const.h"
+#include "Logger.h"
 
 MHW::SetSearcher::SetSearcher()
 	: workerThread(nullptr)
@@ -508,7 +509,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				}
 				else
 				{
-					// Error. User picked charm isn't size 1.
+					MHW::Logger::getInstance().errorCode(MHW::ERROR_CODE::SS_USER_PICKED_CHARM_IS_NOT_SIZE_1);
 					return;
 				}
 			}
@@ -576,6 +577,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 					else
 					{
 						// error: Charm deata deoesn't exists
+						MHW::Logger::getInstance().errorCode(MHW::ERROR_CODE::SS_CHARM_IS_NULLPTR);
 						continue;
 					}
 
@@ -609,14 +611,15 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 
 		std::unordered_map<int/*skill id*/, int/*remaining skill level*/> remainingSkillLevels;
 
+		auto& logger = MHW::Logger::getInstance();
+
 		for (auto reqSkill : filter.reqSkills)
 		{
 			auto find_it = curArmorSet->skillLevelSums.find(reqSkill->id);
 
 			if (find_it == curArmorSet->skillLevelSums.end())
 			{
-				// Can't find skill level sum. 
-				OutputDebugString(L"Skill level sum doesn't eixsts\n");
+				logger.errorCode(MHW::ERROR_CODE::SS_SKILL_LEVEL_SUM_DOES_NOT_EXIST);
 			}
 			else
 			{
@@ -624,7 +627,6 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				// If so, see if it can be activated by set skill.
 				// If so, don't add to remaining skill
 				// Else, add to remaining skill
-				// Todo: implement this
 				if (reqSkill->fromDecoSetSkill)
 				{
 					// get deco
@@ -671,14 +673,13 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 						}
 						else
 						{
-							// error
-							OutputDebugString(L"Can't get set skilld ata\n");
+							logger.errorCode(MHW::ERROR_CODE::SS_CANT_GET_DECO_SET_SKILL_BY_SET_SKILL_ID);
 						}
 					}
 					else
 					{
 						// error
-						OutputDebugString(L"Skill from deco set skill can't get deco from db\n");
+						logger.errorCode(MHW::ERROR_CODE::SS_CANT_GET_DECO_BY_SKILL_ID);
 					}
 				}
 				// Else, required skill isn't from deco.

@@ -2,6 +2,7 @@
 #include "Decoration.h"
 #include "Database.h"
 #include "Utility.h"
+#include "Logger.h"
 
 Decoration::Decoration()
 	: name(L"")
@@ -28,8 +29,7 @@ std::wstring Decoration::getItemWStr(Database* db)
 		}
 		else
 		{
-			// error
-			return L"ERROR";
+			MHW::Logger::getInstance().errorCode(MHW::ERROR_CODE::DECO_FAILED_TO_GET_SET_SKILL);
 		}
 	}
 	else
@@ -90,39 +90,3 @@ void Decoration::print()
 	}
 	OutputDebugString(L"\n");
 }
-
-/*
-std::string Decoration::getItemStr(Database * db)
-{
-	std::string itemStr = Utility::wtos(name) + " Jewel " + std::to_string(size) + " (R" + std::to_string(rarity);
-
-	if (this->setSkill)
-	{
-		SetSkill* setSkill = db->getSetSkillByID(setSkillId, highRankSetSkill);
-
-		if (setSkill)
-		{
-			itemStr += (", " + Utility::wtos(setSkill->skillName) + ", " + Utility::wtos(setSkill->name) + " " + std::to_string(setSkill->reqArmorPieces));
-		}
-		else
-		{
-			// error
-			return "ERROR";
-		}
-	}
-	else
-	{
-		itemStr += ", " + Utility::wtos(db->getSkillNameById(skillId));
-	}
-
-	itemStr += ")";
-
-	return itemStr;
-}
-*/
-
-
-MyDecoration::MyDecoration()
-	: count(0)
-{}
-

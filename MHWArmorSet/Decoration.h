@@ -43,20 +43,4 @@ public:
 	void print();
 };
 
-class MyDecoration
-{
-public:
-	// Constructor
-	MyDecoration();
-
-	// Default destructor
-	~MyDecoration() = default;
-
-	// deco
-	Decoration deco;
-
-	// count
-	int count;
-};
-
 #endif
