@@ -9,6 +9,7 @@
 #include "Utility.h"
 #include "Const.h"
 #include "Logger.h"
+#include "ErrorCode.h"
 
 MHW::SetSearcher::SetSearcher()
 	: workerThread(nullptr)
@@ -29,12 +30,14 @@ void MHW::SetSearcher::init(Database * db)
 	state = State::IDLE;
 	running.store(true);
 
-	OutputDebugString(L"Main thread creating worker thread.\n");
+	auto& logger = MHW::Logger::getInstance();
+	logger.info("Creating worker thread...");
+
 	workerThread = new std::thread(std::bind(&SetSearcher::work, this, db));
 
-	std::wstringstream ss;
+	std::stringstream ss;
 	ss << workerThread->get_id();
-	OutputDebugString((L"Worker thread " + ss.str() + L" created\n").c_str());
+	logger.info("Worker thread created. ID: " + ss.str());
 }
 
 void MHW::SetSearcher::stop()
@@ -64,58 +67,81 @@ void MHW::SetSearcher::search(Filter filter)
 
 void MHW::SetSearcher::work(Database * db)
 {
-	if (db == nullptr)
+	auto& logger = MHW::Logger::getInstance();
+
+	while (running)
 	{
-		OutputDebugString(L"DB is nullptr.\n");
-		state = State::IDLE;
-		return;
-	}
-	else
-	{
-		while (running)
+		// scope lock
+		std::unique_lock<std::mutex> wLock(workMutex);
+
+		State curState = getState();
+
+		if (curState == State::IDLE)
 		{
-			// scope lock
-			std::unique_lock<std::mutex> wLock(workMutex);
+			// idle. wait
+			logger.info("Thread waiting for search");
+			cv.wait(wLock);
+			logger.info("Notified");
 
-			State curState = getState();
-
-			if (curState == State::IDLE)
+			if (getState() == State::STOP_REQUESTED)
 			{
-				// idle. wait
-				OutputDebugString(L"Running and IDLE. waiting for notification\n");
-				cv.wait(wLock);
-				OutputDebugString(L"CV Notified\n");
-
-				if (getState() == State::STOP_REQUESTED)
-				{
-					setState(State::STOPPED);
-					break;
-				}
+				logger.info("Stop requested.. end of work.");
+				setState(State::STOPPED);
+				break;
 			}
+		}
 
-			// Check skill
-			if (filter.reqSkills.empty())
-			{
-				OutputDebugString(L"Skill is empty. Should not happen.\n");
-				setState(State::ERR);
-				return;
-			}
+		// Check skill
+		bool skip = false;
 
+		if (filter.reqSkills.empty())
+		{
+			logger.error("Skill is empty. Should not happen");
+			setState(State::FINISHED);
+			skip = true;
+			sendMsg(true);
+		}
+
+		if (!skip)
+		{
 			// search 
-			OutputDebugString(L"Search started\n");
-			
+			logger.info("Start searching...");
+
+			// log
+			logger.info("Total head armors:" + std::to_string(filter.headArmors.size()));
+			logger.info("Total chest armors:" + std::to_string(filter.chestArmors.size()));
+			logger.info("Total arm armors:" + std::to_string(filter.armArmors.size()));
+			logger.info("Total waist armors:" + std::to_string(filter.waistArmors.size()));
+			logger.info("Total leg armors:" + std::to_string(filter.legArmors.size()));
+			logger.info("Total chamrs:" + std::to_string(filter.charms.size()));
+
+			logger.info("Total skills: " + std::to_string(filter.reqSkills.size()));
+			for (auto skill : filter.reqSkills)
+			{
+				logger.info("Skill: " + Utility::wtos(skill->name) + ", " + std::to_string(skill->level));
+			}
+			logger.info("Total LR set skills: " + std::to_string(filter.reqLRSetSkills.size()));
+			for (auto setSkill : filter.reqLRSetSkills)
+			{
+				logger.info("Set skill: " + Utility::wtos(setSkill->name) + ", " + std::to_string(setSkill->reqArmorPieces));
+			}
+			logger.info("Total HR set skills: " + std::to_string(filter.reqHRSetSkill.size()));
+			for (auto setSkill : filter.reqHRSetSkill)
+			{
+				logger.info("Set skill: " + Utility::wtos(setSkill->name) + ", " + std::to_string(setSkill->reqArmorPieces));
+			}
+
 			// search!
 			auto start = Utility::Time::now();
 			searchArmorSet(db);
 			auto end = Utility::Time::now();
 
-			OutputDebugString((L"t: " + Utility::Time::toMilliSecondString(start, end)).c_str());
-
-			// CV notified
-			OutputDebugString(L"Search finished\n");
+			auto t = (L"t: " + Utility::Time::toMilliSecondString(start, end));
+			logger.info(Utility::wtos(t));
 
 			if (abort.load())
 			{
+				logger.info("Search aborted");
 				abort.store(false);
 
 				setState(State::ABORTED);
@@ -124,25 +150,27 @@ void MHW::SetSearcher::work(Database * db)
 				{
 					SendMessage(mainHWND, WM_FROM_WORKER_THREAD, 0, 0);
 				}
-
-				OutputDebugString(L"Search aborted\n");
 			}
 			else
 			{
+				logger.info("Search finished");
 				setState(State::FINISHED);
 
 				sendMsg(true);
 			}
-
-			auto state = getState();
-
-			while (state == State::FINISHED || state == State::ABORTED)
-			{
-				cv.wait(wLock);
-			}
-
-			OutputDebugString(L"Main thread copied all search result. back to idle\n");
 		}
+		logger.flush();
+		
+		auto state = getState();
+
+		while (state == State::FINISHED || state == State::ABORTED)
+		{
+			logger.info("Waiting main thread to get results...");
+			cv.wait(wLock);
+		}
+
+		logger.info("Done. Back to idle.");
+		logger.flush();
 	}
 }
 
@@ -307,7 +335,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				curArmorSet->initSums(filter.reqSkills, filter.reqLRSetSkills, filter.reqHRSetSkill);
 
 				// Count skill sums and set skill's req armor pieces
-				curArmorSet->countSums(db);
+				curArmorSet->countSums();
 
 				// clear flags
 				curArmorSet->skillPassed = false;
@@ -474,7 +502,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 					curArmorSet->charm = filter.charms.front();
 
 					// add charm skill to skill level sum
-					curArmorSet->addCharmSkillLevelSums(db);
+					curArmorSet->addCharmSkillLevelSums();
 
 					// Check skill sum
 					bool result = checkNewArmorSet(curArmorSet);
@@ -570,8 +598,19 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 							}
 
 							// Fix charm index with correct level
-							Charm* nextLevelCharm = db->getNextLevelCharm(curArmorSet->charm);
-							curArmorSet->charm = nextLevelCharm;
+							if (i < len)
+							{
+								Charm* nextLevelCharm = db->getNextLevelCharm(curArmorSet->charm);
+								if (nextLevelCharm)
+								{
+									curArmorSet->charm = nextLevelCharm;
+								}
+								else
+								{
+									MHW::Logger::getInstance().warn("Next level charm is nullptr");
+									break;
+								}
+							}
 						}
 					}
 					else
@@ -724,6 +763,8 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 			int totalSize2DecoSlotReq = 0;
 			int totalSize3DecoSlotReq = 0;
 
+			std::unordered_map<int/*deco id*/, int/*total decos used*/> usingDecos;
+
 			for (auto& e : remainingSkillLevels)
 			{
 				//get deco
@@ -747,6 +788,8 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 						{
 							totalSize3DecoSlotReq += remainingSkillLevels[e.first];
 						}
+
+						usingDecos[deco->id] += remainingSkillLevels[e.first];
 					}
 					else
 					{
@@ -776,6 +819,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				// Success!
 				curArmorSet->updateUsedDecoCount(totalSize1DecoSlotReq, totalSize2DecoSlotReq, totalSize3DecoSlotReq);
 				curArmorSet->decoSkillLevelSums = remainingSkillLevels;
+				curArmorSet->usedDecorations = usingDecos;
 
 				// Add
 				addNewArmorSet(curArmorSet);
@@ -966,6 +1010,8 @@ void MHW::SetSearcher::addNewArmorSet(MHW::ArmorSet * newArmorSet)
 	asRef.highRankSetSkillArmorPieceSums = newArmorSet->highRankSetSkillArmorPieceSums;
 	asRef.extraHighRankSetSkillArmorPieceSums = newArmorSet->extraHighRankSetSkillArmorPieceSums;
 	asRef.activatedHighRankSetSkills = newArmorSet->activatedHighRankSetSkills;
+
+	asRef.usedDecorations = newArmorSet->usedDecorations;
 }
 
 MHW::SetSearcher::State MHW::SetSearcher::getState()

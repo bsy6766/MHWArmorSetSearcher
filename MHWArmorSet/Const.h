@@ -7,7 +7,7 @@ namespace MHW
 {
 	namespace VERSION
 	{
-		static const int major = 0;
+		static const int major = 1;
 		static const int minor = 0;
 		static std::wstring build = L"Alpha";
 	}
@@ -44,6 +44,9 @@ namespace MHW
 		static const int DECO_LISTBOX_H = 295;
 
 		static const int SETSEARCHER_ITER_TRESHOLD = 10;
+
+		static const int CHARM_DISPLAY_BY_NAME = 0;
+		static const int CHARM_DISPLAY_BY_SKILL_NAME = 1;
 	}
 }
 

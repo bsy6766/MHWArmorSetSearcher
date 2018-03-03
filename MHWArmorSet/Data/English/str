@@ -21,6 +21,7 @@ Chest
 Arm
 Waist
 Leg
+Set
 Decoration Filters
 Jewel name
 Level
@@ -36,6 +37,10 @@ Armor skill
 Extra armor skill
 Decoration skill
 Total skill
+Set skill
+Extra Set skill
+Decoration
+Remaining decoration slot
 Searching...
 Search finished.
 Total armor set searched: 

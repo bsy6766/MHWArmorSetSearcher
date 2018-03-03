@@ -24,22 +24,10 @@ MHW::Logger::Logger()
 	std::wifstream ifs(logFilePath);
 	ifs.close();
 
-	//std::wofstream ofs(workingDirectory + L"/log.txt");
-	/*
-	auto fs = &MHW::FileSystem::getInstance();
-
-	auto logFilePath = MHW::FileSystem::getInstance().getWorkingDirectory() + "/log.txt";
-
-	if (fs->doesPathExists(logFilePath))
-	{
-		fs->deleteFile(logFilePath);
-	}
-
-	*/
-
-	logger = spdlog::basic_logger_mt("Log", (Utility::wtos(workingDirectory + L"\\log.txt")));
+	logger = spdlog::basic_logger_mt("Log", logFilePath);
 
 	logger->set_pattern("[%P] [%l] [%c] %v");
+	logger->info((L"Log file created at " + logFilePath).c_str());
 }
 
 void MHW::Logger::info(const std::string & log)
@@ -65,6 +53,11 @@ void MHW::Logger::errorCode(const MHW::ERROR_CODE errCode)
 void MHW::Logger::errorCode(const int errCode)
 {
 	logger->error("Error code: " + std::to_string(errCode));
+}
+
+std::wstring MHW::Logger::getWorkingDirectory()
+{
+	return workingDirectory;
 }
 
 void MHW::Logger::flush()

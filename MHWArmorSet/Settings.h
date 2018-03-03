@@ -4,10 +4,14 @@
 #include "Charm.h"
 #include "Skill.h"
 #include "Armor.h"
+#include "GlobalEnums.h"
+#include "ErrorCode.h"
 
 #include <map>
 #include <list>
 #include <unordered_map>
+
+class Database;
 
 /**
 *	@class Settings
@@ -16,16 +20,39 @@
 class Settings
 {
 public:
-	// const
-	static const int CHARM_DISPLAY_BY_NAME;
-	static const int CHARM_DISPLAY_BY_SKILL_NAME;
+	struct SkillData
+	{
+	public:
+		int skillId;
+		int skillLevel;
+		bool applied;
 
+		SkillData() : skillId(-1), skillLevel(-1), applied(false) { }
+		SkillData(int skillId, int skillLevel, bool applied) : skillId(skillId), skillLevel(skillLevel), applied(applied) { }
+	};
+	
+	struct SetSkillData
+	{
+	public:
+		int setSkillId;
+		int reqArmorPieces;
+		bool applied;
+		bool highRank;
+
+		SetSkillData() : setSkillId(-1), reqArmorPieces(-1), applied(false), highRank(false) { }
+		SetSkillData(int setSkillId, int reqArmorPieces, bool applied, bool highRank) : setSkillId(setSkillId), reqArmorPieces(reqArmorPieces), applied(applied), highRank(highRank) { }
+	};
 public:
 	// constructor
 	Settings();
 
 	// Default destructor
 	~Settings() = default;
+
+	// ============== 
+
+	int majorVersion;
+	int minorVersion;
 
 	// ============== 
 
@@ -52,16 +79,22 @@ public:
 
 	// ============== 
 
+	// skill index
+	int skillIndex;
 	// Added skills
 	std::list<Skill*> skills;
-
+	// For initialization. Temporary storage
+	std::vector<SkillData> tempSkillData;
 	// ============== 
 
 	// set skill rank setting
 	bool highRankSetSkill;
+	// set skill index
+	int setSkillIndex;
 	// Added set skills
 	std::list<SetSkill*> setSkills;
-
+	// For initialization. Temporary storage
+	std::vector<SetSkillData> tempSetSkillData;
 	// ============== 
 
 	// armor rank
@@ -78,7 +111,6 @@ public:
 	int waistArmorIndex;
 	int legArmorIndex;
 
-
 	// ============== 
 
 	// decoration checked list. Index means the id of decoration
@@ -90,6 +122,18 @@ public:
 	MHW::Gender gender;
 	// option that allows low rank armor
 	bool allowLowRankArmor;
+	// option that allows arena armr
+	bool allowArenaArmor;
+	// option that sets minor armor rarity. 5 (highrank) by default.
+	int minArmorRarity;
+	// if true, rejects armor sets that has extra skills
+	bool allowExtraSkills;
+	// if true, searches from higher armor rank. If false, searches from lower armor ran.
+	bool searchFromHigherArmorRarity;
+	// allow over leveled skills in armorset
+	bool allowOverleveledSkills;
+	// use only max level charm
+	bool useOnlyMaxLevelCharm;
 
 	// ============== 
 
@@ -97,12 +141,20 @@ public:
 	std::unordered_map<MHW::StringLiteral, std::wstring> stringLiterals;
 	// ============== 
 
-	bool init();
-	bool initStringLiterals();
-	// read temporary file
-	bool readTemp();
-	// read and store
-	bool readValue(const std::string str, int& dest);
+	int init();
+	int initStringLiterals();
+	int readTemp();
+	bool readValue(const std::wstring str, int& dest);
+	int readLanguage(const std::wstring& line, MHW::Language& language, const std::string& log, const MHW::ERROR_CODE errCode);
+	int readInt(const std::wstring& line, int& dest, const std::string& log, const MHW::ERROR_CODE errCode);
+	int readBool(const std::wstring& line, bool& dest, const std::string& log, const MHW::ERROR_CODE errCode);
+	void saveTemp();
+	int load(Database* db);
+	int loadSkills(Database* db);
+	int loadSetSkills(Database* db);
+
+	// version 1.0
+	int loadTemp(std::wifstream& tempFile);
 
 	// str to num
 	int stoi(const std::string str);
@@ -127,6 +179,7 @@ public:
 
 	// Get language path
 	std::string getLanguagePath();
+	std::string getLanguagePath(const MHW::Language language);
 
 	void addSkillAt(const int index, Skill* skill);
 	// Remove skill at position

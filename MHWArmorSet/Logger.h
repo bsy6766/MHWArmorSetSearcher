@@ -55,6 +55,9 @@ namespace MHW
 		void errorCode(const MHW::ERROR_CODE errCode);
 		void errorCode(const int errCode);
 
+		// get wd
+		std::wstring getWorkingDirectory();
+
 		// flush
 		void flush();
 	};
