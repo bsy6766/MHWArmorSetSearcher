@@ -8,6 +8,7 @@ MHW::Filter::Filter()
 	: totalWeaponDecorations(0)
 	, userPickedCharm(false)
 	, hasDecorationToUse(false)
+	, allowOverleveledSkill(false)
 {}
 
 bool MHW::Filter::hasGuardUpCharm(Database* db)

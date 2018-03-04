@@ -132,7 +132,7 @@ namespace MHW
 		std::wstring getExtraRmorSkillsStr(Database* db, Settings* setting);
 		std::wstring getDecoSkillsStr(Database* db, Settings* setting);
 		std::wstring getTotalSkillsStr(Database* db, Settings* setting);
-		std::wstring getSetSkillStr(Database* db, Settings* setting);
+		std::wstring getSetSkillStr(Database* db, Settings* setting, bool& isNone);
 	};
 }
 

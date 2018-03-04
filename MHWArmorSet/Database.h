@@ -158,8 +158,8 @@ public:
 	int initLowRankSetSkillData(std::ifstream& setSkillData);
 	int initHighRankSetSkillData(std::ifstream& setSkillData, Settings* setting);
 	int initArmorData(Settings * setting);
-	int initArmor(Armor& armor, std::vector<std::string>& split, const int defense, const int rarity, const int id, const int setId, const int setSkiiId, const int secondSetSkillId, const int setGroupId, const std::string& setName, const MHW::Gender gender, const bool arenaArmor);
-	int readArmorInfo(const std::string& line, std::string& setName, int& rarity, int& defense, MHW::Gender& genderCode, bool& arenaArmor, std::string& setSkillGroupName, int& setSkillId, int& secondSetSkillId, int& setGroupId);
+	int initArmor(Armor& armor, std::vector<std::string>& split, const int defense, const int rarity, const int id, const int setId, const int setSkiiId, const int secondSetSkillId, const int setGroupId, const std::string& setName, const MHW::Gender gender, const bool arenaArmor, const bool eventArmor);
+	int readArmorInfo(const std::string& line, std::string& setName, int& rarity, int& defense, MHW::Gender& genderCode, bool& arenaArmor, bool& eventArmor, std::string& setSkillGroupName, int& setSkillId, int& secondSetSkillId, int& setGroupId);
 	int initArmorSkillData(Armor& armor, std::vector<std::string>& split, int& skillCount);
 	int initArmorDecorationData(Armor& armor, const int decoCountIndex, std::vector<std::string>& split);
 	int initDecorationData(Settings * setting);
@@ -214,7 +214,8 @@ public:
 	//void getArmorBySkill(std::map<int, Armor>& armors, std::vector<Armor*>& queriedArmors, std::unordered_set<int>& skillFilter, std::unordered_set<int>& decoSetSkillFilter, std::unordered_set<int>& lowRankSetSkillFilter, std::unordered_set<int>& highRankSetSkillFilter, const bool LR, const bool HR, const MHW::Gender genderSetting, const bool allowArenaArmor);
 	void getArmorBySkill(std::map<int, Armor>& armors, std::vector<Armor*>& queriedArmors, std::unordered_set<int>& skillFilter, std::unordered_set<int>& decoSetSkillFilter, std::unordered_set<int>& lowRankSetSkillFilter, std::unordered_set<int>& highRankSetSkillFilter, Settings* setting);
 	void getArmorBySkill(Armor& armor, std::vector<Armor*>& queriedArmors, std::unordered_set<int>& skillFilter, std::unordered_set<int>& lowRankSetSkillFilter, std::unordered_set<int>& highRankSetSkillFilter, Settings* setting);
-	
+	bool isArmorQualified(Armor& armor, std::vector<Armor*>& queriedArmors, Settings* setting);
+
 	void getAllCharmsBySkill(std::vector<int>& filterCharmIndices, std::unordered_set<int>& filterSkills, std::unordered_set<int>& filterSetSkills);
 	void getAllMinLevelCharmsBySkill(std::vector<Charm*>& filterCharms, std::unordered_set<int>& skillFilters, std::unordered_set<int>& decoSetSkillFilters);
 

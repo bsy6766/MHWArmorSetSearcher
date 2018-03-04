@@ -50,6 +50,9 @@ namespace MHW
 		bool hasDecorationToUse;
 		std::vector<bool> usableDecorations;
 
+		// search option
+		bool allowOverleveledSkill;
+
 		// Check if it has guard up charm
 		bool hasGuardUpCharm(Database* db);
 

@@ -122,8 +122,10 @@ public:
 	MHW::Gender gender;
 	// option that allows low rank armor
 	bool allowLowRankArmor;
-	// option that allows arena armr
+	// option that allows arena armor
 	bool allowArenaArmor;
+	// option that allows event armor
+	bool allowEventArmor;
 	// option that sets minor armor rarity. 5 (highrank) by default.
 	int minArmorRarity;
 	// if true, rejects armor sets that has extra skills
@@ -134,6 +136,10 @@ public:
 	bool allowOverleveledSkills;
 	// use only max level charm
 	bool useOnlyMaxLevelCharm;
+	// Simplyfy search result
+	bool simplifySearchResult;
+	// Show max level
+	bool showMaxLevel;
 
 	// ============== 
 

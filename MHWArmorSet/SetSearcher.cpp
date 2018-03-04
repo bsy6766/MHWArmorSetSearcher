@@ -11,6 +11,11 @@
 #include "Logger.h"
 #include "ErrorCode.h"
 
+float MHW::SetSearcher::searchCounter = 0.0f;
+//float MHW::SetSearcher::prevSearchCounter = 0;
+float MHW::SetSearcher::totalCounter = 0.0f;
+int MHW::SetSearcher::prevPrecentage = 0;
+
 MHW::SetSearcher::SetSearcher()
 	: workerThread(nullptr)
 	, state(State::IDLE)
@@ -108,12 +113,19 @@ void MHW::SetSearcher::work(Database * db)
 			logger.info("Start searching...");
 
 			// log
-			logger.info("Total head armors:" + std::to_string(filter.headArmors.size()));
-			logger.info("Total chest armors:" + std::to_string(filter.chestArmors.size()));
-			logger.info("Total arm armors:" + std::to_string(filter.armArmors.size()));
-			logger.info("Total waist armors:" + std::to_string(filter.waistArmors.size()));
-			logger.info("Total leg armors:" + std::to_string(filter.legArmors.size()));
-			logger.info("Total chamrs:" + std::to_string(filter.charms.size()));
+			const int headSize = filter.headArmors.size();
+			const int chestSize = filter.chestArmors.size();
+			const int armSize = filter.armArmors.size();
+			const int waistSize = filter.waistArmors.size();
+			const int legSize = filter.legArmors.size();
+			const int charmSize = filter.charms.size();
+
+			logger.info("Total head armors:" + std::to_string(headSize));
+			logger.info("Total chest armors:" + std::to_string(chestSize));
+			logger.info("Total arm armors:" + std::to_string(armSize));
+			logger.info("Total waist armors:" + std::to_string(waistSize));
+			logger.info("Total leg armors:" + std::to_string(legSize));
+			logger.info("Total chamrs:" + std::to_string(charmSize));
 
 			logger.info("Total skills: " + std::to_string(filter.reqSkills.size()));
 			for (auto skill : filter.reqSkills)
@@ -130,6 +142,27 @@ void MHW::SetSearcher::work(Database * db)
 			{
 				logger.info("Set skill: " + Utility::wtos(setSkill->name) + ", " + std::to_string(setSkill->reqArmorPieces));
 			}
+
+			int totalPossibility = 1;
+
+			if (headSize) totalPossibility *= headSize;
+			if (chestSize) totalPossibility *= chestSize;
+			if (armSize) totalPossibility *= armSize;
+			if (waistSize) totalPossibility *= waistSize;
+			if (legSize) totalPossibility *= legSize;
+			if (charmSize) totalPossibility *= charmSize;
+
+			logger.info("totalPossibility: " + std::to_string(totalPossibility));
+			logger.flush();
+
+			// set progress bar
+			PostMessage(progressBarHWND, PBM_SETRANGE, 0, MAKELPARAM(0, 100));
+			PostMessage(progressBarHWND, PBM_SETSTEP, 1, 0);
+
+			MHW::SetSearcher::searchCounter = 0.0f;
+			//MHW::SetSearcher::prevSearchCounter = 0.0f;
+			MHW::SetSearcher::prevPrecentage = 0;
+			MHW::SetSearcher::totalCounter = static_cast<float>(totalPossibility);
 
 			// search!
 			auto start = Utility::Time::now();
@@ -159,6 +192,9 @@ void MHW::SetSearcher::work(Database * db)
 				sendMsg(true);
 			}
 		}
+
+		SendMessage(progressBarHWND, PBM_SETPOS, 100, 0);
+		logger.info("counter: " + std::to_string(searchCounter));
 		logger.flush();
 		
 		auto state = getState();
@@ -315,6 +351,9 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 			// there is no waist armor
 			curArmorSet->setLegArmor(nullptr);
 
+			// init and count skill level sum
+			initAndCountSums(curArmorSet);
+
 			// Look for leg
 			searchArmorSet(db, SearchState::LF_CHARM, curArmorSet);
 		}
@@ -328,14 +367,18 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				// set index
 				curArmorSet->setLegArmor(legArmor);
 
-				// clear sum
-				curArmorSet->clearSums();
+				// init and count skill level sum
+				initAndCountSums(curArmorSet);
 
-				// init sum (Not extra skills) to 0
-				curArmorSet->initSums(filter.reqSkills, filter.reqLRSetSkills, filter.reqHRSetSkill);
-
-				// Count skill sums and set skill's req armor pieces
-				curArmorSet->countSums();
+				// Check overlevel
+				if (!filter.allowOverleveledSkill)
+				{
+					bool overlevelResult = hasOverLeveledSkill(curArmorSet);
+					if (overlevelResult)
+					{
+						continue;
+					}
+				}
 
 				// clear flags
 				curArmorSet->skillPassed = false;
@@ -350,7 +393,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 					curArmorSet->setSkillPassed = true;
 
 					// Check if armor set can be added with only armors
-					bool result = checkNewArmorSet(curArmorSet);
+					bool result = checkSkillLevelSums(curArmorSet);
 
 					if (result)
 					{
@@ -363,7 +406,9 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 						//  Add to result
 						addNewArmorSet(curArmorSet);
 						// Don't check charm because if armor set need charm, it would be failed.
-	
+
+						step();
+
 						sendMsg(false);
 					}
 					else
@@ -473,6 +518,8 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 
 		if (filter.charms.empty())
 		{
+			step();
+
 			// Charm is 'None'. 
 			if (filter.hasDecorationToUse)
 			{
@@ -498,14 +545,26 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				// user picked specific charm
 				if (filter.charms.size() == 1)
 				{
+					step();
+
 					// valid. There can be only 1 user picked charm
 					curArmorSet->charm = filter.charms.front();
 
 					// add charm skill to skill level sum
 					curArmorSet->addCharmSkillLevelSums();
 
+					// check over level
+					if (!filter.allowOverleveledSkill)
+					{
+						bool overlevelResult = hasOverLeveledSkill(curArmorSet);
+						if (overlevelResult)
+						{
+							return;
+						}
+					}
+
 					// Check skill sum
-					bool result = checkNewArmorSet(curArmorSet);
+					bool result = checkSkillLevelSums(curArmorSet);
 
 					if (result)
 					{
@@ -548,6 +607,8 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				{
 					if (abort.load()) return;
 
+					step();
+
 					// set index
 					curArmorSet->charm = curCharm;
 
@@ -567,34 +628,46 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 							// Add charm skill level to sum by 1
 							curArmorSet->addCharmSkillLevelSumByOne(curArmorSet->charm);
 
-							// Check skill sum
-							bool result = checkNewArmorSet(curArmorSet);
-
-							if (result)
+							// check over level
+							bool overlevelResult = false;
+							if (!filter.allowOverleveledSkill)
 							{
-								// Armor set found with 5 piece armors and charm! 
-								curArmorSet->skillPassed = true;
-
-								// Add to result.
-								addNewArmorSet(curArmorSet);
-
-								sendMsg(false);
-
-								// Next level charm might have a chance. keep going
+								overlevelResult = hasOverLeveledSkill(curArmorSet);
 							}
-							else
+
+							if (!overlevelResult)
 							{
-								// Failed. 
-								curArmorSet->skillPassed = false;
+								// doesn't have over level result or it's allowed
 
-								if (filter.hasDecorationToUse)
+								// Check skill sum
+								bool result = checkSkillLevelSums(curArmorSet);
+
+								if (result)
 								{
-									// Has decoration to use. Try with decorations
-									searchArmorSet(db, SearchState::LF_DECORATION, curArmorSet);
-								}
-								// Else, there is no decoration to use
+									// Armor set found with 5 piece armors and charm! 
+									curArmorSet->skillPassed = true;
 
-								// Next level charm might have a chance. keep going	
+									// Add to result.
+									addNewArmorSet(curArmorSet);
+
+									sendMsg(false);
+
+									// Next level charm might have a chance. keep going
+								}
+								else
+								{
+									// Failed. 
+									curArmorSet->skillPassed = false;
+
+									if (filter.hasDecorationToUse)
+									{
+										// Has decoration to use. Try with decorations
+										searchArmorSet(db, SearchState::LF_DECORATION, curArmorSet);
+									}
+									// Else, there is no decoration to use
+
+									// Next level charm might have a chance. keep going	
+								}
 							}
 
 							// Fix charm index with correct level
@@ -888,6 +961,24 @@ bool MHW::SetSearcher::checkSkillLevelSums(MHW::ArmorSet * newArmorSet)
 	return true;
 }
 
+bool MHW::SetSearcher::hasOverLeveledSkill(MHW::ArmorSet * newArmorSet)
+{
+	const int skillSize = filter.reqSkills.size();
+	
+	for (auto skill : filter.reqSkills)
+	{
+		const int reqLevel = skill->level;
+		const int curLevel = newArmorSet->skillLevelSums[skill->id];
+
+		if (curLevel > reqLevel)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool MHW::SetSearcher::checkSetSkill(MHW::ArmorSet * newArmorSet)
 {
 	bool result = true;
@@ -962,6 +1053,47 @@ bool MHW::SetSearcher::isSetSkillGuardUp(Database* db)
 
 		return false;
 	}
+}
+
+void MHW::SetSearcher::initAndCountSums(MHW::ArmorSet * newArmorSet)
+{
+	// clear sum
+	newArmorSet->clearSums();
+
+	// init sum (Not extra skills) to 0
+	newArmorSet->initSums(filter.reqSkills, filter.reqLRSetSkills, filter.reqHRSetSkill);
+
+	// Count skill sums and set skill's req armor pieces
+	newArmorSet->countSums();
+}
+
+void MHW::SetSearcher::step()
+{
+	MHW::SetSearcher::searchCounter++;
+
+	int percentage = static_cast<int>((MHW::SetSearcher::searchCounter / MHW::SetSearcher::totalCounter) * 100.0f);
+
+	if (MHW::SetSearcher::prevPrecentage < percentage)
+	{
+		SendMessage(progressBarHWND, PBM_SETPOS, percentage, 0);
+		MHW::SetSearcher::prevPrecentage = percentage;
+	}
+
+	/*
+	if (MHW::SetSearcher::searchCounter >= MHW::SetSearcher::totalCounter)
+	{
+		SendMessage(progressBarHWND, PBM_SETPOS, MHW::SetSearcher::totalCounter, 0);
+	}
+	else
+	{
+		if ((MHW::SetSearcher::searchCounter - MHW::SetSearcher::prevSearchCounter) > 10.0f)
+		{
+			//OutputDebugString((L"c: " + std::to_wstring(MHW::SetSearcher::searchCounter)).c_str());
+			SendMessage(progressBarHWND, PBM_STEPIT, 0, 0);
+			MHW::SetSearcher::prevSearchCounter = MHW::SetSearcher::searchCounter;
+		}
+	}
+	*/
 }
 
 void MHW::SetSearcher::addNewArmorSet(MHW::ArmorSet * newArmorSet)

@@ -6,6 +6,7 @@
 #include <mutex>
 #include <atomic>
 #include <condition_variable>
+#include <CommCtrl.h>
 
 #include "Filter.h"
 #include "ArmorSet.h"
@@ -58,6 +59,12 @@ namespace MHW
 		// iter counter.
 		int iterCount;
 
+		// counter
+		static float searchCounter;
+		//static float prevSearchCounter;
+		static float totalCounter;
+		static int prevPrecentage;
+
 		// flag
 		std::atomic<bool> running;
 		std::atomic<bool> abort;
@@ -95,6 +102,9 @@ namespace MHW
 		// Check skill sum
 		bool checkSkillLevelSums(MHW::ArmorSet* newArmorSet);
 
+		// check if skill has overleveled skill
+		bool hasOverLeveledSkill(MHW::ArmorSet* newArmorSet);
+
 		// check set skill 
 		bool checkSetSkill(MHW::ArmorSet* newArmorSet);
 		bool checkSetSkillWithOutGuardUp(MHW::ArmorSet* newArmorSet);
@@ -102,6 +112,9 @@ namespace MHW
 		// Check if filtered set skill is guard up (Uragaan protection 3)
 		bool isSetSkillGuardUp(Database* db);
 		
+		void initAndCountSums(MHW::ArmorSet* newArmorSet);
+
+		void step();
 	public:
 		// Constructor
 		SetSearcher();
@@ -111,6 +124,8 @@ namespace MHW
 
 		// main window 
 		HWND mainHWND;
+		// pb
+		HWND progressBarHWND;
 
 		// initialize work
 		void init(Database* db);

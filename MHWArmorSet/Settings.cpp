@@ -33,11 +33,14 @@ Settings::Settings()
 	, gender(MHW::Gender::MALE)
 	, allowLowRankArmor(false)
 	, allowArenaArmor(false)
+	, allowEventArmor(false)
 	, minArmorRarity(5)
 	, allowExtraSkills(true)
 	, searchFromHigherArmorRarity(true)
 	, allowOverleveledSkills(true)
 	, useOnlyMaxLevelCharm(false)
+	, simplifySearchResult(true)
+	, showMaxLevel(false)
 {}
 
 int Settings::init()
@@ -359,6 +362,8 @@ void Settings::saveTemp()
 	data += (L"\n" + std::wstring(allowLowRankArmor ? L"1" : L"0"));
 	// allow arena armor
 	data += (L"\n" + std::wstring(allowArenaArmor ? L"1" : L"0"));
+	// allow event armor
+	data += (L"\n" + std::wstring(allowEventArmor ? L"1" : L"0"));
 
 	// min rarirty
 	data += (L"\n" + std::to_wstring(static_cast<int>(minArmorRarity)));
@@ -372,6 +377,12 @@ void Settings::saveTemp()
 
 	// use only max level charm
 	//data += (L"\n" + std::wstring(useOnlyMaxLevelCharm ? L"1" : L"0"));
+
+	// simplify search result
+	data += (L"\n" + std::wstring(simplifySearchResult ? L"1" : L"0"));
+
+	// show max level
+	data += (L"\n" + std::wstring(showMaxLevel ? L"1" : L"0"));
 
 	ofs.write(data.c_str(), data.size());
 
@@ -756,37 +767,20 @@ int Settings::loadTemp(std::wifstream & tempFile)
 		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_DECO_COUNT_TO_NUM);
 	}
 
-	{
-		std::getline(tempFile, line);
-		int boolVal = 0;
+	// lr armor
+	std::getline(tempFile, line);
+	result = readBool(line, allowLowRankArmor, "Allow low rank armor: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_ALLOW_LR_ARMOR_TO_NUM);
+	if (result != 0) return result;
 
-		if (readValue(line, boolVal))
-		{
-			allowLowRankArmor = (boolVal == 1);
-			logger.info("Allow low rank armor: " + std::string(allowLowRankArmor ? "true" : "false"));
-		}
-		else
-		{
-			allowLowRankArmor = false;
-			return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_ALLOW_LR_ARMOR_TO_NUM);
-		}
-	}
+	// arena armor
+	std::getline(tempFile, line);
+	result = readBool(line, allowArenaArmor, "Allow arena armor: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_ALLOW_ARENA_ARMOR_TO_NUM);
+	if (result != 0) return result;
 
-	{
-		std::getline(tempFile, line);
-		int boolVal = 0;
-
-		if (readValue(line, boolVal))
-		{
-			allowArenaArmor = (boolVal == 1);
-			logger.info("Allow arena armor: " + std::string(allowArenaArmor ? "true" : "false"));
-		}
-		else
-		{
-			allowArenaArmor = false;
-			return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_ALLOW_ARENA_ARMOR_TO_NUM);
-		}
-	}
+	// event armor
+	std::getline(tempFile, line);
+	result = readBool(line, allowEventArmor, "Allow event armor: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_ALLOW_EVENT_ARMOR_TO_BOOL);
+	if (result != 0) return result;
 
 	std::getline(tempFile, line);
 	result = readInt(line, minArmorRarity, "Min armor rarity: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_MIN_ARMOR_RARITY_TO_NUM);
@@ -809,6 +803,14 @@ int Settings::loadTemp(std::wifstream & tempFile)
 	result = readBool(line, useOnlyMaxLevelCharm, "Only use max level charm: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_ALLOW_ONLY_USE_MAX_LEVEL_CHARM_TO_BOOL);
 	if (result != 0) return result;
 	*/
+
+	std::getline(tempFile, line);
+	result = readBool(line, simplifySearchResult, "Simplify search result: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_SIMPLIFY_SEARCH_RESULT_TO_BOOL);
+	if (result != 0) return result;
+
+	std::getline(tempFile, line);
+	result = readBool(line, showMaxLevel, "Shows max level: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_SHOW_MAX_LEVEL_TO_BOOL);
+	if (result != 0) return result;
 
 	return 0;
 }
@@ -1180,6 +1182,8 @@ void Settings::clear()
 	logger.info("Disallow LR armor");
 	allowArenaArmor = false;
 	logger.info("Disallow arena armor");
+	allowArenaArmor = false;
+	logger.info("Disallow event armor");
 
 	minArmorRarity = 5;
 	logger.info("Min armor rarity to search: 5");
@@ -1192,6 +1196,12 @@ void Settings::clear()
 	
 	//useOnlyMaxLevelCharm = false;
 	//logger.info("use only max level charm");
+
+	simplifySearchResult = true;
+	logger.info("Simplifies search result");
+
+	showMaxLevel = true;
+	logger.info("Show max level");
 
 	//stringLiterals.clear();
 }

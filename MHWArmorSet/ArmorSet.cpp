@@ -57,22 +57,33 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 	str += dbr;
 
 	// add skills
-	str += getArmorSkillsStr(db, setting);
-	str += getExtraRmorSkillsStr(db, setting);
-	str += getDecoSkillsStr(db, setting);
+	if (!setting->simplifySearchResult)
+	{
+		str += getArmorSkillsStr(db, setting);
+		str += getExtraRmorSkillsStr(db, setting);
+		str += getDecoSkillsStr(db, setting);
+	}
 	str += getTotalSkillsStr(db, setting);
 
 	str += br;
 
 	// set skill
-	auto setSkillStr = getSetSkillStr(db, setting);
+	bool isNone = false;
+	auto setSkillStr = getSetSkillStr(db, setting, isNone);
 
-	if (!setSkillStr.empty())
+	if (isNone)
+	{
+		if (!setting->simplifySearchResult)
+		{
+			str += setSkillStr;
+			str += br;
+		}
+	}
+	else
 	{
 		str += setSkillStr;
+		str += br;
 	}
-
-	str += br;
 
 	// head 
 	str += (setting->getString(MHW::StringLiteral::HEAD) + L": ");
@@ -92,7 +103,16 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 		}
 		else
 		{
-			str += (headArmor->name + L" (" + headArmor->setName + L" / " + getItemDecoSizeAsStr(headArmorDecoSlots) + L")\n");
+			str += headArmor->name;
+
+			if (setting->simplifySearchResult)
+			{
+				str += L"\n";
+			}
+			else
+			{
+				str += (L" (" + headArmor->setName + L" / " + getItemDecoSizeAsStr(headArmorDecoSlots) + L")\n");
+			}
 		}
 	}
 	else
@@ -105,7 +125,16 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 
 	if (chestArmor)
 	{
-		str += (chestArmor->name + L" (" + chestArmor->setName + L" / " + getItemDecoSizeAsStr(chestArmorDecoSlots) + L")\n");
+		str += chestArmor->name;
+
+		if (setting->simplifySearchResult)
+		{
+			str += L"\n";
+		}
+		else
+		{
+			str += (L" (" + chestArmor->setName + L" / " + getItemDecoSizeAsStr(chestArmorDecoSlots) + L")\n");
+		}
 	}
 	else
 	{
@@ -117,7 +146,16 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 
 	if (armArmor)
 	{
-		str += (armArmor->name + L" (" + armArmor->setName + L" / " + getItemDecoSizeAsStr(armArmorDecoSlots) + L")\n");
+		str += armArmor->name;
+
+		if (setting->simplifySearchResult)
+		{
+			str += L"\n";
+		}
+		else
+		{
+			str += (L" (" + armArmor->setName + L" / " + getItemDecoSizeAsStr(armArmorDecoSlots) + L")\n");
+		}
 	}
 	else
 	{
@@ -129,7 +167,16 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 
 	if (waistArmor)
 	{
-		str += (waistArmor->name + L" (" + waistArmor->setName + L" / " + getItemDecoSizeAsStr(waistArmorDecoSlots) + L")\n");
+		str += waistArmor->name;
+
+		if (setting->simplifySearchResult)
+		{
+			str += L"\n";
+		}
+		else
+		{
+			str += (L" (" + waistArmor->setName + L" / " + getItemDecoSizeAsStr(waistArmorDecoSlots) + L")\n");
+		}
 	}
 	else
 	{
@@ -141,7 +188,16 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 
 	if (legArmor)
 	{
-		str += (legArmor->name + L" (" + legArmor->setName + L" / " + getItemDecoSizeAsStr(legArmorDecoSlots) + L")\n");
+		str += legArmor->name;
+
+		if (setting->simplifySearchResult)
+		{
+			str += L"\n";
+		}
+		else
+		{
+			str += (L" (" + legArmor->setName + L" / " + getItemDecoSizeAsStr(legArmorDecoSlots) + L")\n");
+		}
 	}
 	else
 	{
@@ -153,7 +209,16 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 
 	if (charm)
 	{
-		str += charm->name + L" " + std::to_wstring(charm->level) + L"\n";
+		str += charm->name + L" " + std::to_wstring(charm->level);
+
+		if (setting->showMaxLevel)
+		{
+			str += L" (" + std::to_wstring(charm->maxLevel) + L")\n";
+		}
+		else
+		{
+			str += L"\n";
+		}
 	}
 	else
 	{
@@ -444,7 +509,12 @@ std::wstring MHW::ArmorSet::getTotalSkillsStr(Database * db, Settings * setting)
 			if (skill)
 			{
 				//str += (db->getSkillNameById(iter->first) + L" " + std::to_wstring(iter->second));
-				str += (skill->name + L" " + std::to_wstring(iter->second) + L" (" + std::to_wstring(skill->maxLevel) + L")");
+				str += (skill->name + L" " + std::to_wstring(iter->second));
+
+				if (setting->showMaxLevel)
+				{
+					str += (L" (" + std::to_wstring(skill->maxLevel) + L")");
+				}
 
 				iter++;
 
@@ -465,7 +535,7 @@ std::wstring MHW::ArmorSet::getTotalSkillsStr(Database * db, Settings * setting)
 	}
 }
 
-std::wstring MHW::ArmorSet::getSetSkillStr(Database * db, Settings* setting)
+std::wstring MHW::ArmorSet::getSetSkillStr(Database * db, Settings* setting, bool& isNone)
 {
 	std::wstring str = L"";
 	
@@ -484,6 +554,7 @@ std::wstring MHW::ArmorSet::getSetSkillStr(Database * db, Settings* setting)
 	if (lowRankSetSkillArmorPieceSums.empty() && highRankSetSkillArmorPieceSums.empty())
 	{
 		str += setting->getString(MHW::StringLiteral::NONE);
+		isNone = true;
 	}
 	else
 	{
@@ -551,6 +622,7 @@ std::wstring MHW::ArmorSet::getSetSkillStr(Database * db, Settings* setting)
 		if (empty)
 		{
 			str += setting->getString(MHW::StringLiteral::NONE);
+			isNone = true;
 		}
 	}
 
@@ -572,6 +644,7 @@ std::wstring MHW::ArmorSet::getSetSkillStr(Database * db, Settings* setting)
 	if (extraLowRankSetSkillArmorPieceSums.empty() && extraHighRankSetSkillArmorPieceSums.empty())
 	{
 		str += setting->getString(MHW::StringLiteral::NONE);
+		isNone = true;
 	}
 	else
 	{
@@ -641,6 +714,7 @@ std::wstring MHW::ArmorSet::getSetSkillStr(Database * db, Settings* setting)
 		if (empty)
 		{
 			str += setting->getString(MHW::StringLiteral::NONE);
+			isNone = true;
 		}
 	}
 

@@ -38,12 +38,15 @@ namespace MHW
 		static const int SEARCH_BUTTON_Y = 759;
 		static const int DROPDOWN_LIST_W = 285;
 
+		static const int RICH_EDIT_X = 10;
+		static const int RICH_EDIT_Y = 50;
+
 		static const int LINESPACE = 15;
 
 		static const int DECO_LISTBOX_W = 500;
 		static const int DECO_LISTBOX_H = 295;
 
-		static const int SETSEARCHER_ITER_TRESHOLD = 10;
+		static const int SETSEARCHER_ITER_TRESHOLD = 2;
 
 		static const int CHARM_DISPLAY_BY_NAME = 0;
 		static const int CHARM_DISPLAY_BY_SKILL_NAME = 1;

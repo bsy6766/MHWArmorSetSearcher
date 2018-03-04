@@ -47,7 +47,9 @@ public:
 	MHW::Gender gender;
 
 	// arena
-	bool arena;
+	bool arenaArmor;
+	// event
+	bool eventArmor;
 
 	// skills. Can have up to 2 without decoration
 	std::vector<int/*skill id*/> skills;
@@ -68,6 +70,7 @@ public:
 	std::wstring getItemDecorationSizeAsStr();
 
 	bool isAnyArmor();
+	//bool hasSkill(const bool allowExtra)
 
 	// debug
 	void print(Database* db);

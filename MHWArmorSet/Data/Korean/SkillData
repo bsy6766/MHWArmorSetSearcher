@@ -71,8 +71,8 @@ Increases attack power. Also improves affinity at higher levels.
 기초 공격력+9 
 기초 공격력+12, 회심률+5％ 
 기초 공격력+15, 회심률+5% 
-Lv.6 : 기초 공격력+18, 회심률+5% 
-Lv.7 : 기초 공격력+21, 회심률+5%
+기초 공격력+18, 회심률+5% 
+기초 공격력+21, 회심률+5%
 방어,7,0,0
 Increases defense. Level up to improve resistances as well.
 방어력+5 
@@ -80,8 +80,8 @@ Increases defense. Level up to improve resistances as well.
 방어력+15 
 방어력+20 , 모든 속성 내성치+3 
 방어력+25 , 모든 속성 내성치+3 
-Lv.6 : 방어력+30 , 모든 속성 내성치+3 
-Lv.7 : 방어력+35 , 모든 속성 내성치+3
+방어력+30 , 모든 속성 내성치+3 
+방어력+35 , 모든 속성 내성치+3
 체력 증강,3,0,0
 Increases health.
 체력+15 
@@ -215,8 +215,8 @@ Increases affinity.
 회심률+10% 
 회심률+15% 
 회심률+20% 
-Lv.6 : 회심률+25% 
-Lv.7 : 회심률+30%
+회심률+25% 
+회심률+30%
 슈퍼 회심,3,0,0
 Increases the damage of cirtical hits.
 회심 공격 시의 데미지 배율 1.3배 

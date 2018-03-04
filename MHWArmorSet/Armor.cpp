@@ -14,7 +14,8 @@ Armor::Armor()
 	, secondSetSkillId(-1)
 	, setGroupId(-1)
 	, gender(MHW::Gender::NONE)
-	, arena(false)
+	, arenaArmor(false)
+	, eventArmor(false)
 	, dropdownListIndex(-1)
 {}
 

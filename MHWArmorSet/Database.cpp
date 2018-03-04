@@ -717,6 +717,8 @@ int Database::initArmorData(Settings * setting)
 		int typeCounter = 0;
 		// arena armor
 		bool arenaArmor = false;
+		// event armor
+		bool eventArmor = false;
 		// gender.
 		MHW::Gender gender = MHW::Gender::NONE;
 
@@ -726,7 +728,7 @@ int Database::initArmorData(Settings * setting)
 		// get first line
 		std::getline(armorDataFile, line);
 
-		int result = readArmorInfo(line, setName, rarity, defense, gender, arenaArmor, setSkillGroupName, setSkillId, secondSetSkillId, setGroupId);
+		int result = readArmorInfo(line, setName, rarity, defense, gender, arenaArmor, eventArmor, setSkillGroupName, setSkillId, secondSetSkillId, setGroupId);
 		if (result != 0) return result;
 
 		// iterate by each line
@@ -744,7 +746,7 @@ int Database::initArmorData(Settings * setting)
 				// get line
 				std::getline(armorDataFile, line);
 
-				result = readArmorInfo(line, setName, rarity, defense, gender, arenaArmor, setSkillGroupName, setSkillId, secondSetSkillId, setGroupId);
+				result = readArmorInfo(line, setName, rarity, defense, gender, arenaArmor, eventArmor, setSkillGroupName, setSkillId, secondSetSkillId, setGroupId);
 				if (result != 0) return result;
 			}
 			else
@@ -777,7 +779,7 @@ int Database::initArmorData(Settings * setting)
 						// Head
 						Armor& head = headArmors[headArmorIdCounter];
 
-						int result = initArmor(head, split, defense, rarity, headArmorIdCounter, setArmorIdCounter, setSkillId, secondSetSkillId, setGroupId, setName, gender, arenaArmor);
+						int result = initArmor(head, split, defense, rarity, headArmorIdCounter, setArmorIdCounter, setSkillId, secondSetSkillId, setGroupId, setName, gender, arenaArmor, eventArmor);
 
 						if (result != 0) return result;
 
@@ -817,7 +819,7 @@ int Database::initArmorData(Settings * setting)
 						// Chest
 						Armor& chest = chestArmors[chestArmorIdCounter];
 
-						int result = initArmor(chest, split, defense, rarity, chestArmorIdCounter, setArmorIdCounter, setSkillId, secondSetSkillId, setGroupId, setName, gender, arenaArmor);
+						int result = initArmor(chest, split, defense, rarity, chestArmorIdCounter, setArmorIdCounter, setSkillId, secondSetSkillId, setGroupId, setName, gender, arenaArmor, eventArmor);
 
 						if (result != 0) return result;
 
@@ -857,7 +859,7 @@ int Database::initArmorData(Settings * setting)
 						// Arm
 						Armor& arm = armArmors[armArmorIdCounter];
 
-						initArmor(arm, split, defense, rarity, armArmorIdCounter, setArmorIdCounter, setSkillId, secondSetSkillId, setGroupId, setName, gender, arenaArmor);
+						initArmor(arm, split, defense, rarity, armArmorIdCounter, setArmorIdCounter, setSkillId, secondSetSkillId, setGroupId, setName, gender, arenaArmor, eventArmor);
 
 						if (arm.rarity >= 5)
 						{
@@ -895,7 +897,7 @@ int Database::initArmorData(Settings * setting)
 						// Waist
 						Armor& waist = waistArmors[waistArmorIdCounter];
 
-						initArmor(waist, split, defense, rarity, waistArmorIdCounter, setArmorIdCounter, setSkillId, secondSetSkillId, setGroupId, setName, gender, arenaArmor);
+						initArmor(waist, split, defense, rarity, waistArmorIdCounter, setArmorIdCounter, setSkillId, secondSetSkillId, setGroupId, setName, gender, arenaArmor, eventArmor);
 
 						if (waist.rarity >= 5)
 						{
@@ -933,7 +935,7 @@ int Database::initArmorData(Settings * setting)
 						// Leg
 						Armor& leg = legArmors[legArmorIdCounter];
 
-						initArmor(leg, split, defense, rarity, legArmorIdCounter, setArmorIdCounter, setSkillId, secondSetSkillId, setGroupId, setName, gender, arenaArmor);
+						initArmor(leg, split, defense, rarity, legArmorIdCounter, setArmorIdCounter, setSkillId, secondSetSkillId, setGroupId, setName, gender, arenaArmor, eventArmor);
 
 						if (leg.rarity >= 5)
 						{
@@ -983,7 +985,7 @@ int Database::initArmorData(Settings * setting)
 	return 0;
 }
 
-int Database::initArmor(Armor & armor, std::vector<std::string>& split, const int defense, const int rarity, const int id, const int setId, const int setSkiiId, const int secondSetSkillId, const int setGroupId, const std::string& setName, const MHW::Gender gender, const bool arenaArmor)
+int Database::initArmor(Armor & armor, std::vector<std::string>& split, const int defense, const int rarity, const int id, const int setId, const int setSkiiId, const int secondSetSkillId, const int setGroupId, const std::string& setName, const MHW::Gender gender, const bool arenaArmor, const bool eventArmor)
 {
 	armor.name = utf8_decode(split.at(0));			// Name of armor (leather head, etc...)
 	armor.setId = setId;							// unique set id for each armor set(leather, chainmail, etc...)
@@ -995,7 +997,8 @@ int Database::initArmor(Armor & armor, std::vector<std::string>& split, const in
 	armor.secondSetSkillId = secondSetSkillId;
 	armor.setGroupId = setGroupId;
 	armor.gender = gender;
-	armor.arena = arenaArmor;
+	armor.arenaArmor = arenaArmor;
+	armor.eventArmor = eventArmor;
 
 	int skillCount = 0;
 	int result = initArmorSkillData(armor, split, skillCount);
@@ -1011,81 +1014,16 @@ int Database::initArmor(Armor & armor, std::vector<std::string>& split, const in
 	return 0;
 }
 
-int Database::readArmorInfo(const std::string & line, std::string & setName, int & rarity, int & defense, MHW::Gender & gender, bool & arenaArmor, std::string& setSkillGroupName, int& setSkillId, int& secondSetSkillId, int& setGroupId)
+int Database::readArmorInfo(const std::string & line, std::string & setName, int & rarity, int & defense, MHW::Gender & gender, bool & arenaArmor, bool& eventArmor, std::string& setSkillGroupName, int& setSkillId, int& secondSetSkillId, int& setGroupId)
 {
-	/*
-	std::vector<std::string> split = splitByComma(line);
-
-	auto size = split.size();
-
-	// Each first line for each armor sets have 3 or 4 entries per line, but first one has only 4
-	// Armor set name,rarity,armor,gender
-	if (size == 5)
-	{
-		// Set name, rarity, armor
-		setName = split.at(0);
-
-		try
-		{
-			rarity = std::stoi(split.at(1));
-			defense = std::stoi(split.at(2));
-			int genderCode = std::stoi(split.at(3));
-			int arenaCode = std::stoi(split.at(4));
-
-			if (genderCode == 0)
-			{
-				gender = MHW::Gender::NONE;
-			}
-			else
-			{
-				if (genderCode == 1)
-				{
-					gender = MHW::Gender::FEMALE;
-				}
-				else if (genderCode == 2)
-				{
-					gender = MHW::Gender::MALE;
-				}
-				else
-				{
-					MHW::Logger::getInstance().error("Gender code is wrong: " + std::to_string(genderCode));
-					gender = MHW::Gender::NONE;
-				}
-			}
-
-			if (arenaCode == 0)
-			{
-				arenaArmor = false;
-			}
-			else if (arenaCode == 1)
-			{
-				arenaArmor = true;
-			}
-			else
-			{
-				MHW::Logger::getInstance().error("Arena code is wrong: " + std::to_string(arenaCode));
-				arenaArmor = false;
-			}
-		}
-		catch (...)
-		{
-			return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_ARMOR_DATA_ARE_NOT_NUM);
-		}
-	}
-	else
-	{
-		return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_ARMOR_DATA_INCORRECT_SPLIT_SIZE);
-	}
-	*/
-
 	std::vector<std::string> split = splitByComma(line);
 
 	auto size = split.size();
 
 	auto& logger = MHW::Logger::getInstance();
 
-	// set name, rarity, defense, gender, arena, set skill
-	if (size >= 5 && size <= 6)
+	// set name, rarity, defense, gender, arena, event, (set skill)
+	if (size >= 6 && size <= 7)
 	{
 		// Set name, rarity, armor
 		setName = split.at(0);
@@ -1096,6 +1034,7 @@ int Database::readArmorInfo(const std::string & line, std::string & setName, int
 			defense = std::stoi(split.at(2));
 			int genderCode = std::stoi(split.at(3));
 			int arenaCode = std::stoi(split.at(4));
+			int eventCode = std::stoi(split.at(5));
 
 			if (genderCode == 0)
 			{
@@ -1130,16 +1069,30 @@ int Database::readArmorInfo(const std::string & line, std::string & setName, int
 				logger.error("Arena code is wrong: " + std::to_string(arenaCode));
 				arenaArmor = false;
 			}
+
+			if (eventCode == 0)
+			{
+				eventArmor = false;
+			}
+			else if (eventCode == 1)
+			{
+				eventArmor = true;
+			}
+			else
+			{
+				logger.error("Event code is wrong: " + std::to_string(eventArmor));
+				eventArmor = false;
+			}
 		}
 		catch (...)
 		{
 			return static_cast<int>(MHW::ERROR_CODE::BAD_FILE_ARMOR_DATA_ARE_NOT_NUM);
 		}
 
-		if (size == 6)
+		if (size == 7)
 		{
 			// this armor has set skill
-			setSkillGroupName = split.at(5);
+			setSkillGroupName = split.at(6);
 
 			auto find_setSkillId = setSkillGroupNameToIdLUT.find(utf8_decode(setSkillGroupName));
 			if (find_setSkillId == setSkillGroupNameToIdLUT.end())
@@ -2012,99 +1965,88 @@ void Database::getArmorBySkill(Armor & armor, std::vector<Armor*>& queriedArmors
 	if (!setting->allowArenaArmor)
 	{
 		// Don't add arena armor
-		if (armor.arena)
+		if (armor.arenaArmor)
 		{
 			return;
 		}
 	}
 
 	// always add high rank armors
-	bool HR = true;
-	bool LR = setting->allowLowRankArmor;
-
 	bool found = false;
 
-	// armor rank
-	bool highRank = armor.highRank;
-
+	// check skill filter
 	if (!skillFilter.empty())
 	{
-		// iterate all head skills
-		for (auto& skillID : armor.skills)
+		// there is skills to find
+
+		// case 1: User allows extra skill. Once we find armor skill in skill filter, add and return
+		if (setting->allowExtraSkills)
 		{
-			// Check if this skill exist in armor skill filter
-			auto find_it = skillFilter.find(skillID);
-			if (find_it == skillFilter.end())
+			// iterate all skills
+			for (auto& skillID : armor.skills)
 			{
-				// This head armor doesn't have desired skill. skip.
-				return;
+				// Check if this skill exist in armor skill filter
+				auto find_it = skillFilter.find(skillID);
+				if (find_it == skillFilter.end())
+				{
+					// This armor doesn't have required skill. 
+					// In other word, this armor has extra skill and user don't care
+					continue;
+				}
+				else
+				{
+					// This armor has desired skill.
+					
+					found = isArmorQualified(armor, queriedArmors, setting);
+
+					if (found)
+					{
+						// Armor was found.
+						break;
+					}
+				}
+			}
+			// armor skill iter ends
+		}
+		// case 2: User disallows extra skill. 
+		else
+		{
+			bool hasSkill = false;
+			bool hasExtraSkill = false;
+
+			for (auto skillID : armor.skills)
+			{
+				// Check if this skill exist in armor skill filter
+				auto find_it = skillFilter.find(skillID);
+				if (find_it == skillFilter.end())
+				{
+					// This armor doesn't have required skill. 
+					hasExtraSkill = true;
+				}
+				else
+				{
+					hasSkill = true;
+				}
+			}
+
+			if (hasSkill)
+			{
+				// has skill
+				if (hasExtraSkill)
+				{
+					// has extra skill. do nothing
+				}
+				else
+				{
+					// doesn't have extra skill
+					found = isArmorQualified(armor, queriedArmors, setting);
+				}
 			}
 			else
 			{
-				// This armor has desired skill.
-
-				// check for high rank
-				if (HR && highRank)
-				{
-					// Add to head armor filter
-					if (armor.gender == MHW::Gender::NONE)
-					{
-						// This armor doesn't have gender
-						queriedArmors.push_back(&armor);
-						found = true;
-					}
-					else
-					{
-						if (armor.gender == MHW::Gender::MALE && setting->gender == MHW::Gender::MALE)
-						{
-							// This armor is for male and gender is set to male
-							queriedArmors.push_back(&armor);
-							found = true;
-						}
-						else if (armor.gender == MHW::Gender::FEMALE && setting->gender == MHW::Gender::FEMALE)
-						{
-							// this armor is for female and gender is set to female
-							queriedArmors.push_back(&armor);
-							found = true;
-						}
-					}
-				}
-
-				// Check for low rank
-				if (LR && !highRank)
-				{
-					// Add to head armor filter
-					if (armor.gender == MHW::Gender::NONE)
-					{
-						// This armor doesn't have gender
-						queriedArmors.push_back(&armor);
-						found = true;
-					}
-					else
-					{
-						if (armor.gender == MHW::Gender::MALE && setting->gender == MHW::Gender::MALE)
-						{
-							// This armor is for male and gender is set to male
-							queriedArmors.push_back(&armor);
-							found = true;
-						}
-						else if (armor.gender == MHW::Gender::FEMALE && setting->gender == MHW::Gender::FEMALE)
-						{
-							// this armor is for female and gender is set to female
-							queriedArmors.push_back(&armor);
-							found = true;
-						}
-					}
-				}
-
-				if (found)
-				{
-					// Armor was found. Stop iterating armor skill
-					return;
-				}
+				// doesn't have skill. do nothing
 			}
 		}
-		// armor skill iter ends
 	}
 
 	// Check if this head armor was added to filter
@@ -2120,7 +2062,7 @@ void Database::getArmorBySkill(Armor & armor, std::vector<Armor*>& queriedArmors
 		if (ssgId != -1)
 		{
 			// has set skill
-			if (highRank)
+			if (armor.highRank)
 			{
 				// armor is high rank
 				if (!highRankSetSkillFilter.empty())
@@ -2187,6 +2129,70 @@ void Database::getArmorBySkill(Armor & armor, std::vector<Armor*>& queriedArmors
 		// else, set skill id is -1
 	}
 	// else found
+}
+
+bool Database::isArmorQualified(Armor & armor, std::vector<Armor*>& queriedArmors, Settings * setting)
+{
+	bool HR = true;
+	bool LR = setting->allowLowRankArmor;
+
+	bool found = false;
+
+	// check for high rank
+	if (HR && armor.highRank)
+	{
+		// Add to head armor filter
+		if (armor.gender == MHW::Gender::NONE)
+		{
+			// This armor doesn't have gender
+			queriedArmors.push_back(&armor);
+			found = true;
+		}
+		else
+		{
+			if (armor.gender == MHW::Gender::MALE && setting->gender == MHW::Gender::MALE)
+			{
+				// This armor is for male and gender is set to male
+				queriedArmors.push_back(&armor);
+				found = true;
+			}
+			else if (armor.gender == MHW::Gender::FEMALE && setting->gender == MHW::Gender::FEMALE)
+			{
+				// this armor is for female and gender is set to female
+				queriedArmors.push_back(&armor);
+				found = true;
+			}
+		}
+	}
+
+	// Check for low rank
+	if (LR && !armor.highRank)
+	{
+		// Add to head armor filter
+		if (armor.gender == MHW::Gender::NONE)
+		{
+			// This armor doesn't have gender
+			queriedArmors.push_back(&armor);
+			found = true;
+		}
+		else
+		{
+			if (armor.gender == MHW::Gender::MALE && setting->gender == MHW::Gender::MALE)
+			{
+				// This armor is for male and gender is set to male
+				queriedArmors.push_back(&armor);
+				found = true;
+			}
+			else if (armor.gender == MHW::Gender::FEMALE && setting->gender == MHW::Gender::FEMALE)
+			{
+				// this armor is for female and gender is set to female
+				queriedArmors.push_back(&armor);
+				found = true;
+			}
+		}
+	}
+
+	return found;
 }
 
 void Database::getAllCharmsBySkill(std::vector<int>& filterCharmIndices, std::unordered_set<int>& filterSkills, std::unordered_set<int>& filterSetSkills)
@@ -2470,6 +2476,9 @@ int Database::reloadSkillNames(Settings * setting)
 						std::getline(skillData, line);
 						std::wstring description = utf8_decode(line);
 
+						skillNameToIdLUT[skillName] = skill->id;
+						skillIdToNameLUT[skill->id] = skillName;
+
 						for (int i = 1; i <= maxLvl; i++)
 						{
 							std::getline(skillData, line);
@@ -2485,9 +2494,6 @@ int Database::reloadSkillNames(Settings * setting)
 						}
 
 						indexCounter += maxLvl;
-
-						skillNameToIdLUT[skillName] = skill->id;
-						skillIdToNameLUT[skill->id] = skillName;
 					}
 					else
 					{
@@ -2791,7 +2797,7 @@ int Database::reloadArmorNames(Settings * setting)
 
 				auto size = split.size();
 
-				if (size == 5 || size == 6)
+				if (size == 6 || size == 7)
 				{
 					// header
 					std::wstring setName = utf8_decode(split.at(0));
