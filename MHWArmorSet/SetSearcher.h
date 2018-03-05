@@ -61,7 +61,6 @@ namespace MHW
 
 		// counter
 		static float searchCounter;
-		//static float prevSearchCounter;
 		static float totalCounter;
 		static int prevPrecentage;
 
@@ -80,9 +79,6 @@ namespace MHW
 
 		// result mutex
 		std::mutex resultMutex;
-
-		// result indices
-		int previouslyQueriedLastResultIndex;
 
 		// Currently searched armor sets
 		std::vector<ArmorSet> searchedArmorSets;

@@ -21,7 +21,6 @@ MHW::SetSearcher::SetSearcher()
 	, state(State::IDLE)
 	, running(false)
 	, abort(false)
-	, previouslyQueriedLastResultIndex(-1)
 	, iterCount(0)
 {}
 
@@ -214,7 +213,6 @@ void MHW::SetSearcher::work(Database * db)
 void MHW::SetSearcher::searchArmorSet(Database * db)
 {
 	MHW::ArmorSet::idCounter = 1;
-	previouslyQueriedLastResultIndex = -1;
 
 	MHW::ArmorSet* dummy = new MHW::ArmorSet();
 	searchArmorSet(db, SearchState::LF_HEAD, dummy);
