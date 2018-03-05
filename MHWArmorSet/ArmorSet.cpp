@@ -869,6 +869,12 @@ void MHW::ArmorSet::countSums(Armor * armor)
 	}
 }
 
+void MHW::ArmorSet::clearExtraSums()
+{
+	extraLowRankSetSkillArmorPieceSums.clear();
+	extraHighRankSetSkillArmorPieceSums.clear();
+}
+
 /*
 void MHW::ArmorSet::checkActviatedSetSkills(Database* db, const std::vector<SetSkill*>& reqLRSetSkills, const std::vector<SetSkill*>& reqHRSetSkills)
 {

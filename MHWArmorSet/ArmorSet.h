@@ -96,6 +96,8 @@ namespace MHW
 		void initSums(std::vector<Skill*>& filterSkills, const std::vector<SetSkill*>& reqLRSetSkills, const std::vector<SetSkill*>& reqHRSetSkills);
 		void countSums();
 		void countSums(Armor* armor);
+		void clearExtraSums();
+
 		// Check if there is any set skill activated and stores if there's any.
 		//void checkActviatedSetSkills(Database* db, const std::vector<SetSkill*>& reqLRSetSkills, const std::vector<SetSkill*>& reqHRSetSkills);
 		void addSkillLevelToSum(const int skillID, const int skillLevel);

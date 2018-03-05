@@ -40,7 +40,7 @@ namespace MHW
 		enum class SearchState
 		{
 			READY = 0,
-			LF_WEAPON,
+			LF_ARMOR_COMBINATION,
 			LF_HEAD,
 			LF_CHEST,
 			LF_ARM,
@@ -80,6 +80,20 @@ namespace MHW
 		// result mutex
 		std::mutex resultMutex;
 
+		// armor counter
+		int curHeadArmorCounter;
+		int curChestArmorCounter;
+		int curArmArmorCounter;
+		int curWaistArmorCounter;
+		int curLegArmorCounter;
+
+		// armor size
+		int headArmorSize;
+		int chestArmorSize;
+		int armArmorSize;
+		int waistArmorSize;
+		int legArmorSize;
+
 		// Currently searched armor sets
 		std::vector<ArmorSet> searchedArmorSets;
 
@@ -109,6 +123,8 @@ namespace MHW
 		bool isSetSkillGuardUp(Database* db);
 		
 		void initAndCountSums(MHW::ArmorSet* newArmorSet);
+
+		void getNewArmorCombination(MHW::ArmorSet* newArmorSet);
 
 		void step();
 	public:

@@ -22,6 +22,16 @@ MHW::SetSearcher::SetSearcher()
 	, running(false)
 	, abort(false)
 	, iterCount(0)
+	, curHeadArmorCounter(0)
+	, curChestArmorCounter(0)
+	, curArmArmorCounter(0)
+	, curWaistArmorCounter(0)
+	, curLegArmorCounter(0)
+	, headArmorSize(0)
+	, chestArmorSize(0)
+	, armArmorSize(0)
+	, waistArmorSize(0)
+	, legArmorSize(0)
 {}
 
 MHW::SetSearcher::~SetSearcher()
@@ -212,15 +222,51 @@ void MHW::SetSearcher::work(Database * db)
 
 void MHW::SetSearcher::searchArmorSet(Database * db)
 {
+	// init id counter
 	MHW::ArmorSet::idCounter = 1;
 
+	// init armor counter
+	curHeadArmorCounter = 0;
+	curChestArmorCounter = 0;
+	curArmArmorCounter = 0;
+	curWaistArmorCounter = 0;
+	curLegArmorCounter = 0;
+
+	headArmorSize = (int)filter.headArmors.size();
+	chestArmorSize = (int)filter.chestArmors.size();
+	armArmorSize = (int)filter.armArmors.size();
+	waistArmorSize = (int)filter.waistArmors.size();
+	legArmorSize = (int)filter.legArmors.size();
+
+	// create dummy
 	MHW::ArmorSet* dummy = new MHW::ArmorSet();
+
+	// clear and init count sum.
+	dummy->clearSums();
+	// Only need to init sums once.
+	dummy->initSums(filter.reqSkills, filter.reqLRSetSkills, filter.reqHRSetSkill);
+
+	// search
 	searchArmorSet(db, SearchState::LF_HEAD, dummy);
+
+	// delete dummt
 	delete dummy;
 }
 
 void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MHW::ArmorSet * curArmorSet)
 {
+	if (searchState == SearchState::LF_ARMOR_COMBINATION)
+	{
+		// get new armor combination.
+
+		// wipe extra set skill
+		curArmorSet->clearExtraSums();
+		// clear charm
+		curArmorSet->charm = nullptr;
+
+		// get new armor comb
+		getNewArmorCombination(curArmorSet);
+	}
 	if (searchState == SearchState::LF_HEAD)
 	{
 		if (abort.load()) return;
@@ -1064,6 +1110,15 @@ void MHW::SetSearcher::initAndCountSums(MHW::ArmorSet * newArmorSet)
 
 	// Count skill sums and set skill's req armor pieces
 	newArmorSet->countSums();
+}
+
+void MHW::SetSearcher::getNewArmorCombination(MHW::ArmorSet* newArmorSet)
+{
+	// get leg
+	if (curLegArmorCounter >= headArmorSize)
+	{
+		curLegArmorCounter++;
+	}
 }
 
 void MHW::SetSearcher::step()
