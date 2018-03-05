@@ -171,6 +171,7 @@ void MHW::SetSearcher::work(Database * db)
 
 			auto t = (L"t: " + Utility::Time::toMilliSecondString(start, end));
 			logger.info(Utility::wtos(t));
+			OutputDebugString(t.c_str());
 
 			if (abort.load())
 			{
