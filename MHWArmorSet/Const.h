@@ -8,8 +8,7 @@ namespace MHW
 	namespace VERSION
 	{
 		static const int major = 1;
-		static const int minor = 0;
-		static std::wstring build = L"Alpha";
+		static const int minor = 1;
 	}
 
 	namespace CONSTS

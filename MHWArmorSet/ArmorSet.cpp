@@ -125,15 +125,29 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 
 	if (chestArmor)
 	{
-		str += chestArmor->name;
-
-		if (setting->simplifySearchResult)
+		if (chestArmor->id >= ANY_ARMOR_ID_START)
 		{
-			str += L"\n";
+			if (chestArmor->decorationSlots.empty())
+			{
+				str += (L"Any armor\n");
+			}
+			else
+			{
+				str += (L"Any armor with deco slots (" + getItemDecoSizeAsStr(headArmorDecoSlots) + L")\n");
+			}
 		}
 		else
 		{
-			str += (L" (" + chestArmor->setName + L" / " + getItemDecoSizeAsStr(chestArmorDecoSlots) + L")\n");
+			str += chestArmor->name;
+
+			if (setting->simplifySearchResult)
+			{
+				str += L"\n";
+			}
+			else
+			{
+				str += (L" (" + chestArmor->setName + L" / " + getItemDecoSizeAsStr(chestArmorDecoSlots) + L")\n");
+			}
 		}
 	}
 	else
@@ -146,15 +160,29 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 
 	if (armArmor)
 	{
-		str += armArmor->name;
-
-		if (setting->simplifySearchResult)
+		if (armArmor->id >= ANY_ARMOR_ID_START)
 		{
-			str += L"\n";
+			if (armArmor->decorationSlots.empty())
+			{
+				str += (L"Any armor\n");
+			}
+			else
+			{
+				str += (L"Any armor with deco slots (" + getItemDecoSizeAsStr(headArmorDecoSlots) + L")\n");
+			}
 		}
 		else
 		{
-			str += (L" (" + armArmor->setName + L" / " + getItemDecoSizeAsStr(armArmorDecoSlots) + L")\n");
+			str += armArmor->name;
+
+			if (setting->simplifySearchResult)
+			{
+				str += L"\n";
+			}
+			else
+			{
+				str += (L" (" + armArmor->setName + L" / " + getItemDecoSizeAsStr(armArmorDecoSlots) + L")\n");
+			}
 		}
 	}
 	else
@@ -167,15 +195,29 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 
 	if (waistArmor)
 	{
-		str += waistArmor->name;
-
-		if (setting->simplifySearchResult)
+		if (waistArmor->id >= ANY_ARMOR_ID_START)
 		{
-			str += L"\n";
+			if (waistArmor->decorationSlots.empty())
+			{
+				str += (L"Any armor\n");
+			}
+			else
+			{
+				str += (L"Any armor with deco slots (" + getItemDecoSizeAsStr(headArmorDecoSlots) + L")\n");
+			}
 		}
 		else
 		{
-			str += (L" (" + waistArmor->setName + L" / " + getItemDecoSizeAsStr(waistArmorDecoSlots) + L")\n");
+			str += waistArmor->name;
+
+			if (setting->simplifySearchResult)
+			{
+				str += L"\n";
+			}
+			else
+			{
+				str += (L" (" + waistArmor->setName + L" / " + getItemDecoSizeAsStr(waistArmorDecoSlots) + L")\n");
+			}
 		}
 	}
 	else
@@ -188,15 +230,29 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 
 	if (legArmor)
 	{
-		str += legArmor->name;
-
-		if (setting->simplifySearchResult)
+		if (legArmor->id >= ANY_ARMOR_ID_START)
 		{
-			str += L"\n";
+			if (legArmor->decorationSlots.empty())
+			{
+				str += (L"Any armor\n");
+			}
+			else
+			{
+				str += (L"Any armor with deco slots (" + getItemDecoSizeAsStr(headArmorDecoSlots) + L")\n");
+			}
 		}
 		else
 		{
-			str += (L" (" + legArmor->setName + L" / " + getItemDecoSizeAsStr(legArmorDecoSlots) + L")\n");
+			str += legArmor->name;
+
+			if (setting->simplifySearchResult)
+			{
+				str += L"\n";
+			}
+			else
+			{
+				str += (L" (" + legArmor->setName + L" / " + getItemDecoSizeAsStr(legArmorDecoSlots) + L")\n");
+			}
 		}
 	}
 	else
