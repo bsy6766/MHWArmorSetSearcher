@@ -156,14 +156,8 @@ int Settings::readTemp()
 
 			int loadResult = 0;
 
-			if (majorVersion == 1)
-			{
-				if (minorVersion == 0)
-				{
-					// version 1.0
-					loadResult = loadTemp(tempFile);
-				}
-			}
+			// version 1.0
+			loadResult = loadTemp(tempFile);
 
 			if (loadResult != 0) return loadResult;
 

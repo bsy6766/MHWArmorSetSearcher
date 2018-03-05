@@ -1130,6 +1130,7 @@ int Database::readArmorInfo(const std::string & line, std::string & setName, int
 		{
 			setSkillGroupName.clear();
 			setSkillId = -1;
+			setGroupId = -1;
 		}
 	}
 	else
@@ -1966,6 +1967,15 @@ void Database::getArmorBySkill(Armor & armor, std::vector<Armor*>& queriedArmors
 	{
 		// Don't add arena armor
 		if (armor.arenaArmor)
+		{
+			return;
+		}
+	}
+
+	if (!setting->allowEventArmor)
+	{
+		// dOn't add event armor
+		if (armor.eventArmor)
 		{
 			return;
 		}
