@@ -6,13 +6,11 @@
 #include "Skill.h"
 #include "Armor.h"
 #include "Decoration.h"
-#include "Utility.h"
 #include "Const.h"
 #include "Logger.h"
 #include "ErrorCode.h"
 
 float MHW::SetSearcher::searchCounter = 0.0f;
-//float MHW::SetSearcher::prevSearchCounter = 0;
 float MHW::SetSearcher::totalCounter = 0.0f;
 int MHW::SetSearcher::prevPrecentage = 0;
 
@@ -21,7 +19,8 @@ MHW::SetSearcher::SetSearcher()
 	, state(State::IDLE)
 	, running(false)
 	, abort(false)
-	, iterCount(0)
+	, totalSearchResultFound(0)
+	, totalSearchResultQueried(0)
 {}
 
 MHW::SetSearcher::~SetSearcher()
@@ -54,7 +53,6 @@ void MHW::SetSearcher::search(Filter filter)
 {
 	// called by main thread
 	this->filter = filter;
-	this->iterCount = 0;
 
 	setState(State::SEARCHING);
 
@@ -163,8 +161,12 @@ void MHW::SetSearcher::work(Database * db)
 			MHW::SetSearcher::prevPrecentage = 0;
 			MHW::SetSearcher::totalCounter = static_cast<float>(totalPossibility);
 
+			totalSearchResultFound = 0;
+			totalSearchResultQueried = 0;
+
 			// search!
 			auto start = Utility::Time::now();
+			prevTime = Utility::Time::now();
 			searchArmorSet(db);
 			auto end = Utility::Time::now();
 
@@ -416,7 +418,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 
 						step();
 
-						sendMsg(false);
+						//sendMsg(false);
 					}
 					else
 					{
@@ -493,9 +495,11 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 					}
 					*/
 					// There was some set skill added and current armor pieces didn't meet the requirement.
-					return;
+					break;
 				}
 			}
+
+			sendMsg(false);
 		}
 	}
 	else if (searchState == SearchState::LF_CHARM)
@@ -581,7 +585,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 						//Add to result.
 						addNewArmorSet(curArmorSet);
 
-						sendMsg(false);
+						//sendMsg(false);
 						// Doesn't have to roll back skill sums and skill level sum because new leg armor will clear it
 					}
 					else
@@ -657,7 +661,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 									// Add to result.
 									addNewArmorSet(curArmorSet);
 
-									sendMsg(false);
+									//sendMsg(false);
 
 									// Next level charm might have a chance. keep going
 								}
@@ -829,7 +833,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 			// Add
 			addNewArmorSet(curArmorSet);
 
-			sendMsg(false);
+			//sendMsg(false);
 
 			// Clear deco data
 			curArmorSet->clearDecoData();
@@ -904,7 +908,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				// Add
 				addNewArmorSet(curArmorSet);
 
-				sendMsg(false);
+				//sendMsg(false);
 				
 				// Clear deco data
 				curArmorSet->clearDecoData();
@@ -1108,49 +1112,54 @@ void MHW::SetSearcher::addNewArmorSet(MHW::ArmorSet * newArmorSet)
 	// scope lock
 	std::unique_lock<std::mutex> qLock(resultMutex);
 
-	searchedArmorSets.push_back(MHW::ArmorSet());
-	ArmorSet& asRef = searchedArmorSets.back();
+	totalSearchResultFound++;
 
-	asRef.id = MHW::ArmorSet::idCounter;
-	MHW::ArmorSet::idCounter++;
+	if (totalSearchResultFound <= 500)
+	{
+		searchedArmorSets.push_back(MHW::ArmorSet());
+		ArmorSet& asRef = searchedArmorSets.back();
 
-	asRef.headArmor = newArmorSet->headArmor;
-	asRef.chestArmor = newArmorSet->chestArmor;
-	asRef.armArmor = newArmorSet->armArmor;
-	asRef.waistArmor = newArmorSet->waistArmor;
-	asRef.legArmor = newArmorSet->legArmor;
+		asRef.id = MHW::ArmorSet::idCounter;
+		MHW::ArmorSet::idCounter++;
 
-	asRef.charm = newArmorSet->charm;
+		asRef.headArmor = newArmorSet->headArmor;
+		asRef.chestArmor = newArmorSet->chestArmor;
+		asRef.armArmor = newArmorSet->armArmor;
+		asRef.waistArmor = newArmorSet->waistArmor;
+		asRef.legArmor = newArmorSet->legArmor;
 
-	asRef.headArmorDecoSlots = newArmorSet->headArmorDecoSlots;
-	asRef.chestArmorDecoSlots = newArmorSet->chestArmorDecoSlots;
-	asRef.armArmorDecoSlots = newArmorSet->armArmorDecoSlots;
-	asRef.waistArmorDecoSlots = newArmorSet->waistArmorDecoSlots;
-	asRef.legArmorDecoSlots = newArmorSet->legArmorDecoSlots;
+		asRef.charm = newArmorSet->charm;
 
-	asRef.totalSize1DecorationSlots = newArmorSet->totalSize1DecorationSlots;
-	asRef.totalSize2DecorationSlots = newArmorSet->totalSize2DecorationSlots;
-	asRef.totalSize3DecorationSlots = newArmorSet->totalSize3DecorationSlots;
+		asRef.headArmorDecoSlots = newArmorSet->headArmorDecoSlots;
+		asRef.chestArmorDecoSlots = newArmorSet->chestArmorDecoSlots;
+		asRef.armArmorDecoSlots = newArmorSet->armArmorDecoSlots;
+		asRef.waistArmorDecoSlots = newArmorSet->waistArmorDecoSlots;
+		asRef.legArmorDecoSlots = newArmorSet->legArmorDecoSlots;
 
-	asRef.totalUsedSize1DecorationSlot = newArmorSet->totalUsedSize1DecorationSlot;
-	asRef.totalUsedSize2DecorationSlot = newArmorSet->totalUsedSize2DecorationSlot;
-	asRef.totalUsedSize3DecorationSlot = newArmorSet->totalUsedSize3DecorationSlot;
+		asRef.totalSize1DecorationSlots = newArmorSet->totalSize1DecorationSlots;
+		asRef.totalSize2DecorationSlots = newArmorSet->totalSize2DecorationSlots;
+		asRef.totalSize3DecorationSlots = newArmorSet->totalSize3DecorationSlots;
 
-	asRef.skillLevelSums = newArmorSet->skillLevelSums;
-	asRef.extraSkillLevelSums = newArmorSet->extraSkillLevelSums;
-	asRef.decoSkillLevelSums = newArmorSet->decoSkillLevelSums;
+		asRef.totalUsedSize1DecorationSlot = newArmorSet->totalUsedSize1DecorationSlot;
+		asRef.totalUsedSize2DecorationSlot = newArmorSet->totalUsedSize2DecorationSlot;
+		asRef.totalUsedSize3DecorationSlot = newArmorSet->totalUsedSize3DecorationSlot;
 
-	asRef.perfectSkillMatch = newArmorSet->perfectSkillMatch;
+		asRef.skillLevelSums = newArmorSet->skillLevelSums;
+		asRef.extraSkillLevelSums = newArmorSet->extraSkillLevelSums;
+		asRef.decoSkillLevelSums = newArmorSet->decoSkillLevelSums;
 
-	asRef.lowRankSetSkillArmorPieceSums = newArmorSet->lowRankSetSkillArmorPieceSums;
-	asRef.extraLowRankSetSkillArmorPieceSums = newArmorSet->extraLowRankSetSkillArmorPieceSums;
-	asRef.activatedLowRankSetSkills = newArmorSet->activatedLowRankSetSkills;
+		asRef.perfectSkillMatch = newArmorSet->perfectSkillMatch;
 
-	asRef.highRankSetSkillArmorPieceSums = newArmorSet->highRankSetSkillArmorPieceSums;
-	asRef.extraHighRankSetSkillArmorPieceSums = newArmorSet->extraHighRankSetSkillArmorPieceSums;
-	asRef.activatedHighRankSetSkills = newArmorSet->activatedHighRankSetSkills;
+		asRef.lowRankSetSkillArmorPieceSums = newArmorSet->lowRankSetSkillArmorPieceSums;
+		asRef.extraLowRankSetSkillArmorPieceSums = newArmorSet->extraLowRankSetSkillArmorPieceSums;
+		asRef.activatedLowRankSetSkills = newArmorSet->activatedLowRankSetSkills;
 
-	asRef.usedDecorations = newArmorSet->usedDecorations;
+		asRef.highRankSetSkillArmorPieceSums = newArmorSet->highRankSetSkillArmorPieceSums;
+		asRef.extraHighRankSetSkillArmorPieceSums = newArmorSet->extraHighRankSetSkillArmorPieceSums;
+		asRef.activatedHighRankSetSkills = newArmorSet->activatedHighRankSetSkills;
+
+		asRef.usedDecorations = newArmorSet->usedDecorations;
+	}
 }
 
 MHW::SetSearcher::State MHW::SetSearcher::getState()
@@ -1192,7 +1201,14 @@ void MHW::SetSearcher::queryResults(std::vector<MHW::ArmorSet>& armorSets)
 
 	int size = armorSets.size();
 
+	totalSearchResultQueried += searchedArmorSets.size();
+
 	armorSets = std::move(searchedArmorSets);
+}
+
+int MHW::SetSearcher::getTotalResults()
+{
+	return totalSearchResultFound;
 }
 
 void MHW::SetSearcher::sendMsg(const bool finished)
@@ -1206,14 +1222,32 @@ void MHW::SetSearcher::sendMsg(const bool finished)
 	}
 	else
 	{
-		iterCount++;
-
-		if (iterCount > MHW::CONSTS::SETSEARCHER_ITER_TRESHOLD)
+		// get copy
+		int totalQueriedCopy = 0;
 		{
-			iterCount = 0;
+			std::unique_lock<std::mutex> qLock(resultMutex);
+			totalQueriedCopy = totalSearchResultQueried;
+		}
+
+		// get time
+		auto curTime = Utility::Time::now();
+		long long timeSec = std::chrono::duration_cast<std::chrono::milliseconds>(curTime - prevTime).count();
+
+		//OutputDebugString((L"t" + std::to_wstring(timeSec) + L"\n").c_str());
+		//OutputDebugString((L"ps: " + std::to_wstring(prevSize) + L"\n").c_str());
+
+		// if time is greater than 0.1 sec or total queired result is less than 500, send message
+		if (timeSec >= 100 && totalQueriedCopy <= 500)
+		{
+			//OutputDebugString((L"s: " + std::to_wstring(size) + L"\n").c_str());
+			//OutputDebugString(L"sendMsg\n");
+
+			// update time
+			prevTime = curTime;
 
 			if (mainHWND)
 			{
+				// send messesage
 				SendMessage(mainHWND, WM_FROM_WORKER_THREAD, 0, 0);
 			}
 		}
