@@ -83,6 +83,19 @@ namespace MHW
 		// Currently searched armor sets
 		std::vector<ArmorSet> searchedArmorSets;
 
+		// counters
+		int headArmorCounter;
+		int chestArmorCounter;
+		int armArmorCounter;
+		int waistArmorCounter;
+		int legArmorCounter;
+
+		int headArmorSize;
+		int chestArmorSize;
+		int armArmorSize;
+		int waistArmorSize;
+		int legArmorSize;
+
 		// search armor set
 		void searchArmorSet(Database* db);
 
