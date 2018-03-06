@@ -133,7 +133,7 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 			}
 			else
 			{
-				str += (L"Any armor with deco slots (" + getItemDecoSizeAsStr(headArmorDecoSlots) + L")\n");
+				str += (L"Any armor with deco slots (" + getItemDecoSizeAsStr(chestArmorDecoSlots) + L")\n");
 			}
 		}
 		else
@@ -168,7 +168,7 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 			}
 			else
 			{
-				str += (L"Any armor with deco slots (" + getItemDecoSizeAsStr(headArmorDecoSlots) + L")\n");
+				str += (L"Any armor with deco slots (" + getItemDecoSizeAsStr(armArmorDecoSlots) + L")\n");
 			}
 		}
 		else
@@ -203,7 +203,7 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 			}
 			else
 			{
-				str += (L"Any armor with deco slots (" + getItemDecoSizeAsStr(headArmorDecoSlots) + L")\n");
+				str += (L"Any armor with deco slots (" + getItemDecoSizeAsStr(waistArmorDecoSlots) + L")\n");
 			}
 		}
 		else
@@ -238,7 +238,7 @@ std::wstring MHW::ArmorSet::toResultStr(Database* db, Settings* setting)
 			}
 			else
 			{
-				str += (L"Any armor with deco slots (" + getItemDecoSizeAsStr(headArmorDecoSlots) + L")\n");
+				str += (L"Any armor with deco slots (" + getItemDecoSizeAsStr(legArmorDecoSlots) + L")\n");
 			}
 		}
 		else

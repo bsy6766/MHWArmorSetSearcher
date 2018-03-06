@@ -366,6 +366,14 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				// set index
 				curArmorSet->setLegArmor(legArmor);
 
+				/*
+				// for debug. To find specific armor set during debug
+				if (curArmorSet->headArmor->id == 117 && curArmorSet->chestArmor->id == 9005 && curArmorSet->armArmor->id == 114 && curArmorSet->waistArmor->id == 109 && curArmorSet->legArmor->id == 112)
+				{
+					OutputDebugString(L"?!\n");
+				}
+				*/
+
 				// init and count skill level sum
 				initAndCountSums(curArmorSet);
 
