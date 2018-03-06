@@ -46,6 +46,7 @@ namespace MHW
 		static const int DECO_LISTBOX_H = 295;
 
 		static const int SETSEARCHER_ITER_TRESHOLD = 2;
+		static const long long SET_SEARCHER_TIME_TRESHOLD = 1LL;
 
 		static const int CHARM_DISPLAY_BY_NAME = 0;
 		static const int CHARM_DISPLAY_BY_SKILL_NAME = 1;
