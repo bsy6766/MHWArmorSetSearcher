@@ -330,9 +330,10 @@ void Settings::saveTemp()
 
 	// deco
 	data += (L"\n" + std::to_wstring(static_cast<int>(decorationCheckList.size())));
-	for (auto b : decorationCheckList)
+	const int size = decorationCheckList.size();
+	for (int i = 0; i < size; ++i)
 	{
-		if (b)
+		if (decorationCheckList.at(i))
 		{
 			data += (L"\n1");
 		}
@@ -340,6 +341,8 @@ void Settings::saveTemp()
 		{
 			data += (L"\n0");
 		}
+
+		data += ((L"\n") + std::to_wstring(decorationCountList.at(i)));
 	}
 
 	// options
@@ -393,15 +396,19 @@ int Settings::load(Database * db)
 
 	result = loadSetSkills(db);
 	if (result != 0) return result;
-
+	
 	tempSkillData.clear();
 	tempSetSkillData.clear();
 
 	if (decorationCheckList.empty())
 	{
+		logger.info("Deco check list is empty. Init all to true");
 		decorationCheckList.resize(db->decorations.size(), true);
 	}
 
+	result = loadDecoCounts(db);
+	if (result != 0) return result;
+	
 	return 0;
 }
 
@@ -443,6 +450,36 @@ int Settings::loadSetSkills(Database * db)
 		else
 		{
 			return static_cast<int>(MHW::ERROR_CODE::SETTING_FAILED_TO_GET_SET_SKILL_BY_ID_AND_RANK);
+		}
+	}
+
+	return 0;
+}
+
+int Settings::loadDecoCounts(Database * db)
+{
+	if (decorationCountList.empty())
+	{
+		MHW::Logger::getInstance().info("Deco count list is empty. Init to max");
+		decorationCountList.resize(db->decorations.size(), 0);
+
+		int i = 0;
+		for (auto& e : db->decorations)
+		{
+			decorationCheckList.at(i) = true;
+
+			Skill* skill = db->getSkillByIDAndLevel((e.second).skillId, 1);
+			if (skill)
+			{
+				decorationCountList.at(i) = skill->maxLevel;
+			}
+			else
+			{
+				MHW::Logger::getInstance().errorCode(MHW::ERROR_CODE::FAILED_TO_GET_SKILL_DURING_CLEAR);
+				return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_GET_SKILL_DURING_CLEAR);
+			}
+
+			i++;
 		}
 	}
 
@@ -720,7 +757,7 @@ int Settings::loadTemp(std::wifstream & tempFile)
 	else
 	{
 		decoSize = 0;
-		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_DECO_COUNT_TO_NUM);
+		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_DECO_TOTAL_SIZE_TO_NUM);
 	}
 
 	for (int i = 0; i < decoSize; ++i)
@@ -736,6 +773,19 @@ int Settings::loadTemp(std::wifstream & tempFile)
 		else
 		{
 			return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_DECO_BOOL_TO_NUM);
+		}
+
+		std::getline(tempFile, line);
+
+		int countVal;
+		if (readValue(line, countVal))
+		{
+			decorationCountList.push_back(countVal);
+			logger.info(std::to_string(i) + ") deco count: " + std::to_string(countVal));
+		}
+		else
+		{
+			return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_DECO_COUNT_TO_NUM);
 		}
 	}
 
@@ -1108,6 +1158,21 @@ std::wstring Settings::getString(const MHW::StringLiteral e)
 	return stringLiterals[e];
 }
 
+bool Settings::setDecoCount(const int index, const int count)
+{
+	const int size = (int)decorationCountList.size();
+
+	if (index >= size)
+	{
+		return false;
+	}
+	else
+	{
+		decorationCountList.at(index) = count;
+		return true;
+	}
+}
+
 void Settings::clear()
 {
 	auto& logger = MHW::Logger::getInstance();
@@ -1164,11 +1229,35 @@ void Settings::clear()
 	legArmorIndex = 0;
 	logger.info("All armors index: 0");
 
+	/*
+	int i = 0;
+	for (auto& e : db->decorations)
+	{
+		decorationCheckList.at(i) = true;
+		
+		Skill* skill = db->getSkillByIDAndLevel((e.second).skillId, 1);
+		if (skill)
+		{
+			decorationCountList.at(i) = skill->maxLevel;
+		}
+		else
+		{
+			logger.errorCode(MHW::ERROR_CODE::FAILED_TO_GET_SKILL_DURING_CLEAR);
+			decorationCountList.at(i) = 0;
+		}
+		i++;
+	}
+	*/
+
+	/*
 	for (int i = 0; i < (int)decorationCheckList.size(); ++i)
 	{
 		decorationCheckList.at(i) = true;
 	}
-	logger.info("All deco usable");
+	*/
+	decorationCheckList.clear();
+	decorationCountList.clear();
+	logger.info("deco check list & count list empty");
 
 	gender = MHW::Gender::MALE;
 	logger.info("Gender: Male");
@@ -1198,6 +1287,12 @@ void Settings::clear()
 	logger.info("Show max level");
 
 	//stringLiterals.clear();
+}
+
+void Settings::reset(Database * db)
+{
+	clear();
+	load(db);
 }
 
 void Settings::print(std::map<int, Charm>& charms)

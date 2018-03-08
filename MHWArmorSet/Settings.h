@@ -115,6 +115,7 @@ public:
 
 	// decoration checked list. Index means the id of decoration
 	std::vector<bool> decorationCheckList;
+	std::vector<int> decorationCountList;
 
 	// ============== 
 
@@ -158,6 +159,7 @@ public:
 	int load(Database* db);
 	int loadSkills(Database* db);
 	int loadSetSkills(Database* db);
+	int loadDecoCounts(Database* db);
 
 	// version 1.0
 	int loadTemp(std::wifstream& tempFile);
@@ -203,8 +205,11 @@ public:
 
 	std::wstring getString(const MHW::StringLiteral e);
 
+	bool setDecoCount(const int index, const int count);
+
 	// Clear all setting to default
 	void clear();
+	void reset(Database* db);
 
 	// for debug
 	void print(std::map<int, Charm>& charms);

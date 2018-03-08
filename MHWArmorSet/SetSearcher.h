@@ -72,9 +72,6 @@ namespace MHW
 		// work mutex
 		std::mutex workMutex;
 
-		// cb
-		std::condition_variable cv;
-
 		// result mutex
 		std::mutex resultMutex;
 
@@ -121,6 +118,9 @@ namespace MHW
 		// Default destructor
 		~SetSearcher();
 
+		// cb
+		std::condition_variable cv;
+
 		// main window 
 		HWND mainHWND;
 		// pb
@@ -163,7 +163,7 @@ namespace MHW
 		// send message to main thread
 		void sendMsg(const bool finished);
 
-		void abortSearching();
+		void abortSearching(const bool stop);
 	};
 }
 

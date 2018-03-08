@@ -179,11 +179,20 @@ void MHW::SetSearcher::work(Database * db)
 				logger.info("Search aborted");
 				abort.store(false);
 
-				setState(State::ABORTED);
-
-				if (mainHWND)
+				if (getState() == State::STOP_REQUESTED)
 				{
-					SendMessage(mainHWND, WM_FROM_WORKER_THREAD, 0, 0);
+					logger.info("Stop requested.. end of work.");
+					setState(State::STOPPED);
+					return;
+				}
+				else
+				{
+					setState(State::ABORTED);
+
+					if (mainHWND)
+					{
+						SendMessage(mainHWND, WM_FROM_WORKER_THREAD, 0, 0);
+					}
 				}
 			}
 			else
@@ -859,21 +868,32 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 					// valid deco. Check if this deco is usable
 					if (filter.usableDecorations.at(deco->id))
 					{
-						// can use this decoration
-						if (deco->size == 1)
-						{
-							totalSize1DecoSlotReq += remainingSkillLevels[e.first];
-						}
-						else if (deco->size == 2)
-						{
-							totalSize2DecoSlotReq += remainingSkillLevels[e.first];
-						}
-						else if (deco->size == 3)
-						{
-							totalSize3DecoSlotReq += remainingSkillLevels[e.first];
-						}
+						// get total deco needed
+						const int totalDecoNeeded = remainingSkillLevels[e.first];
 
-						usingDecos[deco->id] += remainingSkillLevels[e.first];
+						if (filter.decorationCount.at(deco->id) >= totalDecoNeeded)
+						{
+							// can use this decoration
+							if (deco->size == 1)
+							{
+								totalSize1DecoSlotReq += totalDecoNeeded;
+							}
+							else if (deco->size == 2)
+							{
+								totalSize2DecoSlotReq += totalDecoNeeded;
+							}
+							else if (deco->size == 3)
+							{
+								totalSize3DecoSlotReq += totalDecoNeeded;
+							}
+
+							usingDecos[deco->id] += totalDecoNeeded;
+						}
+						else
+						{
+							// Doesn't haven enough deco
+							return;
+						}
 					}
 					else
 					{
@@ -1254,9 +1274,13 @@ void MHW::SetSearcher::sendMsg(const bool finished)
 	}
 }
 
-void MHW::SetSearcher::abortSearching()
+void MHW::SetSearcher::abortSearching(const bool stop)
 {
 	abort.store(true);
+	if (stop)
+	{
+		setState(MHW::SetSearcher::State::STOP_REQUESTED);
+	}
 }
 
 bool MHW::SetSearcher::join()
