@@ -22,6 +22,8 @@ namespace MHW
 		static const int MAX_SKILL_COUNT = 15;
 		static const int MAX_SET_SKILL_COUNT = 2;
 
+		static const int MAX_ARMOR_RARITY = 8;
+
 		// const
 		static const int LEFT_COLUMN_WIDTH = 300;
 		static const int RIGHT_COLUMN_X = 320;

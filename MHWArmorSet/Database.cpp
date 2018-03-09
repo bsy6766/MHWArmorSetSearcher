@@ -1981,6 +1981,12 @@ void Database::getArmorBySkill(Armor & armor, std::vector<Armor*>& queriedArmors
 		}
 	}
 
+	if (armor.rarity < setting->minArmorRarity)
+	{
+		// doesn't meet rairty
+		return;
+	}
+
 	// always add high rank armors
 	bool found = false;
 
