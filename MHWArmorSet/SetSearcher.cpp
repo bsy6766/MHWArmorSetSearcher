@@ -174,7 +174,7 @@ void MHW::SetSearcher::work(Database * db)
 			totalSearchResultQueried = 0;
 
 			initArmorCounterAndSize();
-
+			
 			// search!
 			auto start = Utility::Time::now();
 			prevTime = Utility::Time::now();
@@ -237,7 +237,10 @@ void MHW::SetSearcher::searchArmorSet(Database * db)
 	MHW::ArmorSet::idCounter = 1;
 
 	MHW::ArmorSet* dummy = new MHW::ArmorSet();
+	initFirstArmorSet(dummy);
+
 	searchArmorSet(db, SearchState::LF_NEXT_ARMOR_COMB, dummy);
+
 	delete dummy;
 }
 
@@ -1176,6 +1179,54 @@ void MHW::SetSearcher::initArmorCounterAndSize()
 	legArmorSize = (int)filter.legArmors.size();
 }
 
+void MHW::SetSearcher::initFirstArmorSet(MHW::ArmorSet* armorSet)
+{
+	if (headArmorSize == 0)
+	{
+		armorSet->setHeadrmor(nullptr);
+	}
+	else
+	{
+		armorSet->setHeadrmor(filter.headArmors.front());
+	}
+
+	if (chestArmorSize == 0)
+	{
+		armorSet->setChestArmor(nullptr);
+	}
+	else
+	{
+		armorSet->setChestArmor(filter.chestArmors.front());
+	}
+
+	if (armArmorSize == 0)
+	{
+		armorSet->setArmArmor(nullptr);
+	}
+	else
+	{
+		armorSet->setArmArmor(filter.armArmors.front());
+	}
+
+	if (waistArmorSize == 0)
+	{
+		armorSet->setWaistArmor(nullptr);
+	}
+	else
+	{
+		armorSet->setWaistArmor(filter.waistArmors.front());
+	}
+
+	if (legArmorSize == 0)
+	{
+		armorSet->setLegArmor(nullptr);
+	}
+	else
+	{
+		armorSet->setLegArmor(filter.legArmors.front());
+	}
+}
+
 bool MHW::SetSearcher::getNextArmorCombination(MHW::ArmorSet * armorSet)
 {
 	if (headArmorCounter == headArmorSize && 
@@ -1187,6 +1238,7 @@ bool MHW::SetSearcher::getNextArmorCombination(MHW::ArmorSet * armorSet)
 		return false;
 	}
 
+
 	if (legArmorSize != 0)
 	{
 		legArmorCounter++;
@@ -1195,10 +1247,14 @@ bool MHW::SetSearcher::getNextArmorCombination(MHW::ArmorSet * armorSet)
 		{
 			legArmorCounter = 0;
 			waistArmorCounter++;
+
+			if (waistArmorCounter < waistArmorSize)
+			{
+				armorSet->setWaistArmor(filter.waistArmors.at(waistArmorCounter));
+			}
 		}
-		else
-		{
-		}
+
+		armorSet->setLegArmor(filter.legArmors.at(legArmorCounter));
 	}
 	else
 	{
@@ -1210,7 +1266,15 @@ bool MHW::SetSearcher::getNextArmorCombination(MHW::ArmorSet * armorSet)
 		if (waistArmorCounter >= waistArmorSize)
 		{
 			waistArmorCounter = 0;
+
+			armorSet->setWaistArmor(filter.waistArmors.at(waistArmorCounter));
+
 			armArmorCounter++;
+
+			if (armArmorCounter < armArmorSize)
+			{
+				armorSet->setArmArmor(filter.armArmors.at(armArmorCounter));
+			}
 		}
 	}
 	else
@@ -1223,7 +1287,15 @@ bool MHW::SetSearcher::getNextArmorCombination(MHW::ArmorSet * armorSet)
 		if (armArmorCounter >= armArmorSize)
 		{
 			armArmorCounter = 0;
+
+			armorSet->setArmArmor(filter.armArmors.at(armArmorCounter));
+
 			chestArmorCounter++;
+
+			if (chestArmorCounter < chestArmorCounter)
+			{
+				armorSet->setChestArmor(filter.chestArmors.at(chestArmorCounter));
+			}
 		}
 	}
 	else
@@ -1236,7 +1308,15 @@ bool MHW::SetSearcher::getNextArmorCombination(MHW::ArmorSet * armorSet)
 		if (chestArmorCounter >= chestArmorSize)
 		{
 			chestArmorCounter = 0;
+
+			armorSet->setChestArmor(filter.chestArmors.at(chestArmorCounter));
+
 			headArmorCounter++;
+
+			if (headArmorCounter < headArmorSize)
+			{
+				armorSet->setHeadrmor(filter.headArmors.at(headArmorCounter));
+			}
 		}
 	}
 	else
@@ -1257,6 +1337,8 @@ bool MHW::SetSearcher::getNextArmorCombination(MHW::ArmorSet * armorSet)
 	}
 
 	//OutputDebugString((L"H: " + std::to_wstring(headArmorCounter) + L", C: " + std::to_wstring(chestArmorCounter) + L", A: " + std::to_wstring(armArmorCounter) + L", W: " + std::to_wstring(waistArmorCounter) + L", L: " + std::to_wstring(legArmorCounter) + L"\n").c_str());
+
+	return true;
 
 	if (headArmorSize == 0)
 	{

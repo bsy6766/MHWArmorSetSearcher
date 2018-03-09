@@ -126,6 +126,7 @@ namespace MHW
 		void initAndCountSums(MHW::ArmorSet* newArmorSet);
 
 		void initArmorCounterAndSize();
+		void initFirstArmorSet(MHW::ArmorSet* armorSet);
 
 		bool getNextArmorCombination(MHW::ArmorSet* armorSet);
 
