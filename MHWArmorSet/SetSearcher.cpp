@@ -256,6 +256,12 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 			// clear flags
 			curArmorSet->skillPassed = false;
 			curArmorSet->setSkillPassed = false;
+			
+			// for debug. To find specific armor set during debug
+			if (curArmorSet->headArmor->id == 101 && curArmorSet->chestArmor->id == 93 && curArmorSet->armArmor->id == 114 && curArmorSet->waistArmor->id == 12 && curArmorSet->legArmor->id == 100)
+			{
+				OutputDebugString(L"?!\n");
+			}
 
 			// first, check overleveled skill
 			if (checkOverleveledSkill(curArmorSet))
@@ -491,7 +497,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 						addNewArmorSet(curArmorSet);
 						// Don't check charm because if armor set need charm, it would be failed.
 
-						step();
+						//step();
 
 						//sendMsg(false);
 					}
@@ -604,7 +610,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 
 		if (filter.charms.empty())
 		{
-			step();
+			//step();
 
 			// Charm is 'None'. 
 			if (filter.hasDecorationToUse)
@@ -1237,7 +1243,6 @@ bool MHW::SetSearcher::getNextArmorCombination(MHW::ArmorSet * armorSet)
 	{
 		return false;
 	}
-
 
 	if (legArmorSize != 0)
 	{
