@@ -53,8 +53,6 @@ namespace MHW
 			LF_DECORATION,
 		};
 	private:
-		// filter to use on search
-		Filter filter;
 
 		// state
 		State state;
@@ -129,6 +127,7 @@ namespace MHW
 		void initFirstArmorSet(MHW::ArmorSet* armorSet);
 
 		bool getNextArmorCombination(MHW::ArmorSet* armorSet);
+		bool getNextArmorCombination2(MHW::ArmorSet* armorSet, std::vector<Armor*>::iterator& headIter, std::vector<Armor*>::iterator& chestIter, std::vector<Armor*>::iterator& armIter, std::vector<Armor*>::iterator& waistIter, std::vector<Armor*>::iterator& legIter);
 
 		bool checkOverleveledSkill(MHW::ArmorSet* curArmorSet);
 				
@@ -139,6 +138,9 @@ namespace MHW
 
 		// Default destructor
 		~SetSearcher();
+
+		// filter to use on search
+		Filter filter;
 
 		// cb
 		std::condition_variable cv;
@@ -186,6 +188,7 @@ namespace MHW
 		void sendMsg(const bool finished);
 
 		void abortSearching(const bool stop);
+		void test();
 	};
 }
 

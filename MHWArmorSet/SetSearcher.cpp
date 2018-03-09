@@ -285,10 +285,8 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 						//  Add to result
 						addNewArmorSet(curArmorSet);
 						// Don't check charm because if armor set need charm, it would be failed.
-
-						step();
-
-						//sendMsg(false);
+						
+						sendMsg(false);
 					}
 					else
 					{
@@ -304,6 +302,8 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				// else, failed set skill 
 			}
 			// else, there is skill overleveled
+
+			step();
 		}
 	}
 	else if (searchState == SearchState::LF_HEAD)
@@ -639,7 +639,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				// user picked specific charm
 				if (filter.charms.size() == 1)
 				{
-					step();
+					//step();
 
 					// valid. There can be only 1 user picked charm
 					curArmorSet->charm = filter.charms.front();
@@ -701,7 +701,7 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				{
 					if (abort.load()) return;
 
-					step();
+					//step();
 
 					// set index
 					curArmorSet->charm = curCharm;
@@ -1354,50 +1354,39 @@ bool MHW::SetSearcher::getNextArmorCombination(MHW::ArmorSet * armorSet)
 	*/
 
 	return true;
+}
 
-	if (headArmorSize == 0)
-	{
-		armorSet->setHeadrmor(nullptr);
-	}
-	else
-	{
-		armorSet->setHeadrmor(filter.headArmors.at(headArmorCounter));
-	}
+bool MHW::SetSearcher::getNextArmorCombination2(MHW::ArmorSet* armorSet, std::vector<Armor*>::iterator& headIter, std::vector<Armor*>::iterator& chestIter, std::vector<Armor*>::iterator& armIter, std::vector<Armor*>::iterator& waistIter, std::vector<Armor*>::iterator& legIter)
+{
+	legIter++;
 
-	if (chestArmorSize == 0)
+	if (legIter == filter.legArmors.end())
 	{
-		armorSet->setChestArmor(nullptr);
-	}
-	else
-	{
-		armorSet->setChestArmor(filter.chestArmors.at(chestArmorCounter));
+		legIter = filter.legArmors.begin();
+		waistIter++;
 	}
 
-	if (armArmorSize == 0)
+	if (waistIter == filter.waistArmors.end())
 	{
-		armorSet->setArmArmor(nullptr);
-	}
-	else
-	{
-		armorSet->setArmArmor(filter.armArmors.at(armArmorCounter));
+		waistIter = filter.waistArmors.begin();
+		armIter++;
 	}
 
-	if (waistArmorSize == 0)
+	if (armIter == filter.armArmors.end())
 	{
-		armorSet->setWaistArmor(nullptr);
-	}
-	else
-	{
-		armorSet->setWaistArmor(filter.waistArmors.at(waistArmorCounter));
+		armIter = filter.armArmors.begin();
+		chestIter++;
 	}
 
-	if (legArmorSize == 0)
+	if (chestIter == filter.chestArmors.end())
 	{
-		armorSet->setLegArmor(nullptr);
+		chestIter = filter.chestArmors.begin();
+		headIter++;
 	}
-	else
+
+	if (headIter == filter.headArmors.end())
 	{
-		armorSet->setLegArmor(filter.legArmors.at(legArmorCounter));
+		return false;
 	}
 
 	return true;
@@ -1416,6 +1405,103 @@ bool MHW::SetSearcher::checkOverleveledSkill(MHW::ArmorSet * curArmorSet)
 	}
 
 	return true;
+}
+
+void MHW::SetSearcher::test()
+{
+	{
+		MHW::ArmorSet* test = new MHW::ArmorSet();
+
+		auto start = Utility::Time::now();
+
+		while (getNextArmorCombination(test))
+		{
+
+		}
+
+		auto end = Utility::Time::now();
+
+		OutputDebugString((L"getNextArmorCombination() t: " + Utility::Time::toMilliSecondString(start, end)).c_str());
+
+		delete test;
+	}
+
+	{
+		MHW::ArmorSet* test = new MHW::ArmorSet();
+
+		std::vector<Armor*>::iterator headIter = filter.headArmors.begin();
+		std::vector<Armor*>::iterator chestIter = filter.chestArmors.begin();
+		std::vector<Armor*>::iterator armIter = filter.armArmors.begin();
+		std::vector<Armor*>::iterator waistIter = filter.waistArmors.begin();
+		std::vector<Armor*>::iterator legIter = filter.legArmors.begin();
+
+		std::vector<Armor*>::iterator headBegin = filter.headArmors.begin();
+		std::vector<Armor*>::iterator chestBegin = filter.chestArmors.begin();
+		std::vector<Armor*>::iterator armBegin = filter.armArmors.begin();
+		std::vector<Armor*>::iterator waistBegin = filter.waistArmors.begin();
+		std::vector<Armor*>::iterator legBegin = filter.legArmors.begin();
+
+		std::vector<Armor*>::iterator headEnd = filter.headArmors.end();
+		std::vector<Armor*>::iterator chestEnd = filter.chestArmors.end();
+		std::vector<Armor*>::iterator armEnd = filter.armArmors.end();
+		std::vector<Armor*>::iterator waistEnd = filter.waistArmors.end();
+		std::vector<Armor*>::iterator legEnd = filter.legArmors.end();
+
+
+		auto start = Utility::Time::now();
+
+		bool run = true;
+
+		do
+		{
+			test->setHeadrmor(*headIter);
+			test->setChestArmor(*chestIter);
+			test->setArmArmor(*armIter);
+			test->setWaistArmor(*waistIter);
+			test->setLegArmor(*legIter);
+
+			legIter++;
+
+			if (legIter == legEnd)
+			{
+				legIter = legBegin;
+				waistIter++;
+			}
+
+			if (waistIter == waistEnd)
+			{
+				waistIter = waistBegin;
+				armIter++;
+			}
+
+			if (armIter == armEnd)
+			{
+				armIter = armBegin;
+				chestIter++;
+			}
+
+			if (chestIter == chestEnd)
+			{
+				chestIter = chestBegin;
+				headIter++;
+			}
+
+			if (headIter == headEnd)
+			{
+				break;
+			}
+
+
+		}
+		//while (getNextArmorCombination2(test, headIter, chestIter, armIter, waistIter, legIter));
+		while (run);
+
+		auto end = Utility::Time::now();
+
+		OutputDebugString((L"iter() t: " + Utility::Time::toMilliSecondString(start, end)).c_str());
+
+		delete test;
+	}
 }
 
 void MHW::SetSearcher::step()
