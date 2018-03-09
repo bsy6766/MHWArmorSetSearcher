@@ -105,6 +105,9 @@ namespace MHW
 		// add search result
 		void addNewArmorSet(MHW::ArmorSet* newArmorSet);
 
+		// check
+		bool check(Database* db, MHW::ArmorSet* newArmorSet);
+
 		// check armor set
 		bool checkNewArmorSet(MHW::ArmorSet* newArmorSet);
 

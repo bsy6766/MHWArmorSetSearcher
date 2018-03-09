@@ -237,9 +237,11 @@ void MHW::SetSearcher::searchArmorSet(Database * db)
 	MHW::ArmorSet::idCounter = 1;
 
 	MHW::ArmorSet* dummy = new MHW::ArmorSet();
-	initFirstArmorSet(dummy);
 
-	searchArmorSet(db, SearchState::LF_NEXT_ARMOR_COMB, dummy);
+	//initFirstArmorSet(dummy);
+	//searchArmorSet(db, SearchState::LF_NEXT_ARMOR_COMB, dummy);
+
+	searchArmorSet(db, SearchState::LF_HEAD, dummy);
 
 	delete dummy;
 }
@@ -451,134 +453,9 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 				// set index
 				curArmorSet->setLegArmor(legArmor);
 
-				/*
-				// for debug. To find specific armor set during debug
-				if (curArmorSet->headArmor->id == 117 && curArmorSet->chestArmor->id == 9005 && curArmorSet->armArmor->id == 114 && curArmorSet->waistArmor->id == 109 && curArmorSet->legArmor->id == 112)
+				if (check(db, curArmorSet))
 				{
-					OutputDebugString(L"?!\n");
-				}
-				*/
 
-				// init and count skill level sum
-				initAndCountSums(curArmorSet);
-
-				// Check overlevel
-				if (!filter.allowOverleveledSkill)
-				{
-					bool overlevelResult = hasOverLeveledSkill(curArmorSet);
-					if (overlevelResult)
-					{
-						continue;
-					}
-				}
-
-				// clear flags
-				curArmorSet->skillPassed = false;
-				curArmorSet->setSkillPassed = false;
-
-				// Check if armor set meets set skill requirement
-				bool setSkillResult = checkSetSkill(curArmorSet);
-
-				if (setSkillResult)
-				{
-					// Passed set skill check
-					curArmorSet->setSkillPassed = true;
-
-					// Check if armor set can be added with only armors
-					bool result = checkSkillLevelSums(curArmorSet);
-
-					if (result)
-					{
-						// Armor set found with only 5 piece armors and fulfills set skill requirements
-						curArmorSet->skillPassed = true;
-
-						// Set charm index as None
-						curArmorSet->charm = nullptr;
-
-						//  Add to result
-						addNewArmorSet(curArmorSet);
-						// Don't check charm because if armor set need charm, it would be failed.
-
-						//step();
-
-						//sendMsg(false);
-					}
-					else
-					{
-						// Failed to pass armor skill test. However, yet this armor set passed set skill check, so we only need to check charm and deco
-						curArmorSet->skillPassed = false;
-
-						//  Try with charm
-						searchArmorSet(db, SearchState::LF_CHARM, curArmorSet);
-					}
-
-					// End of successed set skill check.
-				}
-				else
-				{
-					/*
-					// set skill check failed.
-					// User selected at least 1 set skill.
-					// This usually means that new armor set is not qualified to fulfill set skill requirements. However, there is corner case.
-					// Case 1: Set skill is Guard up. In this case, we need to handle corner case. Guard up can be activated by charm or decoration.
-					// Case 2: Set skill is something else than guard up. In this case, it's failed because user asked for specific set skill
-					curArmorSet->setSkillPassed = false;
-
-					// Corner case: If set skill is Uragaan Protection 3, check if there is a charm that it gives this set skill
-					bool u3 = isSetSkillGuardUp(db);
-
-					if (u3)
-					{
-						// One of set skill is Guard Up (Uragaan Protection 3)
-						// This mean that user selected Uragaan protection 3 on set skill section.
-						// Which means only want to filter armor set that has Uragaan 3 pieces.
-						// Case 1: Has guard up charm. In this case, select guard up charm and check skills.
-						// Case 2: Doesn't have guard up charm. In this case, user selected none or didn't add guard up on skill section.
-
-						// Check if there is a charm that has guard up
-						bool hasBulwarkCharm = filter.hasGuardUpCharm(db);
-
-						if (hasBulwarkCharm)
-						{
-							// Case 1
-
-							// This armor set doesn't have enough pieces for Guard Up, but has charm that can activate set skill.
-
-							// Check set skill without guard up
-							if (checkSetSkillWithOutGuardUp(curArmorSet))
-							{
-								// pass without guard up. Since we have guard up charm, check skill
-								curArmorSet->setSkillPassed = true;
-							}
-							else
-							{
-								// Can't pass even with guard up charm.
-								curArmorSet->setSkillPassed = false;
-								// Check decoration
-								searchArmorSet(db, SearchState::LF_DECORATION, curArmorSet);
-							}
-						}
-						else
-						{
-							// Case 2. Doesn't have guard up charm. It's either None or didn't select Guard up skill.
-							// Because set skill check failed, this armor set can't get guard up.
-							curArmorSet->setSkillPassed = false;
-
-							return;
-						}
-					}
-					else
-					{
-						// There is no guard up set skill. 
-						// This mean that there is no charm to cover up set skill like guard up.
-						// So it's fail
-						curArmorSet->setSkillPassed = false;
-
-						return;
-					}
-					*/
-					// There was some set skill added and current armor pieces didn't meet the requirement.
-					break;
 				}
 			}
 
@@ -1586,6 +1463,66 @@ void MHW::SetSearcher::addNewArmorSet(MHW::ArmorSet * newArmorSet)
 
 		asRef.usedDecorations = newArmorSet->usedDecorations;
 	}
+}
+
+bool MHW::SetSearcher::check(Database* db, MHW::ArmorSet * newArmorSet)
+{
+	// init and count skill level sum
+	initAndCountSums(newArmorSet);
+
+	// clear flags
+	newArmorSet->skillPassed = false;
+	newArmorSet->setSkillPassed = false;
+
+	/*
+	// for debug. To find specific armor set during debug
+	if (curArmorSet->headArmor->id == 101 && curArmorSet->chestArmor->id == 93 && curArmorSet->armArmor->id == 114 && curArmorSet->waistArmor->id == 12 && curArmorSet->legArmor->id == 100)
+	{
+		OutputDebugString(L"?!\n");
+	}
+	*/
+
+	// first, check overleveled skill
+	if (checkOverleveledSkill(newArmorSet))
+	{
+		// passed. check set skill
+		if (checkSetSkill(newArmorSet))
+		{
+			// passed. check 5 armor piecsw
+			newArmorSet->setSkillPassed = true;
+
+			if (checkSkillLevelSums(newArmorSet))
+			{
+				// passed with only with 5 pieces and without charm and deco. So, set charm as none.
+				newArmorSet->charm = nullptr;
+
+				// set flag
+				newArmorSet->skillPassed = true;
+
+				//  Add to result
+				addNewArmorSet(newArmorSet);
+				// Don't check charm because if armor set need charm, it would be failed.
+
+				sendMsg(false);
+			}
+			else
+			{
+				// Failed.
+
+				// set flag
+				newArmorSet->skillPassed = false;
+
+				// try with charm
+				searchArmorSet(db, SearchState::LF_CHARM, newArmorSet);
+			}
+		}
+		// else, failed set skill 
+	}
+	// else, there is skill overleveled
+
+	step();
+
+	return true;
 }
 
 MHW::SetSearcher::State MHW::SetSearcher::getState()
