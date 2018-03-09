@@ -256,12 +256,14 @@ void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MH
 			// clear flags
 			curArmorSet->skillPassed = false;
 			curArmorSet->setSkillPassed = false;
-			
+
+			/*
 			// for debug. To find specific armor set during debug
 			if (curArmorSet->headArmor->id == 101 && curArmorSet->chestArmor->id == 93 && curArmorSet->armArmor->id == 114 && curArmorSet->waistArmor->id == 12 && curArmorSet->legArmor->id == 100)
 			{
 				OutputDebugString(L"?!\n");
 			}
+			*/
 
 			// first, check overleveled skill
 			if (checkOverleveledSkill(curArmorSet))
@@ -1297,7 +1299,7 @@ bool MHW::SetSearcher::getNextArmorCombination(MHW::ArmorSet * armorSet)
 
 			chestArmorCounter++;
 
-			if (chestArmorCounter < chestArmorCounter)
+			if (chestArmorCounter < chestArmorSize)
 			{
 				armorSet->setChestArmor(filter.chestArmors.at(chestArmorCounter));
 			}
@@ -1342,6 +1344,14 @@ bool MHW::SetSearcher::getNextArmorCombination(MHW::ArmorSet * armorSet)
 	}
 
 	//OutputDebugString((L"H: " + std::to_wstring(headArmorCounter) + L", C: " + std::to_wstring(chestArmorCounter) + L", A: " + std::to_wstring(armArmorCounter) + L", W: " + std::to_wstring(waistArmorCounter) + L", L: " + std::to_wstring(legArmorCounter) + L"\n").c_str());
+	//MHW::Logger::getInstance().infoW(L"H: " + std::to_wstring(headArmorCounter) + L", C: " + std::to_wstring(chestArmorCounter) + L", A: " + std::to_wstring(armArmorCounter) + L", W: " + std::to_wstring(waistArmorCounter) + L", L: " + std::to_wstring(legArmorCounter) + L"\n");
+
+	/*
+	if (headArmorCounter == 4 && chestArmorCounter == 4 && armArmorCounter == 1 && waistArmorCounter == 0 && legArmorCounter == 2)
+	{
+		OutputDebugString(L"?!\n");
+	}
+	*/
 
 	return true;
 
