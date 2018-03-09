@@ -35,6 +35,11 @@ void MHW::Logger::info(const std::string & log)
 	logger->info(log);
 }
 
+void MHW::Logger::infoW(const std::wstring & log)
+{
+	logger->info(log.c_str());
+}
+
 void MHW::Logger::warn(const std::string & log)
 {
 	logger->warn(log);

@@ -57,10 +57,22 @@ std::vector<std::wstring> Decoration::getStr(Database * db)
 			ret.push_back(setSkill->name);
 			ret.push_back(std::to_wstring(setSkill->reqArmorPieces));
 		}
+		else
+		{
+			MHW::Logger::getInstance().error("Failed to get set skill from decoration");
+		}
 	}
 	else
 	{
-		ret.push_back(db->getSkillNameById(skillId));
+		Skill* skill = db->getSkillByIDAndLevel(skillId, 1);
+		if (skill)
+		{
+			ret.push_back(skill->name);
+		}
+		else
+		{
+			MHW::Logger::getInstance().error("Failed to get skill from decoration");
+		}
 	}
 
 	return ret;

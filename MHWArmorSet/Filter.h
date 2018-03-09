@@ -49,6 +49,7 @@ namespace MHW
 		// Decorations. Index means decoration id.
 		bool hasDecorationToUse;
 		std::vector<bool> usableDecorations;
+		std::vector<int> decorationCount;
 
 		// search option
 		bool allowOverleveledSkill;

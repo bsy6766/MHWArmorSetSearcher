@@ -10,6 +10,7 @@
 
 #include "Filter.h"
 #include "ArmorSet.h"
+#include "Utility.h"
 
 class Database;
 class Decoration;
@@ -55,10 +56,7 @@ namespace MHW
 
 		// state
 		State state;
-
-		// iter counter.
-		int iterCount;
-
+		
 		// counter
 		static float searchCounter;
 		static float totalCounter;
@@ -73,9 +71,6 @@ namespace MHW
 
 		// work mutex
 		std::mutex workMutex;
-
-		// cb
-		std::condition_variable cv;
 
 		// result mutex
 		std::mutex resultMutex;
@@ -95,6 +90,11 @@ namespace MHW
 		int armArmorSize;
 		int waistArmorSize;
 		int legArmorSize;
+
+		// prev time
+		std::chrono::steady_clock::time_point prevTime;
+		int totalSearchResultFound;
+		int totalSearchResultQueried;
 
 		// search armor set
 		void searchArmorSet(Database* db);
@@ -122,7 +122,7 @@ namespace MHW
 		bool isSetSkillGuardUp(Database* db);
 		
 		void initAndCountSums(MHW::ArmorSet* newArmorSet);
-
+		
 		void step();
 	public:
 		// Constructor
@@ -130,6 +130,9 @@ namespace MHW
 
 		// Default destructor
 		~SetSearcher();
+
+		// cb
+		std::condition_variable cv;
 
 		// main window 
 		HWND mainHWND;
@@ -168,11 +171,12 @@ namespace MHW
 
 		// query results
 		void queryResults(std::vector<MHW::ArmorSet>& armorSets);
+		int getTotalResults();
 
 		// send message to main thread
 		void sendMsg(const bool finished);
 
-		void abortSearching();
+		void abortSearching(const bool stop);
 	};
 }
 

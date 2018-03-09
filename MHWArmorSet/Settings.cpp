@@ -38,7 +38,7 @@ Settings::Settings()
 	, allowExtraSkills(true)
 	, searchFromHigherArmorRarity(true)
 	, allowOverleveledSkills(true)
-	, useOnlyMaxLevelCharm(false)
+	//, useOnlyMaxLevelCharm(false)
 	, simplifySearchResult(true)
 	, showMaxLevel(false)
 {}
@@ -130,6 +130,13 @@ int Settings::readTemp()
 		{
 			// string to read line
 			std::wstring line;
+
+			std::getline(tempFile, line);
+
+			if (line != L"MHWASS_SAVE")
+			{
+				return static_cast<int>(MHW::ERROR_CODE::INVALID_SAVE_FILE);
+			}
 
 			std::getline(tempFile, line);
 
@@ -274,7 +281,29 @@ void Settings::saveTemp()
 
 	std::wofstream ofs(tempPath);
 
-	std::wstring data = L"";
+	save(ofs);
+
+	ofs.close();
+}
+
+void Settings::saveTemp(const std::wstring & path)
+{
+	if (PathFileExistsW((LPWSTR)path.c_str()))
+	{
+		// file path exstis
+		DeleteFileW((LPWSTR)path.c_str());
+	}
+
+	std::wofstream ofs(path);
+
+	save(ofs);
+
+	ofs.close();
+}
+
+void Settings::save(std::wofstream & file)
+{
+	std::wstring data = L"MHWASS_SAVE\n";
 
 	// version
 	data += std::to_wstring(static_cast<int>(majorVersion));
@@ -282,7 +311,7 @@ void Settings::saveTemp()
 
 	// language
 	data += (L"\n" + std::to_wstring(static_cast<int>(language)));
-	
+
 	// weapon
 	data += (L"\n" + std::to_wstring(static_cast<int>(totalWeaponSlots)));
 	data += (L"\n" + std::to_wstring(static_cast<int>(weaponSlot1Size)));
@@ -292,7 +321,7 @@ void Settings::saveTemp()
 	// charm
 	data += (L"\n" + std::to_wstring(static_cast<int>(charmDisplaySetting)));
 	data += (L"\n" + std::to_wstring(static_cast<int>(charmIndex)));
-	
+
 	// skill
 	data += (L"\n" + std::to_wstring(static_cast<int>(skillIndex)));
 	data += (L"\n" + std::to_wstring(static_cast<int>(skills.size())));
@@ -330,9 +359,10 @@ void Settings::saveTemp()
 
 	// deco
 	data += (L"\n" + std::to_wstring(static_cast<int>(decorationCheckList.size())));
-	for (auto b : decorationCheckList)
+	const int size = decorationCheckList.size();
+	for (int i = 0; i < size; ++i)
 	{
-		if (b)
+		if (decorationCheckList.at(i))
 		{
 			data += (L"\n1");
 		}
@@ -340,6 +370,8 @@ void Settings::saveTemp()
 		{
 			data += (L"\n0");
 		}
+
+		data += ((L"\n") + std::to_wstring(decorationCountList.at(i)));
 	}
 
 	// options
@@ -378,9 +410,60 @@ void Settings::saveTemp()
 	// show max level
 	data += (L"\n" + std::wstring(showMaxLevel ? L"1" : L"0"));
 
-	ofs.write(data.c_str(), data.size());
+	file.write(data.c_str(), data.size());
+}
 
-	ofs.close();
+int Settings::openTemp(const std::wstring & path)
+{
+	auto& logger = MHW::Logger::getInstance();
+	logger.info("Trying to open file...");
+
+	std::wifstream file(path);
+
+	if (file.is_open())
+	{
+		std::wstring line;
+
+		std::getline(file, line);
+
+		if (line != L"MHWASS_SAVE")
+		{
+			return static_cast<int>(MHW::ERROR_CODE::TRIED_TO_OPEN_INVALID_FILE);
+		}
+
+		std::getline(file, line);
+
+		// language
+		int majorVersion = 0;
+		if (!readValue(line, majorVersion))
+		{
+			return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_GET_MAJOR_VERSION);
+		}
+
+		std::getline(file, line);
+
+		// language
+		int minorVersion = 0;
+		if (!readValue(line, minorVersion))
+		{
+			return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_GET_MINOR_VERISON);
+		}
+
+		this->majorVersion = majorVersion;
+		this->minorVersion = minorVersion;
+
+		int result = loadTemp(file);
+		if (result != 0)
+		{
+			logger.errorCode(result);
+		}
+
+		return 0;
+	}
+	else
+	{
+		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_OPNE_SAVE_FILE);
+	}
 }
 
 int Settings::load(Database * db)
@@ -393,21 +476,27 @@ int Settings::load(Database * db)
 
 	result = loadSetSkills(db);
 	if (result != 0) return result;
-
+	
 	tempSkillData.clear();
 	tempSetSkillData.clear();
 
 	if (decorationCheckList.empty())
 	{
+		logger.info("Deco check list is empty. Init all to true");
 		decorationCheckList.resize(db->decorations.size(), true);
 	}
-
+	
+	result = loadDecoCounts(db);
+	if (result != 0) return result;
+	
 	return 0;
 }
 
 int Settings::loadSkills(Database * db)
 {
 	const int size = tempSkillData.size();
+
+	std::list<Skill*> skills;
 
 	for (int i = 0; i < size; ++i)
 	{
@@ -424,12 +513,16 @@ int Settings::loadSkills(Database * db)
 		}
 	}
 
+	this->skills = skills;
+
 	return 0;
 }
 
 int Settings::loadSetSkills(Database * db)
 {
 	const int size = tempSetSkillData.size();
+
+	std::list<SetSkill*> setSkills;
 
 	for (int i = 0; i < size; ++i)
 	{
@@ -446,6 +539,38 @@ int Settings::loadSetSkills(Database * db)
 		}
 	}
 
+	this->setSkills = setSkills;
+
+	return 0;
+}
+
+int Settings::loadDecoCounts(Database * db)
+{
+	if (decorationCountList.empty())
+	{
+		MHW::Logger::getInstance().info("Deco count list is empty. Init to max");
+		decorationCountList.resize(db->decorations.size(), 0);
+
+		int i = 0;
+		for (auto& e : db->decorations)
+		{
+			decorationCheckList.at(i) = true;
+
+			Skill* skill = db->getSkillByIDAndLevel((e.second).skillId, 1);
+			if (skill)
+			{
+				decorationCountList.at(i) = skill->maxLevel;
+			}
+			else
+			{
+				MHW::Logger::getInstance().errorCode(MHW::ERROR_CODE::FAILED_TO_GET_SKILL_DURING_CLEAR);
+				return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_GET_SKILL_DURING_CLEAR);
+			}
+
+			i++;
+		}
+	}
+
 	return 0;
 }
 
@@ -456,30 +581,37 @@ int Settings::loadTemp(std::wifstream & tempFile)
 
 	int result = 0;
 
+
 	// language
 	std::getline(tempFile, line);
+	MHW::Language language = MHW::Language::ENGLISH;
 	result = readLanguage(line, language, "Language: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_LANGUAGE_VAL_TO_NUM);
 	if (result != 0) return result;
 
 	std::getline(tempFile, line);
+	int totalWeaponSlots = 0;
 	result = readInt(line, totalWeaponSlots, "Total weapon slots: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_TOTAL_WEAPON_DECO_SLOTS_TO_NUM);
 	if (result != 0) return result;
 
 	std::getline(tempFile, line);
+	int weaponSlot1Size = 0;
 	result = readInt(line, weaponSlot1Size, "Weapon slot 1 level: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_WEAPON_SLOT_1_LEVEL_TO_NUM);
 	if (result != 0) return result;
 
 	std::getline(tempFile, line);
+	int weaponSlot2Size = 0;
 	result = readInt(line, weaponSlot2Size, "Weapon slot 2 level: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_WEAPON_SLOT_2_LEVEL_TO_NUM);
 	if (result != 0) return result;
 
 	std::getline(tempFile, line);
+	int weaponSlot3Size = 0;
 	result = readInt(line, weaponSlot3Size, "Weapon slot 3 level: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_WEAPON_SLOT_3_LEVEL_TO_NUM);
 	if (result != 0) return result;
 
 	std::getline(tempFile, line);
 
 	// charm display 
+	int charmDisplaySetting = MHW::CONSTS::CHARM_DISPLAY_BY_SKILL_NAME;
 	if (readValue(line, charmDisplaySetting))
 	{
 		logger.info("Charm display: " + std::string((charmDisplaySetting == MHW::CONSTS::CHARM_DISPLAY_BY_NAME) ? "By name" : "By skill name"));
@@ -492,11 +624,13 @@ int Settings::loadTemp(std::wifstream & tempFile)
 
 	// charm index
 	std::getline(tempFile, line);
+	int charmIndex = 0;
 	result = readInt(line, charmIndex, "Charm index: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_CHARM_INDEX_TO_NUM);
 	if (result != 0) return result;
 
 	// skill index
 	std::getline(tempFile, line);
+	int skillIndex = 0;
 	result = readInt(line, skillIndex, "Skill index: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_SKILL_INDEX_TO_NUM);
 	if (result != 0) return result;
 
@@ -504,6 +638,8 @@ int Settings::loadTemp(std::wifstream & tempFile)
 	int skillSize = 0;
 	result = readInt(line, skillSize, "Added skills count: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_SKILL_SIZE_TO_NUM);
 	if (result != 0) return result;
+
+	std::vector<SkillData> tempSkillData;
 
 	if (skillSize)
 	{
@@ -529,10 +665,12 @@ int Settings::loadTemp(std::wifstream & tempFile)
 	}
 
 	std::getline(tempFile, line);
+	bool highRankSetSkill = true;
 	result = readBool(line, highRankSetSkill, "High rank set skill: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_SET_SKILL_RANK_TO_BOOL);
 	if (result != 0) return result;
 
 	std::getline(tempFile, line);
+	int setSkillIndex = 0;
 	result = readInt(line, setSkillIndex, "Set skill index: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_SET_SKILL_INDEX_TO_NUM);
 	if (result != 0) return result;
 
@@ -541,7 +679,7 @@ int Settings::loadTemp(std::wifstream & tempFile)
 	result = readInt(line, setSkillSize, "Added set skills count: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_SET_SKILL_SIZE_TO_NUM);
 	if (result != 0) return result;
 
-
+	std::vector<SetSkillData> tempSetSkillData;
 	if (setSkillSize)
 	{
 		for (int i = 0; i < setSkillSize; ++i)
@@ -570,177 +708,84 @@ int Settings::loadTemp(std::wifstream & tempFile)
 		}
 	}
 
-	{
-		std::getline(tempFile, line);
-		int boolVal = 0;
-
-		if (readValue(line, boolVal))
-		{
-			highRankHeadArmor = (boolVal == 1);
-			logger.info("High rank head armor: " + std::string(highRankHeadArmor ? "true" : "false"));
-		}
-		else
-		{
-			highRankHeadArmor = true;
-			return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_HEAD_ARMOR_RANK_TO_NUM);
-		}
-	}
-
-	{
-		std::getline(tempFile, line);
-		int boolVal = 0;
-
-		if (readValue(line, boolVal))
-		{
-			highRankChestArmor = (boolVal == 1);
-			logger.info("High rank Chest armor: " + std::string(highRankChestArmor ? "true" : "false"));
-		}
-		else
-		{
-			highRankChestArmor = true;
-			return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_CHEST_ARMOR_RANK_TO_NUM);
-		}
-	}
-
-	{
-		std::getline(tempFile, line);
-		int boolVal = 0;
-
-		if (readValue(line, boolVal))
-		{
-			highRankArmArmor = (boolVal == 1);
-			logger.info("High rank Arm armor: " + std::string(highRankArmArmor ? "true" : "false"));
-		}
-		else
-		{
-			highRankArmArmor = true;
-			return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_ARM_ARMOR_RANK_TO_NUM);
-		}
-	}
-
-	{
-		std::getline(tempFile, line);
-		int boolVal = 0;
-
-		if (readValue(line, boolVal))
-		{
-			highRankWaistArmor = (boolVal == 1);
-			logger.info("High rank Waist armor: " + std::string(highRankWaistArmor ? "true" : "false"));
-		}
-		else
-		{
-			highRankWaistArmor = true;
-			return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_WAIST_ARMOR_RANK_TO_NUM);
-		}
-	}
-
-	{
-		std::getline(tempFile, line);
-		int boolVal = 0;
-
-		if (readValue(line, boolVal))
-		{
-			highRankLegArmor = (boolVal == 1);
-			logger.info("High rank Leg armor: " + std::string(highRankLegArmor ? "true" : "false"));
-		}
-		else
-		{
-			highRankLegArmor = true;
-			return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_LEG_ARMOR_RANK_TO_NUM);
-		}
-	}
+	std::getline(tempFile, line);
+	bool highRankHeadArmor = true;
+	result = readBool(line, highRankHeadArmor, "High rank head armor: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_HEAD_ARMOR_RANK_TO_NUM);
+	if (result != 0) return result;
 
 	std::getline(tempFile, line);
-
-	if (readValue(line, headArmorIndex))
-	{
-		logger.info("Head armor index: " + std::to_string(headArmorIndex));
-	}
-	else
-	{
-		headArmorIndex = 0;
-		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_HEAD_ARMOR_INDEX_TO_NUM);
-	}
+	bool highRankChestArmor = true;
+	result = readBool(line, highRankChestArmor, "High rank chest armor: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_CHEST_ARMOR_RANK_TO_NUM);
+	if (result != 0) return result;
 
 	std::getline(tempFile, line);
-
-	if (readValue(line, chestArmorIndex))
-	{
-		logger.info("chest armor index: " + std::to_string(chestArmorIndex));
-	}
-	else
-	{
-		chestArmorIndex = 0;
-		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_CHEST_ARMOR_INDEX_TO_NUM);
-	}
+	bool highRankArmArmor = true;
+	result = readBool(line, highRankArmArmor, "High rank arm armor: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_ARM_ARMOR_RANK_TO_NUM);
+	if (result != 0) return result;
 
 	std::getline(tempFile, line);
-
-	if (readValue(line, armArmorIndex))
-	{
-		logger.info("arm armor index: " + std::to_string(armArmorIndex));
-	}
-	else
-	{
-		armArmorIndex = 0;
-		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_ARM_ARMOR_INDEX_TO_NUM);
-	}
+	bool highRankWaistArmor = true;
+	result = readBool(line, highRankWaistArmor, "High rank waist armor: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_WAIST_ARMOR_RANK_TO_NUM);
+	if (result != 0) return result;
 
 	std::getline(tempFile, line);
-
-	if (readValue(line, waistArmorIndex))
-	{
-		logger.info("waist armor index: " + std::to_string(waistArmorIndex));
-	}
-	else
-	{
-		waistArmorIndex = 0;
-		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_WAIST_ARMOR_INDEX_TO_NUM);
-	}
+	bool highRankLegArmor = true;
+	result = readBool(line, highRankLegArmor, "High rank leg armor: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_LEG_ARMOR_RANK_TO_NUM);
+	if (result != 0) return result;
 
 	std::getline(tempFile, line);
+	int headArmorIndex = 0;
+	result = readInt(line, headArmorIndex, "Head armor index: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_HEAD_ARMOR_INDEX_TO_NUM);
+	if (result != 0) return result;
 
-	if (readValue(line, legArmorIndex))
-	{
-		logger.info("leg armor index: " + std::to_string(legArmorIndex));
-	}
-	else
-	{
-		legArmorIndex = 0;
-		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_LEG_ARMOR_INDEX_TO_NUM);
-	}
+	std::getline(tempFile, line);
+	int chestArmorIndex = 0;
+	result = readInt(line, chestArmorIndex, "chest armor index: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_CHEST_ARMOR_INDEX_TO_NUM);
+	if (result != 0) return result;
+
+	std::getline(tempFile, line);
+	int armArmorIndex = 0;
+	result = readInt(line, armArmorIndex, "arm armor index: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_ARM_ARMOR_INDEX_TO_NUM);
+	if (result != 0) return result;
+
+	std::getline(tempFile, line);
+	int waistArmorIndex = 0;
+	result = readInt(line, waistArmorIndex, "waist armor index: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_WAIST_ARMOR_INDEX_TO_NUM);
+	if (result != 0) return result;
+
+	std::getline(tempFile, line);
+	int legArmorIndex = 0;
+	result = readInt(line, legArmorIndex, "leg armor index: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_LEG_ARMOR_INDEX_TO_NUM);
+	if (result != 0) return result;
 
 	int decoSize = 0;
 	std::getline(tempFile, line);
+	result = readInt(line, decoSize, "Deco count: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_DECO_TOTAL_SIZE_TO_NUM);
+	if (result != 0) return result;
 
-	if (readValue(line, decoSize))
-	{
-		logger.info("Deco count: " + std::to_string(decoSize));
-	}
-	else
-	{
-		decoSize = 0;
-		return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_DECO_COUNT_TO_NUM);
-	}
+	std::vector<bool> decorationCheckList;
+	std::vector<int> decorationCountList;
+
+	decorationCheckList.resize(decoSize, false);
+	decorationCountList.resize(decoSize, 0);
 
 	for (int i = 0; i < decoSize; ++i)
 	{
 		std::getline(tempFile, line);
+		bool checked = true;
+		result = readBool(line, checked, std::to_string(i) + ") deco: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_DECO_BOOL_TO_NUM);
+		if (result != 0) return result;
+		decorationCheckList.at(i) = checked;
 
-		int val;
-		if (readValue(line, val))
-		{
-			decorationCheckList.push_back(val == 1);
-			logger.info(std::to_string(i) + ") deco: " + std::to_string(val));
-		}
-		else
-		{
-			return static_cast<int>(MHW::ERROR_CODE::FAILED_TO_CONVERT_DECO_BOOL_TO_NUM);
-		}
+		std::getline(tempFile, line);
+		int count = 0;
+		result = readInt(line, count, std::to_string(i) + ") deco count: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_DECO_COUNT_TO_NUM);
+		if (result != 0) return result;
+		decorationCountList.at(i) = count;
 	}
 
 	std::getline(tempFile, line);
-
+	MHW::Gender gender = MHW::Gender::NONE;
 	int genderVal = 0;
 	if (readValue(line, genderVal))
 	{
@@ -763,48 +808,95 @@ int Settings::loadTemp(std::wifstream & tempFile)
 
 	// lr armor
 	std::getline(tempFile, line);
+	bool allowLowRankArmor = false;
 	result = readBool(line, allowLowRankArmor, "Allow low rank armor: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_ALLOW_LR_ARMOR_TO_NUM);
 	if (result != 0) return result;
 
 	// arena armor
 	std::getline(tempFile, line);
+	bool allowArenaArmor = false;
 	result = readBool(line, allowArenaArmor, "Allow arena armor: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_ALLOW_ARENA_ARMOR_TO_NUM);
 	if (result != 0) return result;
 
 	// event armor
 	std::getline(tempFile, line);
+	bool allowEventArmor = false;
 	result = readBool(line, allowEventArmor, "Allow event armor: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_ALLOW_EVENT_ARMOR_TO_BOOL);
 	if (result != 0) return result;
 
 	std::getline(tempFile, line);
+	int minArmorRarity = 1;
 	result = readInt(line, minArmorRarity, "Min armor rarity: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_MIN_ARMOR_RARITY_TO_NUM);
 	if (result != 0) return result;
 
 	std::getline(tempFile, line);
+	bool allowExtraSkills = true;
 	result = readBool(line, allowExtraSkills, "Allows extra skill: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_ALLOW_EXTRA_SKILL_TO_BOOL);
 	if (result != 0) return result;
 
 	std::getline(tempFile, line);
+	bool searchFromHigherArmorRarity = true;
 	result = readBool(line, searchFromHigherArmorRarity, "Search from higer rarity armors: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_SEARCH_FROM_HIGHER_RARIRTY_TO_BOOL);
 	if (result != 0) return result;
 
 	std::getline(tempFile, line);
+	bool allowOverleveledSkills = true;
 	result = readBool(line, allowOverleveledSkills, "Allow overleveled skill: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_ALLOW_OVERLEVELED_SKILL_TO_BOOL);
 	if (result != 0) return result;
 
 	/*
 	std::getline(tempFile, line);
+	bool useOnlyMaxLevelCharm = true;
 	result = readBool(line, useOnlyMaxLevelCharm, "Only use max level charm: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_ALLOW_ONLY_USE_MAX_LEVEL_CHARM_TO_BOOL);
 	if (result != 0) return result;
 	*/
 
 	std::getline(tempFile, line);
+	bool simplifySearchResult = true;
 	result = readBool(line, simplifySearchResult, "Simplify search result: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_SIMPLIFY_SEARCH_RESULT_TO_BOOL);
 	if (result != 0) return result;
 
 	std::getline(tempFile, line);
+	bool showMaxLevel = true;
 	result = readBool(line, showMaxLevel, "Shows max level: ", MHW::ERROR_CODE::FAILED_TO_CONVERT_SHOW_MAX_LEVEL_TO_BOOL);
 	if (result != 0) return result;
+
+	// copy
+	this->language = language;
+	this->totalWeaponSlots = totalWeaponSlots;
+	this->weaponSlot1Size = weaponSlot1Size;
+	this->weaponSlot2Size = weaponSlot2Size;
+	this->weaponSlot3Size = weaponSlot3Size;
+	this->charmDisplaySetting = charmDisplaySetting;
+	this->charmIndex = charmIndex;
+	this->skillIndex = skillIndex;
+	this->tempSkillData = tempSkillData;
+	this->highRankSetSkill = highRankSetSkill;
+	this->setSkillIndex = setSkillIndex;
+	this->tempSetSkillData = tempSetSkillData;
+	this->highRankHeadArmor = highRankHeadArmor;
+	this->highRankChestArmor = highRankChestArmor;
+	this->highRankArmArmor = highRankArmArmor;
+	this->highRankWaistArmor = highRankWaistArmor;
+	this->highRankLegArmor = highRankLegArmor;
+	this->headArmorIndex = headArmorIndex;
+	this->chestArmorIndex = chestArmorIndex;
+	this->armArmorIndex = armArmorIndex;
+	this->waistArmorIndex = waistArmorIndex;
+	this->legArmorIndex = legArmorIndex;
+	this->decorationCheckList = decorationCheckList;
+	this->decorationCountList = decorationCountList;
+	this->gender = gender;
+	this->allowLowRankArmor = allowLowRankArmor;
+	this->allowArenaArmor = allowArenaArmor;
+	this->allowEventArmor = allowEventArmor;
+	this->minArmorRarity = minArmorRarity;
+	this->allowExtraSkills = allowExtraSkills;
+	this->searchFromHigherArmorRarity = searchFromHigherArmorRarity;
+	this->allowOverleveledSkills = allowOverleveledSkills;
+	//this->useOnlyMaxLevelCharm = useOnlyMaxLevelCharm;
+	this->simplifySearchResult = simplifySearchResult;
+	this->showMaxLevel = showMaxLevel;
 
 	return 0;
 }
@@ -1108,6 +1200,21 @@ std::wstring Settings::getString(const MHW::StringLiteral e)
 	return stringLiterals[e];
 }
 
+bool Settings::setDecoCount(const int index, const int count)
+{
+	const int size = (int)decorationCountList.size();
+
+	if (index >= size)
+	{
+		return false;
+	}
+	else
+	{
+		decorationCountList.at(index) = count;
+		return true;
+	}
+}
+
 void Settings::clear()
 {
 	auto& logger = MHW::Logger::getInstance();
@@ -1142,7 +1249,7 @@ void Settings::clear()
 	logger.info("Added skills: None");
 	logger.info("Skill index: 0");
 	
-	//highRankSetSkill = true;
+	highRankSetSkill = true;
 	setSkills.clear();
 	tempSetSkillData.clear();
 	setSkillIndex = 0;
@@ -1150,11 +1257,11 @@ void Settings::clear()
 	logger.info("Added set skills: None");
 	logger.info("Set skill index: 0");
 
-	//highRankHeadArmor = true;
-	//highRankChestArmor = true;
-	//highRankArmArmor = true;
-	//highRankWaistArmor = true;
-	//highRankLegArmor = true;
+	highRankHeadArmor = true;
+	highRankChestArmor = true;
+	highRankArmArmor = true;
+	highRankWaistArmor = true;
+	highRankLegArmor = true;
 	logger.info("All high rank armors: true");
 
 	headArmorIndex = 0;
@@ -1164,11 +1271,35 @@ void Settings::clear()
 	legArmorIndex = 0;
 	logger.info("All armors index: 0");
 
+	/*
+	int i = 0;
+	for (auto& e : db->decorations)
+	{
+		decorationCheckList.at(i) = true;
+		
+		Skill* skill = db->getSkillByIDAndLevel((e.second).skillId, 1);
+		if (skill)
+		{
+			decorationCountList.at(i) = skill->maxLevel;
+		}
+		else
+		{
+			logger.errorCode(MHW::ERROR_CODE::FAILED_TO_GET_SKILL_DURING_CLEAR);
+			decorationCountList.at(i) = 0;
+		}
+		i++;
+	}
+	*/
+
+	/*
 	for (int i = 0; i < (int)decorationCheckList.size(); ++i)
 	{
 		decorationCheckList.at(i) = true;
 	}
-	logger.info("All deco usable");
+	*/
+	decorationCheckList.clear();
+	decorationCountList.clear();
+	logger.info("deco check list & count list empty");
 
 	gender = MHW::Gender::MALE;
 	logger.info("Gender: Male");
@@ -1176,7 +1307,7 @@ void Settings::clear()
 	logger.info("Disallow LR armor");
 	allowArenaArmor = false;
 	logger.info("Disallow arena armor");
-	allowArenaArmor = false;
+	allowEventArmor = false;
 	logger.info("Disallow event armor");
 
 	minArmorRarity = 5;
@@ -1198,6 +1329,12 @@ void Settings::clear()
 	logger.info("Show max level");
 
 	//stringLiterals.clear();
+}
+
+void Settings::reset(Database * db)
+{
+	clear();
+	load(db);
 }
 
 void Settings::print(std::map<int, Charm>& charms)

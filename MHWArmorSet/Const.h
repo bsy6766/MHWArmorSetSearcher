@@ -8,7 +8,7 @@ namespace MHW
 	namespace VERSION
 	{
 		static const int major = 1;
-		static const int minor = 1;
+		static const int minor = 2;
 	}
 
 	namespace CONSTS
@@ -21,6 +21,8 @@ namespace MHW
 
 		static const int MAX_SKILL_COUNT = 15;
 		static const int MAX_SET_SKILL_COUNT = 2;
+
+		static const int MAX_ARMOR_RARITY = 8;
 
 		// const
 		static const int LEFT_COLUMN_WIDTH = 300;
@@ -46,6 +48,7 @@ namespace MHW
 		static const int DECO_LISTBOX_H = 295;
 
 		static const int SETSEARCHER_ITER_TRESHOLD = 2;
+		static const long long SET_SEARCHER_TIME_TRESHOLD = 1LL;
 
 		static const int CHARM_DISPLAY_BY_NAME = 0;
 		static const int CHARM_DISPLAY_BY_SKILL_NAME = 1;

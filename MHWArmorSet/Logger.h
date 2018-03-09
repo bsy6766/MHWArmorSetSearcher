@@ -46,6 +46,7 @@ namespace MHW
 
 													// log info
 		void info(const std::string& log);
+		void infoW(const std::wstring& log);
 
 		// log warn
 		void warn(const std::string& log);
