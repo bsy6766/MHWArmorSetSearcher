@@ -41,6 +41,8 @@ namespace MHW
 		enum class SearchState
 		{
 			READY = 0,
+			LF_NEXT_ARMOR_COMB,
+			CHECK_5_ARMORS,
 			LF_WEAPON,
 			LF_HEAD,
 			LF_CHEST,
@@ -122,7 +124,13 @@ namespace MHW
 		bool isSetSkillGuardUp(Database* db);
 		
 		void initAndCountSums(MHW::ArmorSet* newArmorSet);
-		
+
+		void initArmorCounterAndSize();
+
+		bool getNextArmorCombination(MHW::ArmorSet* armorSet);
+
+		bool checkOverleveledSkill(MHW::ArmorSet* curArmorSet);
+				
 		void step();
 	public:
 		// Constructor

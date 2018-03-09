@@ -21,6 +21,16 @@ MHW::SetSearcher::SetSearcher()
 	, abort(false)
 	, totalSearchResultFound(0)
 	, totalSearchResultQueried(0)
+	, headArmorCounter(0)
+	, chestArmorCounter(0)
+	, armArmorCounter(0)
+	, waistArmorCounter(0)
+	, legArmorCounter(0)
+	, headArmorSize(0)
+	, chestArmorSize(0)
+	, armArmorSize(0)
+	, waistArmorSize(0)
+	, legArmorSize(0)
 {}
 
 MHW::SetSearcher::~SetSearcher()
@@ -157,12 +167,13 @@ void MHW::SetSearcher::work(Database * db)
 			PostMessage(progressBarHWND, PBM_SETSTEP, 1, 0);
 
 			MHW::SetSearcher::searchCounter = 0.0f;
-			//MHW::SetSearcher::prevSearchCounter = 0.0f;
 			MHW::SetSearcher::prevPrecentage = 0;
 			MHW::SetSearcher::totalCounter = static_cast<float>(totalPossibility);
 
 			totalSearchResultFound = 0;
 			totalSearchResultQueried = 0;
+
+			initArmorCounterAndSize();
 
 			// search!
 			auto start = Utility::Time::now();
@@ -226,13 +237,65 @@ void MHW::SetSearcher::searchArmorSet(Database * db)
 	MHW::ArmorSet::idCounter = 1;
 
 	MHW::ArmorSet* dummy = new MHW::ArmorSet();
-	searchArmorSet(db, SearchState::LF_HEAD, dummy);
+	searchArmorSet(db, SearchState::LF_NEXT_ARMOR_COMB, dummy);
 	delete dummy;
 }
 
 void MHW::SetSearcher::searchArmorSet(Database * db, SearchState searchState, MHW::ArmorSet * curArmorSet)
 {
-	if (searchState == SearchState::LF_HEAD)
+	if (searchState == SearchState::LF_NEXT_ARMOR_COMB)
+	{
+		while (getNextArmorCombination(curArmorSet))
+		{
+			// init and count skill level sum
+			initAndCountSums(curArmorSet);
+
+			// clear flags
+			curArmorSet->skillPassed = false;
+			curArmorSet->setSkillPassed = false;
+
+			// first, check overleveled skill
+			if (checkOverleveledSkill(curArmorSet))
+			{
+				// passed. check set skill
+				if (checkSetSkill(curArmorSet))
+				{
+					// passed. check 5 armor piecsw
+					curArmorSet->setSkillPassed = true;
+
+					if (checkSkillLevelSums(curArmorSet))
+					{
+						// passed with only with 5 pieces and without charm and deco. So, set charm as none.
+						curArmorSet->charm = nullptr;
+
+						// set flag
+						curArmorSet->skillPassed = true;
+
+						//  Add to result
+						addNewArmorSet(curArmorSet);
+						// Don't check charm because if armor set need charm, it would be failed.
+
+						step();
+
+						//sendMsg(false);
+					}
+					else
+					{
+						// Failed.
+
+						// set flag
+						curArmorSet->skillPassed = false;
+
+						// try with charm
+						searchArmorSet(db, SearchState::LF_CHARM, curArmorSet);
+					}
+				}
+				// else, failed set skill 
+			}
+			// else, there is skill overleveled
+		}
+	}
+	else if (searchState == SearchState::LF_HEAD)
 	{
 		if (abort.load()) return;
 
@@ -1096,6 +1159,181 @@ void MHW::SetSearcher::initAndCountSums(MHW::ArmorSet * newArmorSet)
 
 	// Count skill sums and set skill's req armor pieces
 	newArmorSet->countSums();
+}
+
+void MHW::SetSearcher::initArmorCounterAndSize()
+{
+	headArmorCounter = 0;
+	chestArmorCounter = 0;
+	armArmorCounter = 0;
+	waistArmorCounter = 0;
+	legArmorCounter = -1;
+
+	headArmorSize = (int)filter.headArmors.size();
+	chestArmorSize = (int)filter.chestArmors.size();
+	armArmorSize = (int)filter.armArmors.size();
+	waistArmorSize = (int)filter.waistArmors.size();
+	legArmorSize = (int)filter.legArmors.size();
+}
+
+bool MHW::SetSearcher::getNextArmorCombination(MHW::ArmorSet * armorSet)
+{
+	if (headArmorCounter == headArmorSize && 
+		chestArmorCounter == chestArmorSize && 
+		armArmorCounter == armArmorSize && 
+		waistArmorCounter == waistArmorSize && 
+		legArmorCounter == legArmorSize)
+	{
+		return false;
+	}
+
+	if (legArmorSize != 0)
+	{
+		if (legArmorCounter >= legArmorSize)
+		{
+			legArmorCounter = 0;
+			waistArmorCounter++;
+		}
+		else
+		{
+			legArmorCounter++;
+		}
+	}
+	else
+	{
+		legArmorCounter = 0;
+	}
+
+	if (waistArmorSize != 0)
+	{
+		if (waistArmorCounter >= waistArmorSize)
+		{
+			waistArmorCounter = 0;
+			armArmorCounter++;
+		}
+		else
+		{
+			//waistArmorCounter++;
+		}
+	}
+	else
+	{
+		waistArmorCounter = 0;
+	}
+
+	if (armArmorSize != 0)
+	{
+		if (armArmorCounter >= armArmorSize)
+		{
+			armArmorCounter = 0;
+			chestArmorCounter++;
+		}
+		else
+		{
+			//armArmorCounter++;
+		}
+	}
+	else
+	{
+		armArmorCounter = 0;
+	}
+
+	if (chestArmorSize != 0)
+	{
+		if (chestArmorCounter >= chestArmorSize)
+		{
+			chestArmorCounter = 0;
+			headArmorCounter++;
+		}
+		else
+		{
+			//chestArmorCounter++;
+		}
+	}
+	else
+	{
+		chestArmorCounter = 0;
+	}
+
+	if (headArmorSize != 0)
+	{
+		if (headArmorCounter >= headArmorSize)
+		{
+			return false;
+		}
+		else
+		{
+			//headArmorCounter++;
+		}
+	}
+	else
+	{
+		headArmorCounter = 0;
+	}
+
+	//OutputDebugString((L"H: " + std::to_wstring(headArmorCounter) + L", C: " + std::to_wstring(chestArmorCounter) + L", A: " + std::to_wstring(armArmorCounter) + L", W: " + std::to_wstring(waistArmorCounter) + L", L: " + std::to_wstring(legArmorCounter) + L"\n").c_str());
+
+	if (headArmorSize == 0)
+	{
+		armorSet->setHeadrmor(nullptr);
+	}
+	else
+	{
+		armorSet->setHeadrmor(filter.headArmors.at(headArmorCounter));
+	}
+
+	if (chestArmorSize == 0)
+	{
+		armorSet->setChestArmor(nullptr);
+	}
+	else
+	{
+		armorSet->setChestArmor(filter.chestArmors.at(chestArmorCounter));
+	}
+
+	if (armArmorSize == 0)
+	{
+		armorSet->setArmArmor(nullptr);
+	}
+	else
+	{
+		armorSet->setArmArmor(filter.armArmors.at(armArmorCounter));
+	}
+
+	if (waistArmorCounter == 0)
+	{
+		armorSet->setWaistArmor(nullptr);
+	}
+	else
+	{
+		armorSet->setWaistArmor(filter.armArmors.at(waistArmorCounter));
+	}
+
+	if (legArmorCounter == 0)
+	{
+		armorSet->setLegArmor(nullptr);
+	}
+	else
+	{
+		armorSet->setLegArmor(filter.armArmors.at(legArmorCounter));
+	}
+
+	return true;
+}
+
+bool MHW::SetSearcher::checkOverleveledSkill(MHW::ArmorSet * curArmorSet)
+{
+	// Check overlevel
+	if (!filter.allowOverleveledSkill)
+	{
+		bool overlevelResult = hasOverLeveledSkill(curArmorSet);
+		if (overlevelResult)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 void MHW::SetSearcher::step()
