@@ -136,7 +136,7 @@ public:
 	// allow over leveled skills in armorset
 	bool allowOverleveledSkills;
 	// use only max level charm
-	bool useOnlyMaxLevelCharm;
+	//bool useOnlyMaxLevelCharm;
 	// Simplyfy search result
 	bool simplifySearchResult;
 	// Show max level
@@ -156,6 +156,9 @@ public:
 	int readInt(const std::wstring& line, int& dest, const std::string& log, const MHW::ERROR_CODE errCode);
 	int readBool(const std::wstring& line, bool& dest, const std::string& log, const MHW::ERROR_CODE errCode);
 	void saveTemp();
+	void saveTemp(const std::wstring& path);
+	void save(std::wofstream& file);
+	int openTemp(const std::wstring& path);
 	int load(Database* db);
 	int loadSkills(Database* db);
 	int loadSetSkills(Database* db);
