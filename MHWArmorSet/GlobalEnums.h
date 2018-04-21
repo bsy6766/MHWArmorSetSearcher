@@ -15,8 +15,8 @@ namespace MHW
 	enum class Gender
 	{
 		NONE = 0,
-		FEMALE,
-		MALE
+		FEMALE,	// 1
+		MALE	// 2
 	};
 
 	enum class Language

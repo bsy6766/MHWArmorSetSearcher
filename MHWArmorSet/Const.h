@@ -8,7 +8,7 @@ namespace MHW
 	namespace VERSION
 	{
 		static const int major = 1;
-		static const int minor = 3;
+		static const int minor = 4;
 	}
 
 	namespace CONSTS
