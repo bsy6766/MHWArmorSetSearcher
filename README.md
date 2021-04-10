@@ -7,7 +7,7 @@ You can download the executable file (Windows) **[HERE](https://github.com/bsy67
 This is a source code of my own project called Monster Hunter World Armor Set Searcher (MHWASS),  
 which searches all possible armor sets (armor, charm, decorations) when desired skills or skill sets are given by the user.  
 
-This project supported the game until the before Final Fantasy collaboration came out,  
+This project supported the game until the Final Fantasy collaboration (Behemoth) came out,  
 which I stopped playing MHW due to personal reasons.  
 
 I have no plan to update this project further since there are many 'better' alternative solutions out there.  
