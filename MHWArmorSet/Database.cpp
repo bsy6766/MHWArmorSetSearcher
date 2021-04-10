@@ -50,6 +50,15 @@ int Database::init(Settings * setting)
  	result = initDecorationData(setting);
 	if (result != 0) return result;
 
+
+	auto& logger = MHW::Logger::getInstance();
+
+	logger.info("Total head armors: " + std::to_string(headArmors.size()));
+	logger.info("Total chest armors: " + std::to_string(chestArmors.size()));
+	logger.info("Total waist armors: " + std::to_string(waistArmors.size()));
+	logger.info("Total arm armors: " + std::to_string(armArmors.size()));
+	logger.info("Total leg armors: " + std::to_string(legArmors.size()));
+
 	return 0;
 }
 
